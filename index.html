@@ -1547,13 +1547,13 @@ function startGame(){
       });
     }
   });
-  // 按房间顺序排列：同一房间的题目连续展示
+  // 构建追问链：找到同偏旁的题对，插入追问标记
+  buildProbePairs();
+  // 按房间顺序排列：同一房间的题目连续展示（追问之后再排，确保追问不打破房间连续性）
   var roomOrder = ['HR初筛','业务面试','交叉面试','高管面试','HR谈薪'];
   S.selectedQuestions.sort(function(a,b){
     return roomOrder.indexOf(a.room) - roomOrder.indexOf(b.room);
   });
-  // 构建追问链：找到同偏旁的题对，插入追问标记
-  buildProbePairs();
   S.answers = new Array(S.selectedQuestions.length).fill(0);
   S.consistencyData = {}; // { '言': { baseAns:0, probeAns:0 }, ... }
   S.dimScores=[]; S.radScores=[]; S.result=null; S.step=0; S.view='questions';
@@ -2465,14 +2465,14 @@ function buildPlainSummary(style, finalDims, roomData, charAssess, totalRoomAvg)
   if(strong.length > 0){
     var strongNames = strong.map(function(c){
       var d = CHAR_DEFS[c];
-      return d ? d.core.substring(0,4) : c;
+      return d ? d.core : c;
     });
     lines.push('你的核心竞争力是' + strongNames.join('、') + '——面试中主动展示这些方面，能让面试官快速记住你。');
   }
   if(weak.length > 0){
     var weakNames = weak.map(function(c){
       var d = CHAR_DEFS[c];
-      return d ? d.core.substring(0,4) : c;
+      return d ? d.core : c;
     });
     lines.push('相对薄弱的是' + weakNames.join('、') + '——面试官可能会从这些角度追问，提前准备好应对思路。');
   }
