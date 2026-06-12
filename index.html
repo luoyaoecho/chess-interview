@@ -1291,7 +1291,7 @@ function renderLogin(){
       <p style="color:var(--sub);font-size:14px;margin:0 0 6px;">
         战术人格评估 · 能力掌控体系 · 能量来源×价值取向×场景博弈
       </p>
-      <p style="color:var(--accent);font-size:11px;margin:0 0 20px;opacity:0.7;">有问题咨询 @17_lL（🍠）</p>
+      <p style="color:var(--accent);font-size:11px;margin:0 0 20px;opacity:0.7;">有问题咨询 <a href="https://www.xiaohongshu.com/user/profile/67866055000000000803c13e" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);">🍠@17_lL</a></p>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
         <input type="text" id="ni" placeholder="输入你的昵称" value="${esc(sn)}" maxlength="20"
           onfocus="if(this.value==='匿名棋手'||this.value==='匿名选手')this.value=''"
@@ -1547,11 +1547,11 @@ function startGame(){
       });
     }
   });
-  // 打乱避免同房间堆在一起
-  for(var i = S.selectedQuestions.length-1; i>0; i--){
-    var j = Math.floor(Math.random()*(i+1));
-    var tmp = S.selectedQuestions[i]; S.selectedQuestions[i] = S.selectedQuestions[j]; S.selectedQuestions[j] = tmp;
-  }
+  // 按房间顺序排列：同一房间的题目连续展示
+  var roomOrder = ['HR初筛','业务面试','交叉面试','高管面试','HR谈薪'];
+  S.selectedQuestions.sort(function(a,b){
+    return roomOrder.indexOf(a.room) - roomOrder.indexOf(b.room);
+  });
   // 构建追问链：找到同偏旁的题对，插入追问标记
   buildProbePairs();
   S.answers = new Array(S.selectedQuestions.length).fill(0);
@@ -1818,7 +1818,7 @@ function saveSession(){
   const now=new Date();
   const ds=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   const typeDist = S.result.typeDist;
-  data.sessions.push({date:ds,typeName:tn,styleStr:`${style.势}·${style.局}·${style.衡}·${style.法}`,style,finalDims,finalRadicals,typeDist,answers:[...S.answers]});
+  data.sessions.push({date:ds,typeName:tn,styleStr:`${style.势}·${style.局}·${style.衡}·${style.法}`,style,finalDims,finalRadicals,typeDist,answers:[...S.answers],questions:S.selectedQuestions});
   if(data.sessions.length>20)data.sessions=data.sessions.slice(-20);
   saveStorage(data);
 }
@@ -2385,6 +2385,101 @@ function computeRoomScores(selectedQuestions, answers, finalRadicals, finalDims,
 }
 
 
+// ===== 报告双页切换（总览 ↔ 五房间拆解）=====
+function toggleReportDetail(showDetail) {
+  var sections = document.querySelectorAll('.report-section');
+  var summaryEl = sections[0];  // 综合战术评价
+  var detailEl = sections[1];   // 五房间场景拆解
+  var navBtn = document.getElementById('reportNavBtn');
+  if (showDetail) {
+    summaryEl.style.display = 'none';
+    detailEl.style.display = '';
+    if (navBtn) navBtn.style.display = 'none';
+    detailEl.scrollIntoView({behavior:'smooth'});
+  } else {
+    summaryEl.style.display = '';
+    detailEl.style.display = 'none';
+    if (navBtn) navBtn.style.display = '';
+    summaryEl.scrollIntoView({behavior:'smooth'});
+  }
+}
+
+// ===== 大白话总结生成 =====
+function buildPlainSummary(style, finalDims, roomData, charAssess, totalRoomAvg) {
+  // 维度映射到日常语言
+  var dimTalk = {
+    '势': finalDims['势']>=7 ? {me:'很看重外部反馈', them:'主动表达期望'} :
+         finalDims['势']>=5 ? {me:'既在意外部认可，也有自己的标准', them:'该主动时主动，该守时守'} :
+         {me:'更在意自己的标准和感受', them:'不太主动争取外部资源'},
+    '局': finalDims['局']>=7 ? {me:'习惯从长远角度想问题', them:'擅长谈方向和愿景'} :
+         finalDims['局']>=5 ? {me:'长远和当下兼顾', them:'能聊方向也能落地'} :
+         {me:'更关注当下具体的事', them:'执行力强，务实靠谱'},
+    '衡': finalDims['衡']>=7 ? {me:'用逻辑和数据做判断', them:'分析问题有理有据'} :
+         finalDims['衡']>=5 ? {me:'逻辑和人际感受都会考虑', them:'既能讲道理也能讲人情'} :
+         {me:'做决定时很在意人的因素', them:'善于理解他人，团队协作强'},
+    '法': finalDims['法']>=7 ? {me:'喜欢灵活多变的工作方式', them:'适应力强，不怕变化'} :
+         finalDims['法']>=5 ? {me:'在稳定和变化之间找平衡', them:'能深耕也能应变'} :
+         {me:'偏好稳定和明确的规则', them:'做事有章法，让人放心'}
+  };
+
+  // 找到最强和最弱的房间
+  var roomsByScore = roomData.slice().sort(function(a,b){return b.roomFinal - a.roomFinal;});
+  var bestRoom = roomsByScore[0];
+  var worstRoom = roomsByScore[roomsByScore.length-1];
+
+  // 生成大白话段落
+  var lines = [];
+
+  // 1. 第一印象：用势+局
+  var energyLine = dimTalk['势'].me + '，做选择时' + dimTalk['局'].me + '。';
+  lines.push('如果要用一句话描述你：你是一个' + dimTalk['势'].me + '，同时' + dimTalk['局'].me + '的人。');
+
+  // 2. 决策风格
+  lines.push('遇到问题时，你' + dimTalk['衡'].me + '。工作方式上，你' + dimTalk['法'].me + '。');
+
+  // 3. 面试优势
+  if(bestRoom && bestRoom.roomFinal >= 6){
+    lines.push('在面试中，你在「' + bestRoom.room + '」表现得最自然——' + bestRoom.meta.focus + '。这个环节的面试官大概率会觉得你"对路"。');
+  }
+
+  // 4. 需要注意
+  if(worstRoom && worstRoom.roomFinal < bestRoom.roomFinal){
+    var gap = Math.round((bestRoom.roomFinal - worstRoom.roomFinal)*10)/10;
+    if(gap >= 1.5){
+      lines.push('相比之下，「' + worstRoom.room + '」可能让你觉得不太舒服（差了' + gap + '分）——' + worstRoom.meta.focus + '。建议提前想想这个场景下怎么调整自己的表达方式。');
+    }
+  }
+
+  // 5. 综合评分
+  if(totalRoomAvg >= 6.5){
+    lines.push('整体来看，你的面试风格适应力挺强（综合' + totalRoomAvg.toFixed(1) + '分），多数场景能应对自如。');
+  } else if(totalRoomAvg >= 4.5){
+    lines.push('整体来看，你的面试风格处于中等水平（综合' + totalRoomAvg.toFixed(1) + '分），有些场景天然顺手，有些则需要刻意准备。');
+  } else {
+    lines.push('整体来看，你可能需要在面试准备上多花些功夫（综合' + totalRoomAvg.toFixed(1) + '分），尤其是在不太对路的场景下。');
+  }
+
+  // 6. 强势字和薄弱字
+  var strong = charAssess.strongChars || [];
+  var weak = charAssess.weakChars || [];
+  if(strong.length > 0){
+    var strongNames = strong.map(function(c){
+      var d = CHAR_DEFS[c];
+      return d ? d.core.substring(0,4) : c;
+    });
+    lines.push('你的核心竞争力是' + strongNames.join('、') + '——面试中主动展示这些方面，能让面试官快速记住你。');
+  }
+  if(weak.length > 0){
+    var weakNames = weak.map(function(c){
+      var d = CHAR_DEFS[c];
+      return d ? d.core.substring(0,4) : c;
+    });
+    lines.push('相对薄弱的是' + weakNames.join('、') + '——面试官可能会从这些角度追问，提前准备好应对思路。');
+  }
+
+  return lines;
+}
+
 function renderReport() {
   try {
   const r = S.result;
@@ -2393,6 +2488,11 @@ function renderReport() {
   const roomResult = computeRoomScores(S.selectedQuestions, S.answers, r.finalRadicals, r.finalDims, r.style);
   const roomData = roomResult.roomData;
   const overall = roomResult.overall;
+  // 历史记录缺少题目数据时的安全兜底
+  if (!roomData || roomData.length === 0) {
+    app.innerHTML = '<div class="header"><h1>⚠️ 数据不完整</h1><p style="color:var(--sub);">这条历史记录保存时还没有题目数据（旧版本），无法还原完整报告。</p><br><button class="btn-restart" onclick="restart()">⟳ 重新评估</button></div>';
+    return;
+  }
   const style = overall.style;
   // 从房间多数投票获取类型名称
   const typeName = getStyleTypeName(style);
@@ -2476,11 +2576,32 @@ function renderReport() {
   totalRoomAvg = roomCount > 0 ? Math.round(totalRoomAvg / roomCount * 10) / 10 : 5;
   var totalLabel = totalRoomAvg >= 6.5 ? '强势适应' : totalRoomAvg >= 4.5 ? '中等适应' : '需要加强';
 
+  // 大白话总结
+  var plainLines = buildPlainSummary(style, r.finalDims, roomData, charAssess, totalRoomAvg);
+
+  // 保存报告数据供详细页（五房间场景拆解）使用
+  S._reportData = {
+    roomData: roomData, overall: overall, style: style,
+    typeName: typeName, beastInfo: beastInfo,
+    totalRoomAvg: totalRoomAvg, totalLabel: totalLabel,
+    crossInsights: crossInsights, charAssess: charAssess,
+    dimProbHtml: dimProbHtml, charSummaryHtml: charSummaryHtml,
+    finalRadicals: finalRadicals, typeDist: typeDist
+  };
+
   app.innerHTML = `
     <div class="header">
       <h1>🎯 战术人格评估报告</h1>
       <div class="subtitle">能量来源×价值取向</div>
       <div class="user-badge">👤 ${esc(S.nickname)}</div>
+    </div>
+
+    <!-- 大白话总结卡 -->
+    <div style="background:linear-gradient(135deg,rgba(226,176,74,0.08),rgba(168,85,247,0.06));border-radius:14px;padding:20px 24px;margin-bottom:20px;border:1px solid rgba(226,176,74,0.2);">
+      <div style="font-size:16px;margin-bottom:12px;">📋 大白话总结</div>
+      ${plainLines.map(function(line,i){
+        return '<div style="font-size:13px;line-height:1.9;color:#d0d0d8;' + (i===0?'margin-bottom:10px;':'') + '">' + (i===0?'<span style="color:var(--accent);font-weight:600;">' + line + '</span>' : '• ' + line) + '</div>';
+      }).join('')}
     </div>
 
     <!-- ═══════════ 总：综合战术评价 ═══════════ -->
@@ -2717,6 +2838,26 @@ function renderReport() {
     </div>
     <div id="aiResult" style="margin-top:16px;"></div>
   `;
+  // 双页拆分：默认显示总览，隐藏详细拆解
+  (function(){
+    var sections = document.querySelectorAll('.report-section');
+    var summaryEl = sections[0];
+    var detailEl = sections[1];
+    if (!summaryEl || !detailEl) return;
+    // 初始状态：只显示总览
+    detailEl.style.display = 'none';
+    // 在总览底部插入跳转按钮
+    var navBtn = document.createElement('div');
+    navBtn.id = 'reportNavBtn';
+    navBtn.style.cssText = 'text-align:center;margin:24px 0 12px;';
+    navBtn.innerHTML = '<button onclick="toggleReportDetail(true)" style="background:linear-gradient(135deg,var(--accent),#a855f7);color:#fff;border:none;padding:14px 32px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:700;box-shadow:0 4px 16px rgba(124,58,237,0.3);">🔍 查看五房间场景拆解 →</button><div style="font-size:11px;color:var(--sub);margin-top:8px;">每个房间独立评估：场景风格评价 → 能力掌控度 → 六字评分 → 战术改进</div>';
+    summaryEl.parentNode.insertBefore(navBtn, detailEl);
+    // 在拆解页顶部插入返回按钮
+    var backRow = document.createElement('div');
+    backRow.style.cssText = 'text-align:center;margin-bottom:16px;';
+    backRow.innerHTML = '<button onclick="toggleReportDetail(false)" style="background:var(--input-bg);color:var(--accent);border:1px solid var(--border);padding:10px 24px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;">← 返回综合战术评价</button>';
+    detailEl.insertBefore(backRow, detailEl.firstChild);
+  })();
   } catch(e) {
     app.innerHTML = `<div class="header"><h1>报告渲染出错</h1><p style="color:var(--bar-low);">${e.message}</p><pre style="font-size:11px;color:var(--sub);white-space:pre-wrap;">${e.stack||''}</pre><br><button class="btn-restart" onclick="restart()">⟳ 重新评估</button></div>`;
   }
@@ -2750,7 +2891,7 @@ function renderHistory(){
 function viewHistory(idx){
   const data=getStorage(); const s=data.sessions[idx]; if(!s)return;
   S.result={finalDims:s.finalDims,finalRadicals:s.finalRadicals,style:s.style,typeDist:s.typeDist||computeTypeDistribution(s.finalDims)};
-  S.answers=s.answers||[]; S.questions=s.questions||[]; S.nickname=data.nickname;
+  S.answers=s.answers||[]; S.selectedQuestions=s.questions||[]; S.nickname=data.nickname;
   S.view='report'; render();
 }
 function delSession(idx){if(!confirm('确定删除这条记录？'))return;const d=getStorage();d.sessions.splice(idx,1);saveStorage(d);render();}
