@@ -1783,6 +1783,18 @@ function checkAndInsertProbes(){
       }
     }
   }
+  // 追问插入后对剩余题目按房间重新排序，保持房间连续性
+  if(insertCount > 0){
+    var roomOrder = ['HR初筛','业务面试','交叉面试','高管面试','HR谈薪'];
+    var head = S.selectedQuestions.slice(0, S.step + 1);
+    var tail = S.selectedQuestions.slice(S.step + 1);
+    var tailAnswers = S.answers.slice(S.step + 1);
+    // 对尾部按房间排序
+    var indexed = tail.map(function(q, i){ return {q: q, a: tailAnswers[i]}; });
+    indexed.sort(function(a, b){ return roomOrder.indexOf(a.q.room) - roomOrder.indexOf(b.q.room); });
+    S.selectedQuestions = head.concat(indexed.map(function(x){ return x.q; }));
+    S.answers = head.map(function(_, i){ return S.answers[i]; }).concat(indexed.map(function(x){ return x.a; }));
+  }
 }
 
 function prevQ(){
@@ -2503,11 +2515,11 @@ function renderReport() {
   const typeDist = r.typeDist || computeTypeDistribution(r.finalDims);
   const { dimProbs, top3 } = typeDist;
   // 查找所属神兽（用多数投票风格）
-  const beastKey = style.势 + '_' + style.局;
+  const beastKey = style.势 + '_' + style.局 + '_' + style.衡 + '_' + style.法;
   let beastInfo = null;
   for (let b of FOUR_BEASTS) {
     for (let t of b.types) {
-      if (t.key.startsWith(beastKey)) { beastInfo = { beast: b, type: t }; break; }
+      if (t.key === beastKey) { beastInfo = { beast: b, type: t }; break; }
     }
     if (beastInfo) break;
   }
