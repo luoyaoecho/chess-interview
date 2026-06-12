@@ -1,0 +1,3051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>面试风格匹配测试</title>
+<style>
+  :root {
+    --bg: #1a1a2e; --card: #16213e; --accent: #e2b04a; --accent2: #c58940;
+    --text: #e8e8e8; --sub: #a0a0b0; --input-bg: #0f1629; --border: #2a2a4a;
+    --tag-out: #5b8cbf; --tag-in: #8b5b9f; --tag-far: #5b9f7b;
+    --tag-near: #9f7b5b; --tag-logic: #c56b5b; --tag-feel: #c59b5b;
+    --tag-flex: #5b9f9f; --tag-fixed: #7b8b9f;
+    --bar-high: #4eca7a; --bar-mid: #e2b04a; --bar-low: #ca5b5b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .container { max-width: 760px; width: 100%; padding: 20px; }
+
+  /* Header */
+  .header { text-align: center; padding: 24px 0 12px; }
+  .header h1 {
+    font-size: 28px; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), #f0d78c);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  .header .subtitle { color: var(--sub); font-size: 14px; }
+  .header .user-badge {
+    display: inline-block; font-size: 12px; color: var(--accent);
+    margin-top: 6px; padding: 2px 10px; border-radius: 10px;
+    background: rgba(226,176,74,0.1);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card); border-radius: 16px; padding: 24px;
+    margin-bottom: 16px; border: 1px solid var(--border);
+    animation: fadeIn 0.35s ease;
+  }
+  @keyframes fadeIn { from {opacity:0;transform:translateY(10px);} to {opacity:1;transform:translateY(0);} }
+
+  /* Progress */
+  .progress-wrap { margin-bottom: 24px; }
+  .progress-bar-wrap { background: var(--card); border-radius: 10px; height: 6px; overflow: hidden; margin-bottom: 6px; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 10px; transition: width 0.5s ease; }
+  .step-indicator {
+    display: flex; justify-content: space-between; font-size: 10px; color: var(--sub);
+    flex-wrap: wrap; gap: 3px;
+  }
+  .step-indicator span.active { color: var(--accent); font-weight: 700; }
+  .step-indicator span.done { color: var(--bar-high); }
+
+  /* Buttons */
+  .btn {
+    padding: 12px 28px; border-radius: 10px; font-size: 15px;
+    font-weight: 600; cursor: pointer; border: none; font-family: inherit;
+    transition: all 0.3s;
+  }
+  .btn-next { background: var(--accent); color: #1a1a2e; flex: 1; }
+  .btn-next:hover { background: #f0d78c; transform: translateY(-1px); }
+  .btn-prev { background: transparent; color: var(--sub); border: 1px solid var(--border); }
+  .btn-prev:hover { background: rgba(255,255,255,0.05); }
+  .btn-restart {
+    padding: 12px 40px; background: transparent; border: 1px solid var(--border);
+    color: var(--sub); border-radius: 10px; cursor: pointer; font-family: inherit;
+    font-size: 14px; transition: all 0.3s; margin: 0 8px;
+  }
+  .btn-restart:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-row { display: flex; gap: 12px; margin-top: 16px; }
+
+  /* Login */
+  .login-card { text-align: center; padding: 24px; }
+  .login-card .logo { font-size: 48px; margin-bottom: 10px; }
+  .login-card input[type=text] {
+    width: 100%; max-width: 300px; padding: 12px 16px;
+    background: var(--input-bg); color: var(--text);
+    border: 2px solid var(--border); border-radius: 12px;
+    font-size: 16px; text-align: center; font-family: inherit;
+    margin-bottom: 12px; transition: border-color 0.3s;
+  }
+  .login-card input[type=text]:focus { outline: none; border-color: var(--accent); }
+
+  /* Reference panels on login page */
+  .ref-section { margin-top: 28px; }
+  .ref-section h3 {
+    font-size: 15px; color: var(--accent); margin-bottom: 10px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  }
+  .ref-hint { font-size: 11px; color: var(--sub); margin-bottom: 12px; }
+  .history-link {
+    text-align: center; margin-top: 20px; font-size: 13px;
+  }
+  .history-link a {
+    color: var(--sub); text-decoration: none; cursor: pointer;
+    border-bottom: 1px dashed var(--border); padding-bottom: 2px;
+  }
+  .history-link a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* Char overview cards (compact) */
+  .char-overview-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; margin-bottom: 18px;
+  }
+  @media (max-width: 600px) { .char-overview-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 400px) { .char-overview-grid { grid-template-columns: 1fr; } }
+  .co-card {
+    background: var(--input-bg); border-radius: 10px;
+    padding: 12px 14px; border: 1px solid var(--border);
+    text-align: center;
+  }
+  .co-card .co-name { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+  .co-card .co-struct { font-size: 10px; color: var(--sub); margin-bottom: 4px; }
+  .co-card .co-core { font-size: 10px; color: var(--accent); }
+
+  /* Radical compact table */
+  .rad-compact-table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .rad-compact-table th {
+    text-align: left; padding: 6px 8px; color: var(--accent);
+    font-weight: 600; border-bottom: 2px solid var(--border); font-size: 10px;
+  }
+  .rad-compact-table td {
+    padding: 5px 8px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    line-height: 1.5;
+  }
+  .rad-compact-table .rc { font-size: 16px; font-weight: 700; color: var(--accent); width: 36px; text-align: center; }
+  .rad-compact-table .rn { font-weight: 600; white-space: nowrap; }
+  .rad-compact-table .ra { color: var(--accent2); font-size: 10px; white-space: nowrap; }
+
+  /* Question scene */
+  .scene-tag {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 12px; margin-bottom: 14px;
+    background: rgba(226,176,74,0.15); color: var(--accent);
+  }
+  .scene-desc {
+    font-size: 15px; line-height: 1.9; color: var(--text);
+    background: var(--input-bg); border-radius: 10px;
+    padding: 20px 22px; margin-bottom: 18px;
+    border-left: 3px solid var(--accent);
+    white-space: pre-wrap;
+  }
+  textarea.answer-input {
+    width: 100%; min-height: 130px;
+    background: var(--input-bg); color: var(--text);
+    border: 2px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; font-size: 14px; line-height: 1.7;
+    font-family: inherit; resize: vertical; transition: border-color 0.3s;
+  }
+  textarea.answer-input:focus { outline: none; border-color: var(--accent); }
+  textarea.answer-input::placeholder { color: #555; }
+
+  /* Analyzing */
+  .analyzing { text-align: center; padding: 40px 20px; }
+  .analyzing .spinner {
+    width: 40px; height: 40px; border: 3px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+  }
+  @keyframes spin { to {transform:rotate(360deg);} }
+  .analyzing p { color: var(--sub); font-size: 14px; }
+
+  /* Report */
+  .report-section { margin-bottom: 28px; }
+  .report-section h2 { font-size: 18px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); color: var(--accent); }
+  .personality-type-box {
+    background: linear-gradient(135deg, rgba(226,176,74,0.1), rgba(226,176,74,0.02));
+    border: 2px solid var(--accent); border-radius: 16px;
+    padding: 24px; text-align: center; margin-bottom: 20px;
+  }
+  .personality-type-box .type-name { font-size: 32px; font-weight: 800; color: var(--accent); margin-bottom: 6px; }
+  .personality-type-box .type-detail { font-size: 14px; color: var(--sub); }
+  .dim-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; padding: 10px 14px; background: var(--input-bg); border-radius: 8px; }
+  .dim-row .dlabel { width: 56px; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .dim-score { width: 32px; text-align: right; font-weight: 700; font-size: 14px; }
+  .char-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 500px) { .char-grid { grid-template-columns: 1fr; } }
+  .char-card { background: var(--input-bg); border-radius: 10px; padding: 14px 16px; border: 1px solid var(--border); }
+  .char-card .char-name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .char-card .char-parts { font-size: 12px; color: var(--sub); margin-bottom: 8px; }
+  .char-card .tightness-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 11px; }
+  .tightness-item .t-label { width: 24px; color: var(--sub); }
+  .tightness-item .t-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+  .tightness-item .t-fill { height: 100%; border-radius: 3px; }
+  .tightness-item .t-val { width: 16px; text-align: right; font-size: 10px; color: var(--sub); }
+  .overall-tightness { font-size: 12px; color: var(--sub); margin-top: 6px; }
+
+  .strategy-box {
+    background: var(--input-bg); border-radius: 10px; padding: 18px 20px;
+    border-left: 3px solid var(--accent); line-height: 1.9; font-size: 14px;
+  }
+  .strategy-box .tip-item { margin-bottom: 6px; }
+  .strategy-box .tip-item::before { content: '▸ '; color: var(--accent); }
+
+  .btn-row-center { text-align: center; margin-top: 24px; }
+
+  /* Tags */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 12px; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 8px; font-weight: 600; }
+  .tag-out { background: rgba(91,140,191,0.2); color: var(--tag-out); }
+  .tag-in { background: rgba(139,91,159,0.2); color: var(--tag-in); }
+  .tag-far { background: rgba(91,159,123,0.2); color: var(--tag-far); }
+  .tag-near { background: rgba(159,123,91,0.2); color: var(--tag-near); }
+  .tag-logic { background: rgba(197,107,91,0.2); color: var(--tag-logic); }
+  .tag-feel { background: rgba(197,155,91,0.2); color: var(--tag-feel); }
+  .tag-flex { background: rgba(91,159,159,0.2); color: var(--tag-flex); }
+  .tag-fixed { background: rgba(123,139,159,0.2); color: var(--tag-fixed); }
+
+  /* History page (standalone) */
+  .history-item {
+    background: var(--input-bg); border-radius: 10px; padding: 14px 18px;
+    margin-bottom: 10px; border: 1px solid var(--border); cursor: pointer;
+    transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;
+  }
+  .history-item:hover { border-color: var(--accent); }
+  .history-item .h-type { font-weight: 700; font-size: 15px; }
+  .history-item .h-date { font-size: 11px; color: var(--sub); }
+  .history-item .h-delete { color: var(--bar-low); cursor: pointer; font-size: 12px; padding: 4px 8px; }
+  .history-item .h-delete:hover { background: rgba(202,91,91,0.1); border-radius: 4px; }
+  .no-history { text-align: center; color: var(--sub); padding: 40px 20px; font-size: 14px; }
+  .back-link { text-align: center; margin-top: 20px; }
+  .back-link a { color: var(--sub); cursor: pointer; font-size: 13px; text-decoration: none; border-bottom: 1px dashed var(--border); padding-bottom: 2px; }
+  .back-link a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ===== Chinese-style Layout ===== */
+  .cn-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  @media (max-width: 680px) {
+    .cn-layout { grid-template-columns: 1fr; }
+  }
+  .cn-card {
+    background: linear-gradient(180deg, rgba(22,33,62,0.9) 0%, rgba(15,22,41,0.95) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cn-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6;
+  }
+  .cn-card .cn-icon {
+    font-size: 20px; margin-right: 6px; vertical-align: -2px;
+  }
+  .cn-card h3 {
+    font-size: 15px; color: var(--accent);
+    margin: 0 0 10px 0; padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(226,176,74,0.2);
+    letter-spacing: 1px;
+  }
+  .cn-card p {
+    font-size: 12.5px; line-height: 1.85; color: #c8c8d0;
+    margin-bottom: 8px;
+  }
+  .cn-card p strong { color: var(--accent); font-weight: 600; }
+  .cn-card p .hl-red { color: #d4735a; font-weight: 600; }
+
+  /* Stamp badge */
+  .cn-stamp {
+    display: inline-block;
+    border: 2px solid #c43a31;
+    color: #c43a31;
+    padding: 2px 10px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px;
+    transform: rotate(-3deg);
+    opacity: 0.7;
+    margin: 4px 0;
+  }
+
+  /* Four dimensions mini grid */
+  .cn-dim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .cn-dim-card {
+    background: rgba(15,22,41,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 10px 12px;
+    transition: border-color 0.3s;
+  }
+  .cn-dim-card:hover { border-color: rgba(226,176,74,0.3); }
+  .cn-dim-card .dim-title {
+    font-size: 13px; font-weight: 700; color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .cn-dim-card .dim-pair {
+    font-size: 10px; line-height: 1.7; color: var(--sub);
+  }
+  .cn-dim-card .dim-pair span { font-weight: 600; }
+
+  /* Character mini cards */
+  .cn-char-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .cn-char-mini {
+    text-align: center;
+    background: rgba(15,22,41,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 8px 4px;
+    transition: border-color 0.3s;
+  }
+  .cn-char-mini:hover { border-color: rgba(226,176,74,0.3); }
+  .cn-char-mini .cn-char-symbol {
+    font-size: 26px; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), #f0d78c);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .cn-char-mini .cn-char-parts {
+    font-size: 9px; color: var(--sub); margin: 2px 0;
+  }
+  .cn-char-mini .cn-char-core {
+    font-size: 9px; color: var(--accent); opacity: 0.8;
+  }
+
+  /* Radical dictionary full-width */
+  .cn-dict-full {
+    margin-top: 16px;
+  }
+
+  /* Decorative ornament */
+  .cn-ornament {
+    text-align: center; color: var(--accent);
+    font-size: 12px; letter-spacing: 8px;
+    opacity: 0.5; margin: 8px 0;
+    user-select: none;
+  }
+
+  /* Login section at top */
+  .cn-login-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; padding: 18px 20px;
+    background: var(--card); border-radius: 14px;
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .cn-login-bar .logo-icon { font-size: 36px; }
+  .cn-login-bar input[type=text] {
+    width: 180px; padding: 10px 14px;
+    background: var(--input-bg); color: var(--text);
+    border: 2px solid var(--border); border-radius: 10px;
+    font-size: 14px; text-align: center; font-family: inherit;
+    transition: border-color 0.3s;
+  }
+  .cn-login-bar input[type=text]:focus { outline: none; border-color: var(--accent); }
+
+  /* Likert rows */
+  .likert-row:hover { border-color: var(--accent) !important; background: rgba(226,176,74,0.06) !important; }
+
+  /* Collapsible */
+  .collapse-toggle {
+    cursor: pointer; color: var(--accent); font-size: 12px;
+    padding: 4px 0; display: inline-block; user-select: none;
+  }
+  .collapse-toggle:hover { text-decoration: underline; }
+  .collapse-content { display: none; }
+  .collapse-content.open { display: block; }
+</style>
+</head>
+<body>
+
+<div class="container" id="app"></div>
+
+<script>
+// ============================================================
+// 面试风格匹配测试 v3
+// ============================================================
+
+// 全局错误捕获
+window.onerror = function(msg, url, line, col, err) {
+  alert('JS Error at line ' + line + ': ' + msg);
+  return false;
+};
+
+// ---------- 数据定义 ----------
+const RADICAL_DEFS = {
+  '厶': { name:'独有能力', desc:'你特有的、别人难以模仿的核心能力。', ability:'差异化竞争力' },
+  '月': { name:'时间积累', desc:'经验厚度与广度——做了多少年、经历过多大规模。', ability:'经验深度与广度' },
+  '匕': { name:'锋刃', desc:'你最锋利的一项能力——你的最高分。', ability:'单点突破力' },
+  '厂': { name:'背景环境', desc:'待过的公司/行业/阶段，决定了面试官的初始归类。', ability:'出身背书' },
+  '力': { name:'产出推动', desc:'具体做出的成绩——项目数据、收入影响、规模变化。', ability:'交付与战绩' },
+  '木': { name:'性格底子', desc:'核心人格倾向——决定了默认组字方式和压力下的本能反应。', ability:'底层操作系统' },
+  '各': { name:'差异化表现', desc:'同类型下你的独有特质——你怎么和别人"长得不一样"。', ability:'个人辨识度' },
+  '亡': { name:'逃离意识', desc:'对现状不满的认知清晰度。清晰才能避免再踩坑。', ability:'风险感知力' },
+  '王': { name:'理想方向', desc:'对自己最终想成为什么的清晰度——职业生涯的北极星。', ability:'目标牵引力' },
+  '目': { name:'视野判断', desc:'对行业、趋势的理解深度——能不能看到别人看不到的。', ability:'战略洞察力' },
+  '言': { name:'表达筹码', desc:'能说出来的优势——offer、市场稀缺性、可验证成果。', ability:'议价表达力' },
+  '寺': { name:'隐秘把控', desc:'握而不发的能力——知道什么时候说什么、对谁说。', ability:'信息管理力' }
+};
+
+const CHAR_DEFS = {
+  '能': { parts:['厶','月','匕'], desc:'你的硬实力——独有能力+时间积累+锋刃。面试中对方最想拆解的字。', core:'你能做什么' },
+  '历': { parts:['厂','力'], desc:'你的履历和战绩——背景环境+实际产出。面试官通过追问项目细节来验证。', core:'你做过什么' },
+  '格': { parts:['木','各'], desc:'你的人格特质——性格底子+差异化表现。交叉面面试官重点"品"这个字。', core:'你是什么样的人' },
+  '望': { parts:['亡','月','王'], desc:'你的求职诉求——逃离什么+保留什么+追求什么。高管面最关注这个字。', core:'你想要什么' },
+  '相': { parts:['木','目'], desc:'你与岗位的匹配度——性格底子+视野判断。业务面验结构，高管面验视野。', core:'你有多合适' },
+  '詩': { parts:['言','寺'], desc:'你的叙事与表达——如何将你的经历和能力组织成一个有说服力的故事。谈判轮的核心武器。', core:'你怎么讲你的故事' }
+};
+
+// ============================================================
+// 程度选择题库 —— 每维度5题（含反向题），交叉验证 + 偏旁测量
+// ============================================================
+// 每题: { text, dims: [{dim, dir}] , rads: [{rad, dir}] }
+// dim: 势/局/衡/法, dir: 1=正向(高分→外/远/理/活), -1=反向(高分→内/近/情/定)
+// rad: 偏旁名, dir: 1=高分→紧, -1=反向
+
+const QUESTION_BANK = [
+  // ============================================================
+  // 房间1：HR初筛 · 面试官：王姐（HR招聘专员，8年经验）
+  // 叙事线：了解动机→摸底薪资→考察表达→测试功课→追问空窗→探底竞争
+  // ============================================================
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐翻着你的简历，抬头笑笑："我看你简历上这段经历挺有意思的——当时是什么情况？你具体做了什么？"',
+    left: '把这段经历展开成一个完整的故事：当时什么背景、你负责什么、遇到什么困难、结果怎样——让面试官看到你做事的方式', right: '先概括你从这段经历里带走的核心能力，再倒回去讲具体事例佐证——让对方先记住你的标签而非流水账',
+    dims:[{dim:'法',dir:-1},{dim:'势',dir:1}], rads:[{rad:'亡',dir:1},{rad:'言',dir:1}] },
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐点点头，在笔记本上划了几笔，抬头接着问："行，大概了解了——那你这次聊薪资，心里有数吗？大概什么范围？"',
+    left: '仔细研究过市场行情后给出一个合理区间，同时说明这个数字背后的依据和你带来的价值', right: '先了解对方的薪资结构、职级体系、绩效机制，再基于这些信息给出你的判断',
+    dims:[{dim:'衡',dir:1},{dim:'势',dir:-1}], rads:[{rad:'言',dir:1},{rad:'寺',dir:1}] },
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐合上本子："好，薪资我心里有底了。那聊聊你自己吧——你随便说，你觉得我应该知道什么？"',
+    left: '按时间线展开，让面试官看到你的成长轨迹——每段经历之间有清晰的逻辑衔接', right: '提取2-3个核心能力点，每个点用一段经历来证明——让面试官记住你的标签而非流水账',
+    dims:[{dim:'法',dir:-1},{dim:'势',dir:1}], rads:[{rad:'言',dir:1},{rad:'匕',dir:1}] },
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐身体前倾，有点兴趣了："你刚才提到我们几个业务——看来做了功课。那你觉得，我们现在做的这些事，有戏吗？"',
+    left: '说明你做了哪些功课、看到什么机会、对这个方向有什么独立判断', right: '坦诚你了解的部分和没了解的部分，同时说明你为什么觉得值得来聊',
+    dims:[{dim:'局',dir:1},{dim:'衡',dir:1}], rads:[{rad:'目',dir:1},{rad:'厂',dir:1}] },
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐翻回简历的第一页，犹豫了一下，指着日期那一栏说："对了，我注意到你有一段大概半年的空白期——从上一份工作结束到下一份开始之间。刚才你没有提到这段经历，可以跟我聊聊这段时间你在做什么吗？"',
+    left: '详细说明空窗期做了什么、想了什么、学到了什么——把它变成一段有内容的经历而非空白', right: '简要说明原因后自然过渡到"现在我想做什么"——让面试官关注你的下一步而非过去',
+    dims:[{dim:'局',dir:1},{dim:'势',dir:-1}], rads:[{rad:'亡',dir:1},{rad:'寺',dir:1}] },
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐看了看表，面试接近尾声。她放下笔，语气轻松了一些："最后一个问题了——刚才我们聊得挺坦诚的，我这边对你的情况也比较清楚了。你现在还有其他公司在接触吗？大概到什么阶段了？我只是想了解一下，方便我们这边安排后续的节奏。"',
+    left: '如实说明其他接触的情况，让对方了解你的市场位置——这本身是在帮对方评估', right: '不主动提及其他机会的细节，但表达你对这个岗位的偏好——把注意力集中在这边',
+    dims:[{dim:'法',dir:-1},{dim:'衡',dir:1}], rads:[{rad:'言',dir:1},{rad:'月',dir:1}] },
+
+  // ============================================================
+  // 房间2：业务面试 · 面试官：李总（业务负责人，8年经验，从一线做起来的）
+  // 叙事线：追问核心项目→测试应变能力→验证数据深度→考察自知→探方法论→反向考察
+  // ============================================================
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总没寒暄，指着你简历上一段经历就问："你这个事情，我顺着看了下——中间其实数据有回落吧？你怎么调整的？当时你在里面具体负责什么？"',
+    left: '拉出当时的完整时间线和你的决策节点：每一步你看到了什么信号、做了什么选择、结果怎样', right: '先讲你从这个波动中学到的判断方法，再用数据佐证——让对方看到你的复盘能力而非运气',
+    dims:[{dim:'法',dir:-1},{dim:'势',dir:1}], rads:[{rad:'力',dir:1},{rad:'月',dir:1}] },
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总面无表情，忽然话锋一转："行，换个题。给你一个你从没碰过的方向，一个月，你怎么办？"',
+    left: '先用你已有的方法论框架去拆解这个陌生问题——展示你的思维工具而非具体知识', right: '坦诚哪些是你知道的、哪些需要现学，然后给出一个分阶段的上手计划',
+    dims:[{dim:'法',dir:-1},{dim:'势',dir:-1}], rads:[{rad:'匕',dir:1},{rad:'厶',dir:1}] },
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总靠在椅背上，表情看不出满意还是不满意："你刚才聊了两个事情——一个是你的项目经历，一个是你的学习能力。现在给我一个数。你经手过的所有项目里，最能证明你价值的那个，具体带来了什么变化？用数字说话。"',
+    left: '提炼沉淀关键要素方法论，用对比变化的数据佐证——展示你如何从经历中抽象出可复用的方法', right: '讲清楚项目的完整故事线：起因、转折、你的角色、最终影响——用叙事展示价值',
+    dims:[{dim:'法',dir:1},{dim:'局',dir:1}], rads:[{rad:'力',dir:1},{rad:'目',dir:1}] },
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总点了点头，忽然话锋一转："刚才你一直在展示你擅长什么。现在我问你一个反过来的问题——你觉得你在专业上最大的短板是什么？我不是要一个包装过的答案，说真的。"',
+    left: '具体说出一个真实短板：它什么时候暴露的、你怎么发现的、现在你怎么跟它共存或弥补', right: '说一个你正在有意识改进的能力点，强调成长的速度和你的学习系统而非短板本身',
+    dims:[{dim:'法',dir:-1},{dim:'局',dir:-1}], rads:[{rad:'寺',dir:1},{rad:'木',dir:1}] },
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总前倾身子，第一次展现出明显的兴趣："前面聊了项目、聊了数据、聊了你的优势和短板。我现在想了解一下你是怎么工作的——不是说具体做了什么，而是你做事的底层方法是什么？你解决问题的框架是什么？"',
+    left: '抽象出你解决问题的通用框架——用1-2个词概括核心，再用具体场景验证', right: '用2-3个不同场景下的真实案例，让对方从故事中自然看到你的工作方式',
+    dims:[{dim:'法',dir:1},{dim:'局',dir:1}], rads:[{rad:'目',dir:1},{rad:'厶',dir:1}] },
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总看了看表："我这边该问的基本问了。刚才我们聊了一个小时，你应该对我、对这个团队要做的事有了一些判断。现在轮到你问我——你有什么想问我的？任何问题都可以。"',
+    left: '针对刚才聊到的具体业务问题深入追问——展现你对这个领域的认真程度', right: '问关于团队怎么协作、这个岗位的成长路径、公司下一步方向——展现你在考虑长线',
+    dims:[{dim:'局',dir:-1},{dim:'势',dir:1}], rads:[{rad:'目',dir:1},{rad:'厂',dir:1}] },
+
+  // ============================================================
+  // 房间3：交叉面试 · 面试官：小李（协作部门同事，5年经验，健谈但观察敏锐）
+  // 叙事线：聊协作冲突→探团队角色→测协作意愿→验向上沟通→试探判断力→评资源共享
+  // ============================================================
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李笑着坐下，气氛明显比前面轻松："我这边不问技术，就想跟你聊聊合作。你之前的工作中，有没有遇到过跨部门的同事特别不配合的情况？就是那种你找他要东西他拖、你催他他就敷衍你的那种。你怎么处理的？"',
+    left: '先换位理解对方的困难和诉求，找到双方都能接受的协作方式再推动', right: '明确双方的职责边界和交付标准，必要时通过上级来协调推动',
+    rads:[{rad:'各',dir:1},{rad:'木',dir:1}],dims:[{dim:'衡',dir:-1},{dim:'法',dir:1}] },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李听完你的处理方式，若有所思地点点头："有意思。那回到你自己身上——在一个团队里，你觉得自己通常扮演什么角色？是冲在最前面推动事情的那个人，还是在后方稳住阵脚的那个人？"',
+    left: '先用几周时间观察和倾听：理解团队的运作方式、权力结构、未言明的规则——再找切入点', right: '主动展示你的能力边界和协作偏好，让别人快速知道怎么跟你配合——透明加速融入',
+    rads:[{rad:'各',dir:1},{rad:'木',dir:1}],dims:[{dim:'法',dir:1},{dim:'衡',dir:-1}] },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李转了转手里的笔，抛出一个日常场景："假设现在是下午四点，你手头有一个明天上午要交付的紧急任务。这时候一个隔壁组的同事跑过来找你，说他遇到了一个卡点需要你帮忙——这事你刚好会。你怎么处理？"',
+    left: '会在尽快完成自己工作并主动提供帮助，需要协同合作', right: '先了解具体的情况以及紧急程度，表达自身工作的紧急性需要先做完',
+    dims:[{dim:'衡',dir:-1},{dim:'势',dir:1}], rads:[{rad:'木',dir:1},{rad:'力',dir:1}] },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李压低了声音："说个更真实的——合作方给你的需求文档里有个明显的逻辑漏洞。按他说的做，三个月后一定会出事。但是他比你高两级，你会怎么表达？"',
+    left: '用数据和推演说话——不是"我觉得不对"，而是"如果这样做，三个月后可能出现A/B/C三种情况"——把判断变成信息，让对方自己做决策', right: '先私下找对方一对一聊，不在会上让他难堪——把问题拆成"我能帮你规避什么风险"而非"你做错了什么"',
+    rads:[{rad:'亡',dir:1},{rad:'言',dir:1}],dims:[{dim:'势',dir:-1},{dim:'衡',dir:1}] },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李身体前倾，声音压低了一点："最后一个假设——如果另一个团队的负责人给你提了一个需求。你内心觉得这个需求完全不靠谱，做了也是白做。但他非常坚持。你会怎么处理？"',
+    left: '先执行，在执行中发现问题表达', right: '先了解需求背景，将相关材料整理推演带着plan b去沟通',
+    rads:[{rad:'寺',dir:1},{rad:'言',dir:1}],dims:[{dim:'局',dir:-1},{dim:'法',dir:-1}] },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李合上笔记本，语气变得认真了一些："我们这边经常有跨团队的资源协调。假设你手上有一些信息、工具或者人脉资源——这些对另一个团队来说非常有用，但他们不来主动要，你可能会主动分享吗？"',
+    left: '主动分享你有的资源和经验——团队的成长最终会让你也受益', right: '先建立好自己的根据地和信任，再逐步分享——影响力需要基础',
+    rads:[{rad:'言',dir:1},{rad:'力',dir:1}],dims:[{dim:'势',dir:1},{dim:'衡',dir:-1}] },
+
+  // ============================================================
+  // 房间4：高管面试 · 面试官：陈总（VP/部门负责人，15年经验，话极少但每句致命）
+  // 叙事线：测判断框架→探价值观→验失败韧性→考影响力→试探坦诚→问自我认知
+  // ============================================================
+  { room:'高管面试', interviewer:'陈总 · VP部门负责人',
+    scene:'陈总没有寒暄，甚至没有看你简历。他靠在椅背上，沉默了几秒才开口："你做的时间不算长——这也正常。但我好奇一件事：你现在的阶段，是怎么判断一家公司值不值得去的？你排个序我听听。"',
+    left: '给出你自己的判断框架：什么维度最重要、为什么——不是标准答案，而是你的优先级排序', right: '分享你之前做过的一个选择案例：当时你是怎么权衡的、最后选了哪边、回头看对不对',
+    dims:[{dim:'局',dir:1},{dim:'法',dir:1}], rads:[{rad:'目',dir:1},{rad:'王',dir:1}] },
+  { room:'高管面试', interviewer:'陈总 · VP部门负责人',
+    scene:'陈总没有评价你刚才的回答。他只是接着问了一句，语气依然平淡："如果你来了一年之后离开了——不是因为干得不好，就是你个人选择了下一站。你觉得到时候你的同事会怎么评价你？用一句话。"',
+    left: '围绕长期主义和成长发展来表述——你希望在这个岗位上积累什么样的能力、成为什么样的人', right: '围绕具体案例和成果来表述——用你过去做过的产出、留下的改变来让对方判断你的价值',
+    dims:[{dim:'势',dir:-1},{dim:'局',dir:1}], rads:[{rad:'厶',dir:1},{rad:'寺',dir:1}] },
+  { room:'高管面试', interviewer:'陈总 · VP部门负责人',
+    scene:'陈总微微坐直了一点，问了一个完全出乎你意料的问题："刚才你一直在说做成了什么。现在我问你一个关于失败的——你经历过的最难的一次失败是什么？不一定是工作上的，什么事都行。我不是在刁难你，我想知道你怎么面对失败。"',
+    left: '围绕失败对你决策逻辑的深层影响——不是学到了什么，而是之后做判断的方式哪里不一样了', right: '复盘当时决策的信息是否完整、思维是否存在盲区——关注如何在下次获取更全面的信息',
+    dims:[{dim:'势',dir:-1},{dim:'局',dir:1}], rads:[{rad:'亡',dir:1},{rad:'匕',dir:1}] },
+  { room:'高管面试', interviewer:'陈总 · VP部门负责人',
+    scene:'陈总沉默了几秒。然后他说："你现在的阶段，可能还没有带团队的经验——这没关系。但我想知道：你有没有影响过比你资深的人？比如你的上级或前辈——你提出了一个想法，他们原本不同意，后来被你说服了。怎么发生的？"',
+    left: '主动表达，用数据和逻辑进行说服——把想法讲清楚，让对方从理性上认可你的方向', right: '关注当下，先用行动做出成果来说服对方——做出来比说出来更有说服力',
+    dims:[{dim:'衡',dir:1},{dim:'局',dir:1}], rads:[{rad:'力',dir:1},{rad:'言',dir:1}] },
+  { room:'高管面试', interviewer:'陈总 · VP部门负责人',
+    scene:'陈总忽然直直地看着你，问了一个让你不太舒服的问题："你对我们公司了解不少了。但说实话——你现在对我们最大的担心是什么？不是客气话，是真的让你犹豫要不要来的那个点。"',
+    left: '坦诚你最真实的顾虑——不是抱怨，而是把你观察到的不确定性说出来，同时说明你打算怎么验证或应对', right: '先问对方几个你真正关心的问题，然后再给出你的判断——展示你是在双向选择而非单向求职',
+    dims:[{dim:'势',dir:-1},{dim:'衡',dir:-1}], rads:[{rad:'寺',dir:1},{rad:'目',dir:1}] },
+  { room:'高管面试', interviewer:'陈总 · VP部门负责人',
+    scene:'陈总站了起来，似乎面试要结束了。但他走到窗边，背对着你，忽然问了一个最简单的："五年后你想成为什么样的人？不用想太多——你脑子里第一个出现的答案就行。"',
+    left: '描述你理想中的工作状态：你每天在做什么类型的决策、跟什么样的人共事、创造什么价值', right: '描述你想避免的状态：你不想成为什么样的人、不想在什么样的环境里工作',
+    dims:[{dim:'局',dir:1},{dim:'势',dir:-1}], rads:[{rad:'王',dir:1},{rad:'月',dir:1}] },
+
+  // ============================================================
+  // 房间5：HR谈薪 · 面试官：刘姐（HRBP，10年经验，专业老练，微笑但难对付）
+  // 叙事线：摸底期望→试探备选→压迫让步→据理对抗→把控节奏→拓展维度
+  // ============================================================
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐笑容满面地走进会议室，手里拿着一个文件夹。她坐下后直接说："前面几轮反馈都非常好，大家都挺认可你的。那我们就进入薪资环节——你目前的期望薪资大概是多少？可以给我一个范围。"',
+    left: '用市场数据+你的能力价值来锚定一个合理区间——先抛锚再谈条件', right: '先全面了解总包构成（base+奖金+股权+福利），再综合评估而非只盯一个数字',
+    dims:[{dim:'势',dir:-1},{dim:'局',dir:1}], rads:[{rad:'言',dir:1},{rad:'寺',dir:1}] },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐往椅背上一靠，表情变得有点微妙："我换个角度问你——假设你入职半年后，无意中发现跟你同职级、同期进来的同事，base比你高了大概15%。你心里什么感受？你会怎么办？"',
+    left: '把这个信息当作复盘自己谈判能力的机会——当时的判断依据是什么、哪里可以做得更好——然后在下一次谈薪时用上', right: '不在团队内部制造对立——专注把接下来的工作做到远超预期，下一次谈薪用实际产出说话',
+    dims:[{dim:'势',dir:-1},{dim:'法',dir:1}], rads:[{rad:'寺',dir:1},{rad:'目',dir:1}] },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐收起文件夹，语气变得格外真诚："说实话，我们这边的预算确实是有上限的，你的期望比我们的预算稍微高了一些。但这个岗位的方向特别好——从我个人的角度，我觉得这对你来说是一个很好的机会。如果是你，你愿意在薪资上稍微做一些让步吗？"',
+    left: '把总包拆开看：base、奖金、股权、职级、成长空间——在不同的维度上做权衡', right: '设定一条底线，底线之上可以谈结构，底线之下不妥协——有原则的灵活',
+    dims:[{dim:'衡',dir:1},{dim:'法',dir:1}], rads:[{rad:'王',dir:1},{rad:'月',dir:1}] },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐看你没有立刻松口，换了一个角度："我理解你的期望。那这样，你能不能帮我理解一下——你觉得你的期望值是怎么来的？你是参考了什么定的这个数？"',
+    left: '把你的价值拆解成具体的能力点：你过去做过什么证明了你值这个价、你来了之后能解决什么问题', right: '如果薪资确实卡住，看看其他方面能不能补——比如试用期长短、第一年有没有调薪窗口、有没有培训机会',
+    dims:[{dim:'衡',dir:1},{dim:'势',dir:-1}], rads:[{rad:'力',dir:1},{rad:'言',dir:1}] },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐在日历上看了看："如果薪资这边我们达成一致——你大概什么时候能入职？"',
+    left: '如果可以就配合对方的节奏——快速到岗本身也是一种诚意信号', right: '实事求是地说你需要多长时间——给自己留够准备的时间，也是对这份工作的负责',
+    dims:[{dim:'衡',dir:-1},{dim:'势',dir:1}], rads:[{rad:'寺',dir:1},{rad:'月',dir:1}] },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐合上文件夹，微笑说："最后一个环节了。除了薪资以外，你对其他条件有没有什么想法？比如试用期薪资怎么算、奖金怎么考核、第一年有没有调薪机会、有没有培训或考证的支持——这些你有什么期望吗？"',
+    left: '把你真正在乎的东西列出来排个优先序——薪资、成长、时间、稳定——哪个对你现阶段最重要', right: '先问清楚对方在这些维度上的常规做法，在你知道对方灵活空间最大的地方提诉求——知己知彼',
+    dims:[{dim:'势',dir:-1},{dim:'法',dir:-1}], rads:[{rad:'各',dir:1},{rad:'目',dir:1}] },
+
+  // === 扩展题库（每房间+3题，支持动态分配）===
+  // HR初筛 +3
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐合上简历，往前靠了靠："聊了这么多，问个方向的事——你想想，三年后你大概在干嘛？不用特别精确，我就想听听你自己怎么盘算的。"',
+    left: '给出具体的里程碑和方向判断：你想在什么领域、做到什么程度、为什么是这个方向', right: '描述你希望具备的能力和状态：三年后你想成为什么样的人，而非具体什么职位',
+    dims:[{dim:'衡',dir:1},{dim:'势',dir:1}], rads:[{rad:'王',dir:1},{rad:'目',dir:1}] },
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐在本子上画了个圈："刚才聊了很多关于你的情况。现在反过来——你对我们公司是怎么判断的？你投我们之前，对我们了解多少？为什么觉得我们会适合你？"',
+    left: '具体分析你看到的行业机会和公司位置——你投之前做过的判断', right: '坦诚你了解的和不了解的，同时说清楚你判断一家公司是否合适的方法论',
+    dims:[{dim:'衡',dir:1},{dim:'局',dir:1}], rads:[{rad:'木',dir:1},{rad:'厂',dir:1}] },
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'面试接近结束，王姐站起来和你握了握手，忽然想起什么似的说："对了，最后一个事情——你之前有没有遇到过和上级或者长辈意见严重冲突的情况？不一定是工作，学校里、实习里都行。当时你是怎么处理的？"',
+    left: '还原冲突的过程：你当时怎么想的、怎么表达的、最后怎么解决的——展示你处理不同意见的方式', right: '讲你从那次冲突中学到的原则——不在于谁对谁错，在于之后你做类似事情时哪里不一样了',
+    dims:[{dim:'法',dir:-1},{dim:'局',dir:-1}], rads:[{rad:'木',dir:1},{rad:'寺',dir:1}] },
+
+  // 业务面试 +3（跨行业适用——新人成长、跨界迁移、自我认知）
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总靠在椅背上，语气变得直接："你现在做的行业跟我们不太一样——说白了，你在那边学的东西，哪一条能直接用到我们这边？给我一个具体的例子。"',
+    left: '从你的工作方法中提炼出跨行业通用的能力——不是具体知识，而是你怎么拆问题、怎么推动事情', right: '坦诚行业差异，然后聚焦你的学习能力——用过去快速上手新领域的案例来证明',
+    dims:[{dim:'法',dir:1},{dim:'衡',dir:1}], rads:[{rad:'厶',dir:1},{rad:'目',dir:1}] },
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总忽然停下手上的动作，盯着你："你之前遇到的最大的困难是什么？最后是怎么解决了呢？"',
+    left: '简要讲述困难的客观情况，重点说明你从中提炼的方法以及后续的思考——让对方看到你如何把经历变成能力', right: '详细描述当时的困境和具体解决过程——用完整的故事展示你的应对方式',
+    dims:[{dim:'法',dir:1},{dim:'局',dir:1}], rads:[{rad:'木',dir:1},{rad:'月',dir:1}] },
+  { room:'业务面试', interviewer:'李总 · 业务负责人',
+    scene:'李总放下简历，抱臂看着你："前面你一直在聊自己做的事。现在换个角度——过去一年，你觉得自己进步最大的是什么？不是学了什么技能——是你这个人哪里不一样了？"',
+    left: '说明前后对比——主要在自身能力上的变化：之前做不到什么、现在能做到什么、怎么做到的', right: '用一段具体的故事叙述改变发生的时刻——让面试官感受到你的成长而非听到你的总结',
+    dims:[{dim:'势',dir:-1},{dim:'衡',dir:1}], rads:[{rad:'月',dir:1},{rad:'厶',dir:1}] },
+
+  // 交叉面试 +3（行业实战场景——远程协作、职场政治、跨时区依赖）
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李叹了口气，像是想起什么烦心事："我们跟另一个团队经常异步协作——你发了一份详细的方案过去，对方隔了一天就回了两个字「好的」。结果一周后交出来的东西跟你写的完全不是一回事。面对这样的情况后续你会怎么处理？"',
+    left: '提升日常沟通频次，关键事项同步其他协作方确认进行有效流程的搭建降低风险', right: '花时间进行信任默契建立',
+    rads:[{rad:'木',dir:1},{rad:'寺',dir:1}],dims:[{dim:'衡',dir:1}] },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李放下咖啡杯，压低了声音："换个敏感点的话题——你有没有遇到过这种情况：你做了一个分析或者出了一个方案，结果在跨部门周会上，隔壁组的同事把它说成是他主导的。你当时怎么处理的？后来呢？"',
+    left: '在会上用事实澄清', right: '会前就和关键决策者同步你的工作，用透明建立防线',
+    rads:[{rad:'寺',dir:1},{rad:'言',dir:1}],dims:[{dim:'法',dir:-1},{dim:'势',dir:-1}] },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李看了看手表："最后一个问题——假设你下午要给领导汇报，需要一个关键数据只有财务部有。你早上就去问了，对方说最快明天才能给。但汇报就在下午三点。你怎么办？"',
+    left: '先评估没有这个数据汇报能做到什么程度——把内容拆成"必须有数据支撑"和"可以先讲逻辑框架"，先稳住场面', right: '直接去找财务的同事面对面聊——不是催，是让对方理解你下午的处境，看有没有临时替代方案或粗略口径',
+    rads:[{rad:'力',dir:1},{rad:'各',dir:1}],dims:[{dim:'法',dir:1}] },
+
+  // 高管面试 +3（跨行业适用——自我认知、成长瓶颈、真实反馈）
+  { room:'高管面试', interviewer:'陈总 · 事业部VP',
+    scene:'陈总沉默了好一会儿，慢慢开口："你做了不少事。但我好奇——你自己分的清哪些算「做了」，哪些算「做成了」吗？在你看来这俩有什么区别？"',
+    left: '从你经手的事里挑出真正产生了影响的——用结果而非过程来定义你的贡献', right: '分析哪些因素决定了做了能变成做成了——展示你对成功条件的理解而非罗列战果',
+    dims:[{dim:'衡',dir:1},{dim:'势',dir:1}], rads:[{rad:'力',dir:1},{rad:'目',dir:1}] },
+  { room:'高管面试', interviewer:'陈总 · 事业部VP',
+    scene:'陈总不动声色："你现在这个阶段，最大的坎儿在哪？别跟我说能力的——我指的是机会。你觉得你差什么机会？"',
+    left: '分析你现在卡在哪里：是能力、是机会、是平台、还是认知——精准定位瓶颈本身就是能力', right: '描述你看到的几种可能路径以及你如何评估每条路——展示你的决策框架而非答案',
+    dims:[{dim:'势',dir:-1},{dim:'局',dir:1}], rads:[{rad:'王',dir:1},{rad:'亡',dir:1}] },
+  { room:'高管面试', interviewer:'陈总 · 事业部VP',
+    scene:'聊得差不多了，陈总忽然问了一个收尾的问题："你今天回去以后，会怎么跟你的朋友描述这次面试？不用想太多——你就当你朋友问你「聊得怎么样」，你怎么说？"',
+    left: '从你真实的感受出发——哪些地方让你觉得"来对了"，哪些地方让你还有疑虑——真实比包装重要', right: '从你对自己的判断出发——这次面试让你更清楚自己适合什么、不适合什么，不管结果怎样',
+    dims:[{dim:'局',dir:-1},{dim:'势',dir:1}], rads:[{rad:'寺',dir:1},{rad:'言',dir:1}] },
+
+  // HR谈薪 +3（行业实战场景——竞业博弈、期权判断、内部竞争）
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐往前倾了倾身子，语气突然变得很直接："我开诚布公地问你一句——假设你手上同时有两个机会：我们这边，和另一个方向完全不同的公司。两边各有各的好。你会怎么选？你的判断标准是什么？"',
+    left: '把你在意的维度列出来排个序——钱、成长、稳定、氛围、距离——不是标准答案而是你的优先级', right: '分享你过去做选择的逻辑：上一次重要的选择你是怎么做的、后来回头看对不对、你的判断框架升级了什么',
+    dims:[{dim:'衡',dir:1},{dim:'局',dir:1}], rads:[{rad:'寺',dir:1},{rad:'言',dir:1}] },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐翻开薪资结构那页，用笔圈了一个数字："base这边大概就是这样。另外我们年终奖金是浮动的——看公司业绩也看个人绩效，去年平均发了2-4个月。你对这种浮动部分怎么看？你心里有数吗？"',
+    left: '问清楚奖金的计算逻辑和考核标准——把浮动的部分变成可以自己掌控的目标', right: '把总包拉平了看：base + 预期奖金 + 其他福利打包算年收入，不纠结单个数字的高低',
+    dims:[{dim:'衡',dir:1},{dim:'局',dir:1}], rads:[{rad:'目',dir:1},{rad:'亡',dir:1}] },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'刘姐犹豫了一下，像是决定告诉你一件事："我不瞒你——这个岗位同时还有个内部转岗的同事在看。他薪资比外面的候选人低，对公司流程也熟。你觉得，我为什么要跟老板争取多花这笔钱把你招进来？"',
+    left: '直接对比你和内部候选人的差异点——你有什么是他没有的（外部视角、行业经验、跨公司方法论）——把差异变成溢价理由', right: '不跟内部候选人做对比——而是重新定义这个岗位需要解决什么问题，论证为什么外部视角对这个问题的解决是不可替代的',
+    dims:[{dim:'势',dir:1},{dim:'法',dir:-1}], rads:[{rad:'力',dir:1},{rad:'厶',dir:1}] },
+
+  // === 稳定性/Gap评估专项（双向稳定性 × 追问式回答框架）===
+  { room:'HR初筛', interviewer:'王姐 · HR招聘专员',
+    scene:'王姐翻到你简历上的一段经历，皱了皱眉："你这个...一年换了两次工作？我不是说这一定有问题，但你能帮我把这段串起来吗？"',
+    left: '把每次变动的决策逻辑串成一条线：不是解释原因，而是展示你的选择框架', right: '说明每次变动都有外部客观原因——行业波动、公司调整、业务线裁撤——稳定性问题不完全由个人决定',
+    dims:[{dim:'势',dir:-1},{dim:'局',dir:1},{dim:'法',dir:1}], rads:[{rad:'寺',dir:1},{rad:'木',dir:1}], stability:true },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事',
+    scene:'小李端着咖啡，随口问了一句："我看你之前做的几个项目——好像都跟我们现在做的方向不太搭？你怎么看这个事？"',
+    left: '展示你的能力如何跨行业复用——用具体的思维工具和方法论而非行业知识来论证', right: '承认方向差异，然后反问对方团队现在最缺的是哪种人——把差异变成互补的可能性',
+    rads:[{rad:'目',dir:1},{rad:'各',dir:1}],dims:[{dim:'法',dir:1},{dim:'衡',dir:1}], stability:true },
+  { room:'高管面试', interviewer:'陈总 · 事业部VP',
+    scene:'陈总放下你的简历："你在这行其实不算久——三年。这个岗位我们需要一个能扛五年的人。你怎么让我相信你三年后不会又换赛道了？"',
+    left: '不是论证你不会走，而是分享你做长期选择时的判断标准——让对方理解你的决策逻辑', right: '追问对方这个岗位的长期价值在哪里——如果方向对自然留，如果不对也不该浪费彼此时间',
+    dims:[{dim:'势',dir:-1},{dim:'局',dir:1}], rads:[{rad:'亡',dir:1},{rad:'王',dir:1}], stability:true },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP',
+    scene:'聊到最后，刘姐忽然压低了声音："其实我有个担心的点——你现在要的薪资比我们同级别的同事高不少。万一你来了发现跟大家差不多，你会不会很快就又动了？"',
+    left: '问对方这个岗位的产出预期是否也比同级高——用对等透明取代单向证明', right: '把你的薪资诉求和具体的价值贡献对标——让对方看到薪资不是成本，是投资',
+    dims:[{dim:'势',dir:1},{dim:'局',dir:-1}], rads:[{rad:'言',dir:1},{rad:'寺',dir:1}], stability:true },
+
+  // === 混合题型：3选1场景选择题（测试多维/单维思维）===
+  { room:'业务面试', interviewer:'李总 · 业务负责人', qType:'choice3',
+    scene:'李总放下笔："你在刚才的回答里说你擅长解决问题。正好，我们最近遇到一个情况——一个业务的业绩在往下走，但团队里一半人说问题出在前端获客，一半人说问题出在后端交付。如果让你来诊断，你第一步会做什么？"',
+    options: [
+      'A. 先拉数据，用数字定位问题到底在哪一端',
+      'B. 分别找前端和后端的负责人聊一聊，听他们各自的判断',
+      'C. 先搞清楚"业绩在掉"这个结论是怎么得出的、谁定义的——也许问题出在看问题的角度上'
+    ],
+    dims:[{dim:'衡',dir:1},{dim:'法',dir:-1}], rads:[{rad:'目',dir:1},{rad:'厶',dir:1}] },
+  { room:'交叉面试', interviewer:'小李 · 跨部门同事', qType:'choice3',
+    scene:'小李歪着头问你："假设我们决定录用你。三个月后，你希望我怎么跟别人介绍你？不用正式，就是茶水间偶遇的那种——「这是我们新来的XXX，他/她特别......」——你觉得我会怎么说完这句话？"',
+    options: [
+      'A. 用具体成果说——"他三个月就把XX项目搞定了"',
+      'B. 用协作风格说——"他来了之后我们开会效率高多了"',
+      'C. 用独特价值说——"他看问题的角度跟别人不一样，帮我们少走了好多弯路"'
+    ],
+    rads:[{rad:'各',dir:1},{rad:'匕',dir:1}],dims:[{dim:'衡',dir:1},{dim:'局',dir:-1},{dim:'法',dir:1},{dim:'势',dir:-1}] },
+  { room:'高管面试', interviewer:'陈总 · 事业部VP', qType:'choice3',
+    scene:'陈总忽然问了一个很直接的问题："你觉得一个团队里，最值钱的那个人通常具备什么特质？别跟我说「能力强」——具体一点。"',
+    options: [
+      'A. 能在模糊中找到方向的人——别人不知道往哪走的时候他已经在走了',
+      'B. 能把不同的人拧在一起的人——能力强的人愿意跟他搭档，合作方也服他',
+      'C. 能在关键时刻说不的人——所有人都往前冲的时候他敢停下来想一下'
+    ],
+    dims:[{dim:'局',dir:1},{dim:'衡',dir:-1},{dim:'势',dir:1}], rads:[{rad:'目',dir:1},{rad:'王',dir:1}] },
+  { room:'HR谈薪', interviewer:'刘姐 · HRBP', qType:'choice3',
+    scene:'刘姐合上文件夹，忽然换了个话题："之前有没有一个选择你特别后悔的？不一定是工作——什么事都行。就是你做了某个决定，后来回头看觉得「当时不应该那样选」——这个经历对你后来做选择有什么影响？"',
+    options: [
+      'A. 有过后悔没选某个方向的——当时太保守，现在回头看那次"安全"的选择其实限制了自己',
+      'B. 有过后悔选了某个方向的——进去后发现跟想的不一样，但学到了怎么在事前识别这类情况',
+      'C. 没有特别后悔的——每个选择当时都是我能做的最好判断，后来变了的只是信息和条件'
+    ],
+    dims:[{dim:'局',dir:-1},{dim:'法',dir:-1},{dim:'势',dir:1}], rads:[{rad:'亡',dir:1},{rad:'木',dir:1}] },
+];
+
+const LIKERT_OPTIONS = [
+  { value:1, label:'非常不同意' },
+  { value:2, label:'比较不同意' },
+  { value:3, label:'中立/看情况' },
+  { value:4, label:'比较同意' },
+  { value:5, label:'非常同意' },
+];
+
+// ---------- 存储 ----------
+const STORAGE_KEY = 'chess_career_v3';
+function getStorage() { try { const r=localStorage.getItem(STORAGE_KEY); return r?JSON.parse(r):{nickname:'',sessions:[]}; } catch(e){ return {nickname:'',sessions:[]}; } }
+function saveStorage(d) { localStorage.setItem(STORAGE_KEY,JSON.stringify(d)); }
+
+// ============================================================
+// 评分引擎 v2 —— 分层加权 · 否定检测 · 结构分析 · 交叉一致性
+// ============================================================
+
+// 否定词检测：如果关键词前有否定词，不计分
+function hasNegation(text, keyword) {
+  const idx = text.indexOf(keyword);
+  if (idx <= 0) return false;
+  const prefix = text.substring(Math.max(0, idx - 6), idx);
+  return /不|没|非|无|难以|不太|并不|从未/.test(prefix);
+}
+
+// 分层关键词评分：{strong: [权重3.0], weak: [权重1.2]}，放大信号
+function kwScore(text, tieredKw) {
+  let score = 0;
+  (tieredKw.strong || []).forEach(k => {
+    if (text.includes(k) && !hasNegation(text, k)) score += 3.0;
+  });
+  (tieredKw.weak || []).forEach(k => {
+    if (text.includes(k) && !hasNegation(text, k)) score += 1.2;
+  });
+  return score;
+}
+
+// STAR结构检测（Situation-Task-Action-Result），反映回答质量
+function detectSTAR(text) {
+  let star = 0;
+  if (/当时|之前|有一次|曾经|遇到过|面临/.test(text)) star += 1; // Situation
+  if (/需要|必须|目标|任务是|要解决|要完成/.test(text)) star += 1; // Task
+  if (/我做了|我决定|我选择|我采取|我提出|我主导|我推动/.test(text)) star += 1.5; // Action
+  if (/结果|最终|后来|数据|增长|提升|降低|完成|达到/.test(text)) star += 1.5; // Result
+  return star; // 0-5
+}
+
+function scoreStyleDimensions(scene, answer) {
+  const t = answer || '';
+  if (t.length < 15) return { 势: 5, 局: 5, 衡: 5, 法: 5 };
+
+  const d = { 势: 5, 局: 5, 衡: 5, 法: 5 };
+  const star = detectSTAR(t);
+
+  // === 势：外势 vs 内势 ===
+  const outerScore = kwScore(t, {
+    strong: ['反问', '问他', '你呢', '你怎么看', '你什么', '互相交流', '主动交流'],
+    weak: ['聊聊', '交个朋友', '认识一下', '打听', '顺便问', '交流', '互动', '分享', '沟通', '也想知道']
+  });
+  const innerScore = kwScore(t, {
+    strong: ['保持距离', '没必要说', '不想多说', '含糊过去', '保守一点'],
+    weak: ['没必要', '不用管', '随意', '无所谓', '礼貌', '应付', '简单说', '模糊', '懒得']
+  });
+  const qCount = (t.match(/[？?]/g) || []).length;
+  const selfRef = (t.match(/我/g) || []).length;
+  let 勢 = 5 + outerScore - innerScore;
+  if (qCount >= 2) 勢 += 2;
+  if (qCount >= 4) 勢 += 1.5;
+  if (selfRef > 15) 勢 -= 1.5;
+  if (star >= 3 && outerScore > innerScore) 勢 += 2;
+  d.势 = Math.round(勢);
+
+  // === 局：远局 vs 近局 ===
+  const farScore = kwScore(t, {
+    strong: ['长期规划', '职业方向', '成长路径', '战略意义', '未来发展', '长远来看', '深耕这个领域'],
+    weak: ['长期', '未来', '方向', '规划', '发展', '成长', '目标', '理想', '前景', '潜力', '上升', '空间', '趋势', '赛道', '战略', '视野', '格局', '沉淀']
+  });
+  const nearScore = kwScore(t, {
+    strong: ['工资待遇', '薪资水平', '离家近', '通勤方便', '眼下最重要', '实际到手'],
+    weak: ['工资', '薪资', '待遇', '稳定', '眼前', '现在', '当前', '马上', '实际', '现实', '房租', '底薪', '福利', '年终', '方便']
+  });
+  let 局 = 5 + farScore - nearScore;
+  if (/先.*再|首先.*然后|第一步.*第二步|短期.*长期/.test(t) && !hasNegation(t, '规划')) 局 += 2;
+  if (star >= 4) 局 += 1.5;
+  d.局 = Math.round(局);
+
+  // === 衡：理衡 vs 情衡 ===
+  const logicScore = kwScore(t, {
+    strong: ['数据分析', '逻辑推理', 'ROI', '投入产出', '效率最优', '利弊权衡', '客观事实', '系统性'],
+    weak: ['数据', '逻辑', '分析', '判断', '评估', '推理', '依据', '证据', '理性', '客观', '事实', '原因', '效率', '最优', '利弊', '性价比', '方案', '策略', '系统']
+  });
+  const feelScore = kwScore(t, {
+    strong: ['感受很重要', '关系和谐', '人情世故', '照顾情绪', '团队融洽', '相互理解'],
+    weak: ['感觉', '感受', '情绪', '氛围', '关系', '舒服', '在意', '照顾', '体谅', '共情', '信任', '喜欢', '合得来', '融洽', '合拍', '人情', '面子', '和谐']
+  });
+  let 衡 = 5 + logicScore - feelScore;
+  if (star >= 3 && logicScore > feelScore) 衡 += 2;
+  d.衡 = Math.round(衡);
+
+  // === 法：活法 vs 定法 ===
+  const flexScore = kwScore(t, {
+    strong: ['随机应变', '看情况而定', '不设框架', '边走边看', '弹性处理', '灵活调整', '试错迭代'],
+    weak: ['尝试', '探索', '不确定', '不一定', '看情况', '灵活', '调整', '变化', '改变', '变通', '可能', '也许', '或者', '再说', '试试看', '适应', '弹性']
+  });
+  const fixedScore = kwScore(t, {
+    strong: ['按部就班', '稳扎稳打', '确定无疑', '长期坚持', '专注深耕', '步步为营', '有章法'],
+    weak: ['确定', '稳定', '明确', '固定', '一定', '肯定', '坚持', '持续', '按计划', '流程', '规则', '制度', '框架', '标准', '规范', '稳妥', '踏实', '专注']
+  });
+  const sents = t.split(/[。！？.!?\n]+/).filter(s => s.trim());
+  let 法 = 5 + flexScore - fixedScore;
+  if (sents.length >= 3) {
+    const ls = sents.map(s => s.length);
+    const avg = ls.reduce((a, b) => a + b, 0) / ls.length;
+    const vari = ls.reduce((s, l) => s + (l - avg) ** 2, 0) / ls.length;
+    if (vari > 100) 法 += 2.5;
+    if (vari < 20) 法 -= 2;
+  }
+  if (star >= 4 && flexScore > fixedScore) 法 += 2;
+  d.法 = Math.round(法);
+
+  // 场景权重
+  d[scene.dims[0]] = Math.round(d[scene.dims[0]] * 1.3);
+  if (scene.dims.length > 1) d[scene.dims[1]] = Math.round(d[scene.dims[1]] * 0.75);
+
+  // 钳制 + 强力分散化
+  Object.keys(d).forEach(k => {
+    const raw = d[k];
+    const dist = raw - 5;
+    // 大幅放大离差，让分数分布拉开
+    d[k] = Math.round(5 + dist * 1.8);
+    d[k] = Math.max(1, Math.min(10, d[k]));
+  });
+
+  return d;
+}
+
+function scoreRadicalTightness(scene, answer) {
+  const t = answer || '';
+  const len = t.length;
+  const star = detectSTAR(t);
+
+  // 基础分：长度 + 结构质量
+  let base = 3;
+  if (len > 40) base = 4;
+  if (len > 100) base = 5;
+  if (len > 200) base = 6;
+  if (len > 350) base = 7;
+  base += star * 0.4; // STAR结构每项+0.4
+
+  // 具体性：分层评分
+  let spec = 0;
+  const numCount = (t.match(/\d+/g) || []).length;
+  if (numCount >= 2) spec += 1;
+  if (numCount >= 5) spec += 0.5;
+  if (/[0-9]+%|百分点|倍数|翻了|增长.*%|下降.*%/.test(t)) spec += 1.5;
+  if (/[A-Z][a-z]+|[A-Z]{2,}/.test(t)) spec += 1; // 英文专有名词
+  if (/公司|团队|项目|产品|系统|平台|业务|部门/.test(t)) spec += 1;
+  if (/年|个月|周|季度|阶段|期/.test(t)) spec += 0.5;
+  if (/[0-9]+万|[0-9]+亿|[0-9]+k|[0-9]+千/.test(t)) spec += 1; // 有量级
+
+  // 深度：分层评分
+  let depth = 0;
+  if (/但是|不过|然而|后来才|回想起来|反思|复盘|总结|意识|领悟|学到了/.test(t)) depth += 2;
+  if (/如果重来|假如再选|换一个角度|更深一层/.test(t)) depth += 2;
+  if (/第一|第二|第三|首先|其次|最后|一方面|另一方面/.test(t)) depth += 1.5;
+  if (/结果|最终|后来|于是|所以|因此|导致|带来/.test(t)) depth += 1;
+  if (/因为.*所以|由于.*因此|基于.*决定/.test(t)) depth += 1; // 因果链
+
+  // 真诚度（反向检测模板化/空洞回答）
+  let sincerity = 0;
+  if (/说实话|老实说|坦诚说|其实我也不知道|我承认|说真的/.test(t)) sincerity += 1.5;
+  if (/我觉得|我认为|我倾向于|我的想法是/.test(t)) sincerity += 0.5;
+  const templateKw = ['积极主动','认真负责','吃苦耐劳','团队合作','沟通能力强','学习能力强','抗压能力强'];
+  let templateHits = 0;
+  templateKw.forEach(k => { if (t.includes(k)) templateHits++; });
+  sincerity -= templateHits * 1.5; // 模板词扣分
+
+  const totalBase = Math.max(2, base + spec + depth + sincerity);
+  const targets = scene.radicals;
+  const allRads = ['厶','月','匕','厂','力','木','各','亡','王','目','言','寺'];
+  const scores = {};
+
+  // 分层关键词（strong=核心信号, weak=辅助信号）
+  const kw = {
+    '厶': {
+      strong: ['独一无二', '只有我能', '我的独特', '别人做不了', '我的专长', '秘密武器'],
+      weak: ['独特', '我自己的', '和别人不同', '我习惯', '我擅长', '特别', '专属']
+    },
+    '月': {
+      strong: ['多年经验', '深耕了', '从业以来', '一直做这个', '积累了', '长期从事'],
+      weak: ['多年', '几年', '一直', '长期', '经验', '积累', '持续', '经历']
+    },
+    '匕': {
+      strong: ['最擅长的', '核心竞争力', '一击必中', '关键突破', '绝招', '杀手锏'],
+      weak: ['关键', '核心', '突破', '最擅长', '最厉害', '精准', '一击']
+    },
+    '厂': {
+      strong: ['大厂背景', '创业公司经历', '行业头部', '从零到一', '规模化阶段'],
+      weak: ['公司', '企业', '大厂', '创业', '行业', '环境', '背景', '平台', '规模']
+    },
+    '力': {
+      strong: ['主导了', '推动了', '完成了.*项目', '达成.*指标', '增长.*倍', '提升.*%'],
+      weak: ['做到', '完成', '达成', '实现', '推动', '负责', '产出', '结果', '数据', '指标']
+    },
+    '木': {
+      strong: ['我的性格就是', '天生就', '骨子里是', '底层逻辑', '本能的反应'],
+      weak: ['性格', '风格', '人格', '特质', '倾向', '内在', '习惯', '天生']
+    },
+    '各': {
+      strong: ['不走寻常路', '和别人不一样', '差异化路径', '非典型', '另辟蹊径'],
+      weak: ['不同', '差异', '区别', '独特路径', '个性化', '非典型']
+    },
+    '亡': {
+      strong: ['受不了了', '瓶颈了', '天花板到了', '没意思了', '厌倦了重复', '逃离'],
+      weak: ['逃离', '离开', '不想', '瓶颈', '天花板', '没意思', '无聊', '重复']
+    },
+    '王': {
+      strong: ['终极目标是', '理想状态是', '想成为.*的人', '梦想中的工作'],
+      weak: ['理想', '终极', '最终', '梦想', '向往', '想成为', '最好的', '巅峰']
+    },
+    '目': {
+      strong: ['行业趋势', '前瞻判断', '战略眼光', '全局视角', '洞察到'],
+      weak: ['看到', '洞察', '视野', '预判', '判断', '趋势', '方向', '全局', '格局']
+    },
+    '言': {
+      strong: ['谈判策略', '薪资协商', '展现价值', '包装经历', '议价能力'],
+      weak: ['表达', '展示', '展现', '呈现', '包装', '谈判', '协商', '沟通']
+    },
+    '寺': {
+      strong: ['按兵不动', '静观其变', '握在手里', '不急着亮牌', '沉住气'],
+      weak: ['忍住', '不说', '等待', '保密', '持有', '握着', '藏着', '观察']
+    }
+  };
+
+  allRads.forEach(r => {
+    let s = totalBase;
+    if (targets.includes(r)) s += 2;
+    const k = kw[r] || { strong: [], weak: [] };
+    let hits = 0;
+    k.strong.forEach(w => { if (t.includes(w) && !hasNegation(t, w)) hits += 2; });
+    k.weak.forEach(w => { if (t.includes(w) && !hasNegation(t, w)) hits += 0.7; });
+    s += hits;
+    // 钳制在1-10，加大离散
+    s = Math.round(5 + (s - 5) * 1.2);
+    scores[r] = Math.max(1, Math.min(10, s));
+  });
+
+  return scores;
+}
+
+// ============================================================
+// 程度题评分引擎 v3 —— Likert直接映射，多题交叉验证
+// ============================================================
+
+function scoreFromLikert(responses) {
+  const dimScores = { 势:{sum:0,count:0}, 局:{sum:0,count:0}, 衡:{sum:0,count:0}, 法:{sum:0,count:0} };
+  const radScores = {};
+
+  responses.forEach((val, i) => {
+    const q = S.selectedQuestions[i];
+    const rawVal = Math.max(1, Math.min(7, val || 4));
+
+    (q.dims || []).forEach(d => {
+      const mapped = d.dir === -1 ? rawVal : (8 - rawVal);
+      const sc7 = {1:1, 2:2.5, 3:4, 4:5.5, 5:7, 6:8.5, 7:10};
+      dimScores[d.dim].sum += sc7[mapped] || 5.5;
+      dimScores[d.dim].count += 1;
+    });
+
+    (q.rads || []).forEach(r => {
+      if (!radScores[r.rad]) radScores[r.rad] = {sum:0, count:0};
+      // 偏旁：距离中点法——坚定程度比方向更重要。|选4|=0→弱, |选1/7|=3→强
+      const sc7 = {1:1, 2:2.5, 3:4, 4:5.5, 5:7, 6:8.5, 7:10};
+      var distFromMid = Math.abs(rawVal - 4);
+      var firmness = distFromMid + 4; // 4→4(中点), 1/7→7(最强)
+      radScores[r.rad].sum += sc7[firmness] || 5.5;
+      radScores[r.rad].count += 1;
+    });
+  });
+
+  const fd = {};
+  Object.keys(dimScores).forEach(k => {
+    fd[k] = dimScores[k].count > 0 ? Math.round(dimScores[k].sum / dimScores[k].count) : 5;
+    fd[k] = Math.max(1, Math.min(10, fd[k]));
+  });
+
+  const fr = {};
+  const allRads = ['厶','月','匕','厂','力','木','各','亡','王','目','言','寺'];
+  allRads.forEach(r => {
+    if (radScores[r] && radScores[r].count > 0) fr[r] = Math.round(radScores[r].sum / radScores[r].count);
+    else fr[r] = 5;
+    fr[r] = Math.max(1, Math.min(10, fr[r]));
+  });
+
+  // 一致性验证：追问与基础回答对比——同向+同样坚定=牢固，反向或忽强忽弱=松动
+  if (S.consistencyData) {
+    allRads.forEach(function(r) {
+      var cd = S.consistencyData[r];
+      if (cd && cd.pairs && cd.pairs.length > 0) {
+        var totalConsistency = 0;
+        cd.pairs.forEach(function(pair) {
+          var b = pair.base || 4, p = pair.probe || 4;
+          // 方向一致性
+          var bDir = b > 4 ? 1 : b < 4 ? -1 : 0;
+          var pDir = p > 4 ? 1 : p < 4 ? -1 : 0;
+          var sameDir = (bDir === pDir) || bDir === 0 || pDir === 0;
+          // 坚定度一致性（都坚定或都中性 = 一致，一跳很坚定一跳中性 = 松）
+          var bFirm = Math.abs(b-4), pFirm = Math.abs(p-4);
+          var firmDiff = Math.abs(bFirm - pFirm);
+          var firmConsistent = firmDiff <= 1;
+          if (sameDir && firmConsistent) totalConsistency += 1.0;
+          else if (sameDir) totalConsistency += 0.8;
+          else totalConsistency += 0.5;
+        });
+        var avgConsistency = totalConsistency / cd.pairs.length;
+        var factor = 0.8 + avgConsistency * 0.25; // range: 0.8~1.05
+        fr[r] = Math.round(fr[r] * factor);
+        fr[r] = Math.max(1, Math.min(10, fr[r]));
+      }
+    });
+  }
+
+  const style = classifyStyle(fd);
+  if (style.势 === '外势') { fr['言']=Math.min(10,fr['言']+1); fr['力']=Math.min(10,fr['力']+1); fr['匕']=Math.min(10,fr['匕']+1); }
+  else { fr['厶']=Math.min(10,fr['厶']+1); fr['木']=Math.min(10,fr['木']+1); fr['目']=Math.min(10,fr['目']+1); fr['寺']=Math.min(10,fr['寺']+1); }
+  if (style.局 === '远局') { fr['目']=Math.min(10,fr['目']+1); fr['王']=Math.min(10,fr['王']+1); fr['木']=Math.min(10,fr['木']+1); }
+  else { fr['力']=Math.min(10,fr['力']+1); fr['匕']=Math.min(10,fr['匕']+1); fr['厂']=Math.min(10,fr['厂']+1); }
+  if (style.法 === '活法') { fr['各']=Math.min(10,fr['各']+1); fr['亡']=Math.min(10,fr['亡']+1); fr['寺']=Math.min(10,fr['寺']+1); fr['厶']=Math.max(1,fr['厶']-1); fr['厂']=Math.max(1,fr['厂']-1); }
+  else { fr['厶']=Math.min(10,fr['厶']+1); fr['月']=Math.min(10,fr['月']+1); fr['厂']=Math.min(10,fr['厂']+1); fr['力']=Math.min(10,fr['力']+1); }
+
+  Object.keys(fr).forEach(k => { fr[k] = Math.max(1, Math.min(10, fr[k])); });
+  const typeDist = computeTypeDistribution(fd);
+  return { finalDims: fd, finalRadicals: fr, style: typeDist.style, typeDist };
+}
+function classifyStyle(d) { return { 势: d.势 >= 6 ? '外势' : '内势', 局: d.局 >= 6 ? '远局' : '近局', 衡: d.衡 >= 6 ? '理衡' : '情衡', 法: d.法 >= 6 ? '活法' : '定法' }; }
+function getStyleTypeName(s) { const m = { '外势_近局_理衡_定法': '压制型', '外势_近局_理衡_活法': '拆解型', '外势_近局_情衡_定法': '共鸣型', '外势_近局_情衡_活法': '适应型', '外势_远局_理衡_定法': '布局型', '外势_远局_理衡_活法': '演化型', '外势_远局_情衡_定法': '感召型', '外势_远局_情衡_活法': '渗透型', '内势_近局_理衡_定法': '深耕型', '内势_近局_理衡_活法': '解析型', '内势_近局_情衡_定法': '守护型', '内势_近局_情衡_活法': '直觉型', '内势_远局_理衡_定法': '孤局型', '内势_远局_理衡_活法': '深度型', '内势_远局_情衡_定法': '信念型', '内势_远局_情衡_活法': '流动型' }; return m[`${s.势}_${s.局}_${s.衡}_${s.法}`] || '未知型'; }
+
+// 概率模型：S型曲线映射，让分数6-7产生70-80%的区分度
+function dimProb(score) {
+  const raw = Math.max(1, Math.min(10, score));
+  // S型映射：中点=5.5，斜率0.7。分数4→74%,6→59%,8→85%。避免极端概率
+  const midpoint = 5.5;
+  const steepness = 0.7;
+  const sigmoid = 1 / (1 + Math.exp(-steepness * (raw - midpoint)));
+  const p2 = Math.round(sigmoid * 10000) / 100; const p1 = Math.round((100 - p2) * 100) / 100;
+  return [p1, p2];
+}
+
+// 计算16种类型的概率分布
+function computeTypeDistribution(fd) {
+  const dims = ['势','局','衡','法'];
+  const poles = [
+    ['内势','外势'], ['近局','远局'], ['情衡','理衡'], ['定法','活法']
+  ];
+  const typeNames = {
+    '内势_近局_情衡_定法':'守护型','内势_近局_情衡_活法':'直觉型',
+    '内势_近局_理衡_定法':'深耕型','内势_近局_理衡_活法':'解析型',
+    '内势_远局_情衡_定法':'信念型','内势_远局_情衡_活法':'流动型',
+    '内势_远局_理衡_定法':'孤局型','内势_远局_理衡_活法':'深度型',
+    '外势_近局_情衡_定法':'共鸣型','外势_近局_情衡_活法':'适应型',
+    '外势_近局_理衡_定法':'压制型','外势_近局_理衡_活法':'拆解型',
+    '外势_远局_情衡_定法':'感召型','外势_远局_情衡_活法':'渗透型',
+    '外势_远局_理衡_定法':'布局型','外势_远局_理衡_活法':'演化型'
+  };
+
+  // 每个维度的概率（使用S型曲线）
+  const dimProbs = dims.map((d, i) => {
+    const score = fd[d];
+    const [p1, p2] = dimProb(score);
+    return { dim: d, pole1: poles[i][0], pole2: poles[i][1], p1, p2 };
+  });
+
+  // 计算16种类型的联合概率（独立假设）
+  const typeProbs = [];
+  Object.entries(typeNames).forEach(([key, name]) => {
+    const parts = key.split('_');
+    let prob = 1.0;
+    dims.forEach((d, i) => {
+      const pole = parts[i];
+      const dp = dimProbs[i];
+      prob *= (pole === dp.pole2) ? dp.p2 / 100 : dp.p1 / 100;
+    });
+    typeProbs.push({ key, name, prob: Math.round(prob * 10000) / 100 });
+  });
+
+  // 按概率降序排列
+  typeProbs.sort((a, b) => b.prob - a.prob);
+
+  // 归一化使总和=100（处理浮点误差）
+  const total = typeProbs.reduce((s, t) => s + t.prob, 0);
+  if (total > 0) typeProbs.forEach(t => { t.prob = Math.round(t.prob * 10000 / total) / 100; });
+
+  // 确保总和不超100
+  let running = 0;
+  typeProbs.forEach((t, i) => {
+    if (i < typeProbs.length - 1) { running += t.prob; }
+    else { t.prob = Math.max(0, Math.round((100 - running) * 100) / 100); }
+  });
+
+  const topType = typeProbs[0];
+  const top3 = typeProbs.slice(0, 3);
+  const style = classifyStyle(fd);
+
+  return { dimProbs, typeProbs, topType, top3, style };
+}
+function getBarColor(v) { return v >= 8 ? '#4eca7a' : v >= 6 ? '#8fce5b' : v >= 4 ? '#e2b04a' : v >= 3 ? '#d9793b' : '#ca5b5b'; }
+
+// 松紧度定性标签
+function tightnessLabel(v) {
+  if (v >= 9) return { label: '焊牢', cls: 'tag-far', desc: '面对追问依然稳固，是你最可靠的竞争壁垒。' };
+  if (v >= 7) return { label: '牢固', cls: 'tag-far', desc: '能应对常规追问，但到第三层可能松动。' };
+  if (v >= 5) return { label: '一般', cls: 'tag-near', desc: '能回答第一层追问，深度不足。需要准备更多具体案例支撑。' };
+  if (v >= 3) return { label: '松动', cls: 'tag-logic', desc: '回答模糊，追问下容易暴露薄弱。建议提前准备STAR案例加固。' };
+  return { label: '脆弱', cls: 'tag-logic', desc: '面试中高概率被拆走。这是你最需要优先加固的偏旁。' };
+}
+
+function charOverallLabel(avgScore) {
+  if (avgScore >= 8) return { label: '强势字', desc: '这个字在面试中是你的核心武器，可以主动展示。', cls: '#4eca7a' };
+  if (avgScore >= 6) return { label: '稳健字', desc: '正常发挥即可守住。面试中无需刻意回避，但也不必主动暴露弱偏旁。', cls: '#8fce5b' };
+  if (avgScore >= 4) return { label: '需加固字', desc: '这个字整体偏松。建议在面试前针对性地准备2-3个具体案例。', cls: '#e2b04a' };
+  return { label: '风险字', desc: '这个字可能在面试中碎裂。强烈建议在面试前重点加固相关偏旁。', cls: '#ca5b5b' };
+}
+
+function getDimTagClass(d, v) { if (d === '势') return v >= 6 ? 'tag-out' : 'tag-in'; if (d === '局') return v >= 6 ? 'tag-far' : 'tag-near'; if (d === '衡') return v >= 6 ? 'tag-logic' : 'tag-feel'; return v >= 6 ? 'tag-flex' : 'tag-fixed'; }
+function getDimTagText(d, v) { if (d === '势') return v >= 6 ? '外势' : '内势'; if (d === '局') return v >= 6 ? '远局' : '近局'; if (d === '衡') return v >= 6 ? '理衡' : '情衡'; return v >= 6 ? '活法' : '定法'; }
+function getDimDesc(d, v) {
+  const m = {
+    '势': [v >= 7 ? '在对话中高度主动、开放，通过与外界互动来确认自己的位置和价值。在面试中你能自然引导对话节奏。' : v >= 5 ? '在多数场景下保持舒适距离，但必要时可以主动出击。在面试中你倾向于等待对方抛球。' : '在内心完成判断，不需要外部反馈。面试中你更习惯被动应答而非主动引导。'],
+    '局': [v >= 7 ? '你本能地从长期视角评估机会，愿意为未来价值牺牲短期利益。在高管面中这是显著优势。' : v >= 5 ? '你在长远和当下之间平衡。会考虑未来方向，但不会为了"可能性"放弃眼前的确定性。' : '你优先关注当下、具体的目标。先把眼前的事做好——这种务实感在业务面和HR面是加分项。'],
+    '衡': [v >= 7 ? '决策时逻辑和系统分析是你的默认模式。你善于拆解复杂问题找到最优解。在技术面/业务面这是核心优势。' : v >= 5 ? '你在逻辑和感受之间灵活切换。不会为了"正确"牺牲关系，也不会为了"和谐"放弃原则。' : '你的决策中"人"的权重很高。你善于理解他人动机和感受，在交叉面和团队协作中这是独特的优势。'],
+    '法': [v >= 7 ? '高度灵活，愿意拆开已有的结构重新组合。不惧不确定性，善于在变化中找到机会。' : v >= 5 ? '在稳定和变化之间保持弹性。不排斥变化，但需要看到足够理由才会放弃已有的结构。' : '你偏好确定性和秩序。一旦锁定方向会持续深挖，不轻易改变。这种稳定性在定法型面试官面前是加分项。']
+  };
+  v = Math.max(1, Math.min(10, v || 5));
+  const idx = v >= 7 ? 0 : v >= 5 ? 1 : 2;
+  return (m[d] && m[d][idx]) ? m[d][idx] : '你的博弈倾向在这一维度上表现为均衡态势。';
+}
+
+// 个性化维度评价：基于 Likert 回答模式生成 MBTI 风格评估
+function buildDimEvaluation(dim, score) {
+  const v = Math.max(1, Math.min(10, score || 5));
+
+  // 找到该维度最强和最弱的信号（从最同意和最不同意的题中提取）
+  const dimQs = (S.selectedQuestions || QUESTION_BANK).map((q, i) => {
+    const dimDef = (q.dims || []).find(d => d.dim === dim);
+    if (!dimDef) return null;
+    const rawVal = S.answers[i] || 3;
+    const mapped = dimDef.dir === -1 ? rawVal : (8 - rawVal);
+    var txt = q.right || q.left || (q.options && q.options[2]) || '场景题';
+    return { text: txt, val: mapped, dir: dimDef.dir };
+  }).filter(Boolean);
+
+  // 找最同意的正向题和最同意的反向题
+  const highPole2 = dimQs.filter(q => q.dir === 1 && q.val >= 5).map(q => q.text);
+  const highPole1 = dimQs.filter(q => q.dir === -1 && q.val <= 3).map(q => q.text);
+  // 即：选了"比较同意/非常同意"反向题 = 实际倾向于 pole1
+
+  const poles = {
+    '势': { pole1:'内势', pole2:'外势', label1:'自我驱动', label2:'外部驱动' },
+    '局': { pole1:'近局', pole2:'远局', label1:'务实当下', label2:'长期主义' },
+    '衡': { pole1:'情衡', pole2:'理衡', label1:'感性共情', label2:'理性分析' },
+    '法': { pole1:'定法', pole2:'活法', label1:'稳健持重', label2:'灵活变通' }
+  };
+  const p = poles[dim];
+  const tendency = score >= 6 ? p.label2 : p.label1;
+  const poleName = score >= 6 ? p.pole2 : p.pole1;
+  const strength = score >= 8 ? '显著' : score >= 6 ? '明显' : score >= 4 ? '中等' : '轻度';
+
+  // 从最同意的题中提取关键词片段
+  var exemplarQs = score >= 6 ? highPole2.slice(0, 1) : highPole1.slice(0, 1);
+  var exemplar = (exemplarQs.length > 0 && typeof exemplarQs[0] === 'string') ? (exemplarQs[0].substring(0, 40) + '…') : '';
+
+  // 场景/房间建议
+  const roomAdvice = {
+    '势': score >= 7
+      ? '你以外部回报为主要驱动力——在HR面和谈薪面这是优势，清晰地表达你期望的回报能帮对方快速判断匹配度。在高管面中则需展现你的内在价值判断，而非只谈条件。'
+      : score >= 5
+      ? '你在外部驱动和自我成长之间有一定的弹性。在业务面中可以侧重展示你对成果和影响力的追求，在高管面中则多谈谈你的内在标准和价值观。'
+      : '你以自我成长为主要驱动力——在高管面和交叉面中，这种内驱力让你显得真诚且有深度。在HR面和谈薪面中，建议明确表达你对回报的期望，避免让对方觉得你"不够在乎"。',
+    '局': score >= 7
+      ? '你以长期主义为价值取向——在高管面中这是核心优势，主动表达你对行业趋势和职业方向的判断。在业务面中则需注意补充具体的执行细节，避免给人"只有方向没有落地"的印象。'
+      : score >= 5
+      ? '你在长期价值和当下现实之间能够灵活切换。在业务面中把每个项目经验都用"短期成果+长期价值"双线呈现，在高管面中引导话题到你对行业方向的思考。'
+      : '你以务实当下为价值取向——在业务面中你对具体成果和执行力上的聚焦是明确的加分项。在高管面中建议提前准备1-2个关于行业趋势或公司战略方向的问题，展现你的思考维度。',
+    '衡': score >= 7
+      ? '你基于逻辑和数据的判断方式与业务面的评估标准高度契合。在交叉面中建议在展现分析能力的同时，也表达对团队协作和他人贡献的认可。'
+      : score >= 5
+      ? '你能够在逻辑和感受两个维度灵活调整。在业务面中侧重数据和方案，在交叉面中侧重沟通和关系——根据面试对象调整表达重心是你最有效的策略。'
+      : '在交叉面中你对人际关系和团队氛围的敏感是独特优势。在业务面中建议为每个观点补充1-2个具体数据或案例支撑，增强理性说服力。',
+    '法': score >= 7
+      ? '你偏好灵活变通的工作方式——在业务面和HR谈薪中这是优势，能从多个维度寻找最优解。在HR初筛中，可以适当展示你对稳定性的看重，避免被误读为"不够踏实"。'
+      : score >= 5
+      ? '你在灵活应变和稳健持重之间可以自如切换。在业务面展示"能深耕"的一面，在高管面展示"能灵活应变"的一面——让每个房间看到你最适配的那个侧面。'
+      : '你的稳健和专注在业务面和HR面中是明确的加分项。在高管面中建议表达你对新方向、新挑战的开放态度，展现"稳中求变"的一面。'
+  };
+
+  let evalText = '';
+  if (score >= 7) {
+    evalText = `你在该维度的测评中展现出${strength}的${tendency}倾向（${poleName}）。${exemplar ? '你尤其认同「' + exemplar + '」，这反映了你在这个方向上的稳定偏好。' : ''}${roomAdvice[dim]}`;
+  } else if (score >= 5) {
+    evalText = `你的${poleName}倾向处于${strength}水平，在${p.pole1}和${p.pole2}两端之间有一定的弹性空间。${exemplar ? '你对「' + exemplar + '」的认同度表明你在特定情境下可以灵活调整。' : ''}${roomAdvice[dim]}`;
+  } else {
+    evalText = `你在该维度上表现出${strength}的${tendency}倾向（${poleName}）。${exemplar ? '你对「' + exemplar + '」的态度反映了你的默认模式。' : ''}${roomAdvice[dim]}`;
+  }
+
+  return evalText;
+}
+
+function pickQuestions(n=5){const pool=[...QUESTION_POOL];for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}return pool.slice(0,n);}
+
+// ---------- 渲染 ----------
+function renderBar(v,cf=getBarColor){return `<div style="flex:1;height:10px;background:rgba(255,255,255,0.05);border-radius:5px;overflow:hidden;"><div style="width:${v*10}%;height:100%;background:${cf(v)};border-radius:5px;"></div></div>`;}
+function renderDimRow(n,v){return `<div class="dim-row"><span class="dlabel"><span class="tag ${getDimTagClass(n,v)}">${getDimTagText(n,v)}</span></span>${renderBar(v)}<span class="dim-score">${v}</span></div><div style="font-size:12px;color:var(--sub);margin:-6px 0 8px 68px;">${getDimDesc(n,v)}</div>`;}
+function renderCharCard(cn,rs){const d=CHAR_DEFS[cn];const p=d.parts;const ov=Math.round(p.reduce((s,x)=>s+(rs[x]||5),0)/p.length);let h=`<div class="char-card"><div class="char-name">「${cn}」</div><div class="char-parts">${p.map(x=>'['+x+']'+RADICAL_DEFS[x].name).join(' · ')}</div><div style="font-size:11px;color:var(--sub);margin-bottom:8px;">${d.core}</div>`;p.forEach(x=>{const v=rs[x]||5;h+=`<div class="tightness-item"><span class="t-label">[${x}]</span><div class="t-bar"><div class="t-fill" style="width:${v*10}%;background:${getBarColor(v)}"></div></div><span class="t-val">${v}</span></div>`;});h+=`<div class="overall-tightness">整体松紧: ${ov}</div></div>`;return h;}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ---------- 应用状态 ----------
+let S={view:'login',nickname:'',questions:[],answers:[],dimScores:[],radScores:[],result:null,step:0};
+
+// 调试开关
+const DEBUG = true;
+function dbg(msg) { if (DEBUG && console && console.log) console.log('[棋局DBG]', msg); }
+
+// ===== 首页 =====
+function renderLogin(){
+  const data=getStorage();
+  const sn=data.nickname||'';
+  const rads=['厶','月','匕','厂','力','木','各','亡','王','目','言','寺'];
+  let radRows=rads.map(r=>{const d=RADICAL_DEFS[r];return `<tr><td class="rc">[${r}]</td><td class="rn">${d.name}</td><td>${d.desc}</td><td class="ra">${d.ability}</td></tr>`;}).join('');
+
+  app.innerHTML=`
+    <!-- ===== 英雄区 ===== -->
+    <div style="text-align:center;padding:32px 20px 24px;">
+      <div style="font-size:42px;margin-bottom:4px;">🎯</div>
+      <h1 style="font-size:28px;font-weight:800;margin:0 0 6px;
+        background:linear-gradient(135deg,#e2b04a,#f0d78c,#e2b04a);
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+        面试风格匹配
+      </h1>
+      <p style="color:var(--sub);font-size:14px;margin:0 0 20px;">
+        战术人格评估 · 能力掌控体系 · 能量来源×价值取向×场景博弈
+      </p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <input type="text" id="ni" placeholder="输入你的昵称" value="${esc(sn)}" maxlength="20"
+          style="width:200px;padding:12px 16px;background:var(--input-bg);color:var(--text);
+            border:2px solid var(--border);border-radius:12px;font-size:15px;text-align:center;
+            font-family:inherit;transition:border-color 0.3s;">
+        <button class="btn btn-next" style="width:auto;padding:12px 32px;font-size:16px;" onclick="startGame()">
+          开始评估 →
+        </button>
+      </div>
+      <div style="font-size:10px;color:var(--sub);margin-top:8px;">动态选题 · 按需分配场景权重 · 结果仅保存在本设备</div>
+
+      <!-- 房间分配选择器 -->
+      <div style="margin-top:14px;background:var(--input-bg);border-radius:12px;padding:14px 18px;max-width:480px;margin-left:auto;margin-right:auto;">
+        <div style="font-size:11px;color:var(--sub);margin-bottom:10px;text-align:center;">📊 场景权重分配（每题约1分钟，建议总题数20-40）</div>
+        <div id="roomSliders"></div>
+        <div style="text-align:center;font-size:12px;color:var(--accent);margin-top:8px;font-weight:600;" id="totalQHint">共 30 题</div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <a onclick="switchTo('beasts')" style="color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;text-decoration:none;border-bottom:1px dashed var(--accent);padding-bottom:2px;">🐉 四象神兽 · 16战术总揽 →</a>
+      </div>
+    </div>
+
+    <!-- ===== 双核心理念（对称双卡）===== -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <!-- 战术 · 四象象限 -->
+      <div style="background:var(--card);border-radius:14px;padding:18px 16px;border:1px solid var(--border);
+        text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;
+          background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5;"></div>
+        <h3 style="font-size:15px;color:var(--accent);margin:0 0 4px;">🎯 战术 · 博弈之道</h3>
+        <p style="font-size:11px;color:#c0c0c8;line-height:1.75;margin:0 0 10px;">战术是你在不同场景下的<strong style="color:var(--accent);">博弈模式</strong>。<br>场景变换、时间推移，你的风格会发生<strong style="color:var(--accent);">迁移和调整</strong>——<br><strong style="color:var(--accent);">多变</strong>的战术让你适配不同战场，<br><strong style="color:var(--accent);">不变</strong>的战术是你的个人底色，引人入局、吃棋制胜。</p>
+        <!-- 四象 2x2 象限 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+          <div style="background:rgba(74,158,123,0.08);border:1px solid rgba(74,158,123,0.2);border-radius:8px;padding:8px 6px;text-align:center;">
+            <div style="font-size:20px;">🐉</div>
+            <div style="font-weight:700;font-size:11px;color:#4a9e7b;">青龙</div>
+            <div style="font-size:9px;color:var(--sub);">外势×远局</div>
+            <div style="font-size:9px;color:#4a9e7b;">外求·长期</div>
+          </div>
+          <div style="background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:8px;padding:8px 6px;text-align:center;">
+            <div style="font-size:20px;">🐅</div>
+            <div style="font-weight:700;font-size:11px;color:#d4a853;">白虎</div>
+            <div style="font-size:9px;color:var(--sub);">外势×近局</div>
+            <div style="font-size:9px;color:#d4a853;">外求·务实</div>
+          </div>
+          <div style="background:rgba(196,58,49,0.08);border:1px solid rgba(196,58,49,0.2);border-radius:8px;padding:8px 6px;text-align:center;">
+            <div style="font-size:20px;">🐦</div>
+            <div style="font-weight:700;font-size:11px;color:#c43a31;">朱雀</div>
+            <div style="font-size:9px;color:var(--sub);">内势×远局</div>
+            <div style="font-size:9px;color:#c43a31;">内求·长期</div>
+          </div>
+          <div style="background:rgba(91,123,159,0.08);border:1px solid rgba(91,123,159,0.2);border-radius:8px;padding:8px 6px;text-align:center;">
+            <div style="font-size:20px;">🐢</div>
+            <div style="font-weight:700;font-size:11px;color:#5b7b9f;">玄武</div>
+            <div style="font-size:9px;color:var(--sub);">内势×近局</div>
+            <div style="font-size:9px;color:#5b7b9f;">内求·务实</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-size:10px;color:var(--sub);">
+          能量来源×价值取向 交叠为四象 · 判断基准×行动方式 各生四型 → 共16种战术
+        </div>
+      </div>
+
+      <!-- 能力掌控 -->
+      <div style="background:var(--card);border-radius:14px;padding:18px 16px;border:1px solid var(--border);
+        text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;
+          background:linear-gradient(90deg,transparent,var(--accent2),transparent);opacity:0.5;"></div>
+        <h3 style="font-size:15px;color:var(--accent2);margin:0 0 6px;">📜 能力掌控 · 拆解与重组</h3>
+        <p style="font-size:11px;color:#c0c0c8;line-height:1.75;margin:0 0 8px;">
+          <span style="font-size:10px;color:var(--sub);">取意「仓颉造字」——偏旁为基，拆解重组，化繁为简。</span><br>
+          你的经验、技能、关系，都是<strong style="color:var(--accent2);">能力偏旁</strong>。<br>
+          <strong style="color:var(--accent2);">松紧度</strong>衡量你对此能力的掌控程度——<br>
+          面试就是对方<strong style="color:var(--accent2);">拆解你的能力</strong>、你<strong style="color:var(--accent2);">守住核心优势</strong>的博弈。
+        </p>
+        <p style="font-size:10.5px;color:#c0c0c8;line-height:1.65;margin:0 0 10px;">
+          职场中没有<strong style="color:var(--accent2);">非黑即白</strong>，也没有<strong style="color:var(--accent2);">赢家通吃</strong>。一个能力偏旁松动，不等于全局失守——你可以用剩下的牢固偏旁重新<strong style="color:var(--accent2);">组合展示</strong>。这就是能力掌控：不被拆散，而是不断地拆、组、拼、变。
+        </p>
+        <!-- 拆字重组图示 -->
+        <div style="background:rgba(15,22,41,0.6);border-radius:10px;padding:14px 10px;">
+          <div style="display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;">
+            <div style="background:rgba(196,58,49,0.12);border:2px solid rgba(196,58,49,0.35);border-radius:10px;padding:6px 10px;font-size:22px;font-weight:800;color:#c43a31;">「相」</div>
+            <div style="font-size:13px;color:var(--sub);margin:0 5px;">→</div>
+            <div style="display:flex;gap:3px;">
+              <div style="background:rgba(226,176,74,0.12);border:1px solid rgba(226,176,74,0.3);border-radius:6px;padding:3px 7px;font-size:12px;color:var(--accent);">木</div>
+              <div style="background:rgba(226,176,74,0.12);border:1px solid rgba(226,176,74,0.3);border-radius:6px;padding:3px 7px;font-size:12px;color:var(--accent);">目</div>
+            </div>
+            <div style="font-size:13px;color:var(--sub);margin:0 5px;">→</div>
+            <div style="display:flex;gap:3px;">
+              <div style="background:rgba(74,158,123,0.12);border:1px solid rgba(74,158,123,0.3);border-radius:6px;padding:3px 7px;font-size:12px;color:#4a9e7b;">木</div>
+            </div>
+            <div style="font-size:13px;color:var(--sub);margin:0 5px;">→</div>
+            <div style="background:rgba(74,158,123,0.12);border:2px solid rgba(74,158,123,0.35);border-radius:10px;padding:6px 10px;font-size:22px;font-weight:800;color:#4a9e7b;">「格」</div>
+          </div>
+          <div style="font-size:9px;color:var(--sub);margin-top:6px;line-height:1.6;">失去[目]（视野）→ 剩余[木]（本质）仍可独当一面。<strong style="color:#4a9e7b;">「相」被拆，[木]还在——你的性格底子本身就是一个完整的展示面。</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 四维 + 六字 对称区 ===== -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <!-- 战术四维 -->
+      <div style="background:var(--card);border-radius:14px;padding:20px 18px;border:1px solid var(--border);">
+        <h3 style="font-size:14px;color:var(--accent);margin:0 0 12px;text-align:center;">🧭 战术四维</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:var(--input-bg);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-weight:700;color:var(--accent);font-size:12px;">势 · 能量来源</div>
+            <div style="font-size:10px;color:var(--sub);margin-top:4px;line-height:1.6;">
+              <span class="tag tag-out">外势</span> 外部回报<br>
+              <span class="tag tag-in">内势</span> 自我成长
+            </div>
+          </div>
+          <div style="background:var(--input-bg);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-weight:700;color:var(--accent);font-size:12px;">局 · 价值取向</div>
+            <div style="font-size:10px;color:var(--sub);margin-top:4px;line-height:1.6;">
+              <span class="tag tag-far">远局</span> 长期主义<br>
+              <span class="tag tag-near">近局</span> 务实当下
+            </div>
+          </div>
+          <div style="background:var(--input-bg);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-weight:700;color:var(--accent);font-size:12px;">衡 · 判断基准</div>
+            <div style="font-size:10px;color:var(--sub);margin-top:4px;line-height:1.6;">
+              <span class="tag tag-logic">理衡</span> 逻辑最优<br>
+              <span class="tag tag-feel">情衡</span> 关系优先
+            </div>
+          </div>
+          <div style="background:var(--input-bg);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-weight:700;color:var(--accent);font-size:12px;">法 · 行动方式</div>
+            <div style="font-size:10px;color:var(--sub);margin-top:4px;line-height:1.6;">
+              <span class="tag tag-flex">活法</span> 灵活重组<br>
+              <span class="tag tag-fixed">定法</span> 锁定深耕
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 六字能力盘 -->
+      <div style="background:var(--card);border-radius:14px;padding:20px 18px;border:1px solid var(--border);">
+        <h3 style="font-size:14px;color:var(--accent);margin:0 0 12px;text-align:center;">📋 六字能力盘</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+          ${['能','历','格','望','相','詩'].map(cn=>{
+            const d=CHAR_DEFS[cn];
+            return `<div style="background:var(--input-bg);border-radius:8px;padding:8px 4px;text-align:center;">
+              <div style="font-size:24px;font-weight:800;background:linear-gradient(135deg,#e2b04a,#f0d78c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">「${cn}」</div>
+              <div style="font-size:9px;color:var(--sub);margin:2px 0;">${d.parts.map(p=>'['+p+']').join('')}</div>
+              <div style="font-size:9px;color:var(--accent);">${d.core}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="text-align:center;font-size:10px;color:var(--sub);margin-top:10px;">
+          面试中每个字都可能被拆解——守住则牢固，被夺则松动
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 偏旁字典（全宽）===== -->
+    <div style="background:var(--card);border-radius:14px;padding:20px 18px;border:1px solid var(--border);margin-bottom:20px;">
+      <h3 style="font-size:14px;color:var(--accent);margin:0 0 12px;text-align:center;">🔤 十二偏旁字典</h3>
+      <div style="font-size:11px;color:var(--sub);text-align:center;margin-bottom:10px;">
+        偏旁是构成字的零件。每个偏旁代表你的一项<strong style="color:var(--accent);">职场资源或能力</strong>——松紧度越高，面试中越难被拆走。
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="rad-compact-table">
+          <thead><tr><th>偏旁</th><th>名称</th><th>含义</th><th>核心能力</th></tr></thead>
+          <tbody>${radRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 底部 -->
+    <div style="text-align:center;padding-bottom:20px;">
+      <a onclick="switchTo('history')" style="color:var(--sub);cursor:pointer;font-size:12px;text-decoration:none;border-bottom:1px dashed var(--border);padding-bottom:2px;">📋 查看历史评估记录</a>
+	      &nbsp;&nbsp;
+	      <a onclick="switchTo('beasts')" style="color:var(--sub);cursor:pointer;font-size:12px;text-decoration:none;border-bottom:1px dashed var(--border);padding-bottom:2px;"></a>
+    </div>
+  `;
+  // 渲染房间分配滑块
+  setTimeout(()=>{
+    const i=document.getElementById('ni'); if(i)i.focus();
+    renderRoomSliders();
+  },100);
+}
+
+// 房间分配滑块渲染
+var roomAlloc = { 'HR初筛':5, '业务面试':5, '交叉面试':5, '高管面试':5, 'HR谈薪':5 };
+function renderRoomSliders(){
+  var wrap = document.getElementById('roomSliders');
+  if(!wrap) return;
+  var rooms = ['HR初筛','业务面试','交叉面试','高管面试','HR谈薪'];
+  var icons = {'HR初筛':'🔍','业务面试':'💼','交叉面试':'🤝','高管面试':'🏔️','HR谈薪':'⚖️'};
+  var html = '';
+  rooms.forEach(function(r){
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;">' +
+      '<span style="width:18px;">'+icons[r]+'</span>' +
+      '<span style="width:56px;color:var(--sub);">'+r+'</span>' +
+      '<input type="range" min="2" max="9" value="'+roomAlloc[r]+'" ' +
+        'oninput="updateAlloc(\''+r+'\',this.value)" ' +
+        'style="flex:1;accent-color:var(--accent);">' +
+      '<span style="width:24px;text-align:right;color:var(--accent);font-weight:600;" id="cnt_'+r+'">'+roomAlloc[r]+'</span>' +
+      '</div>';
+  });
+  wrap.innerHTML = html;
+}
+function updateAlloc(room, val){
+  roomAlloc[room] = parseInt(val);
+  document.getElementById('cnt_'+room).textContent = val;
+  var total = 0;
+  Object.keys(roomAlloc).forEach(function(r){ total += roomAlloc[r]; });
+  document.getElementById('totalQHint').textContent = '共 '+total+' 题';
+}
+
+// ===== 开始游戏（动态选题）=====
+function startGame(){
+  var inp=document.getElementById('ni');
+  var nn=(inp?inp.value.trim():'')||'匿名棋手';
+  var data=getStorage(); data.nickname=nn; saveStorage(data);
+  S.nickname=nn;
+  // 按房间分配动态选题（核心题必选，其余随机填充）
+  S.selectedQuestions = [];
+  S._usedQIndices = {};
+  var roomPools = {};
+  QUESTION_BANK.forEach(function(q, qi){
+    var room = q.room;
+    if(!roomPools[room]) roomPools[room] = { core: [], rest: [] };
+    if(q.stability || q.qType === 'choice3'){
+      roomPools[room].core.push({q: q, idx: qi});
+    } else {
+      roomPools[room].rest.push({q: q, idx: qi});
+    }
+  });
+  Object.keys(roomPools).forEach(function(room){
+    var pool = roomPools[room];
+    var alloc = roomAlloc[room] || 5;
+    // 先选核心题
+    var coreSelected = pool.core.slice(0, alloc);
+    coreSelected.forEach(function(item){
+      S.selectedQuestions.push(item.q);
+      S._usedQIndices[item.idx] = true;
+    });
+    // 剩余名额随机填充
+    var remaining = alloc - coreSelected.length;
+    if(remaining > 0 && pool.rest.length > 0){
+      for(var i = pool.rest.length-1; i>0; i--){
+        var j = Math.floor(Math.random()*(i+1));
+        var tmp = pool.rest[i]; pool.rest[i] = pool.rest[j]; pool.rest[j] = tmp;
+      }
+      var restSelected = pool.rest.slice(0, Math.min(remaining, pool.rest.length));
+      restSelected.forEach(function(item){
+        S.selectedQuestions.push(item.q);
+        S._usedQIndices[item.idx] = true;
+      });
+    }
+  });
+  // 打乱避免同房间堆在一起
+  for(var i = S.selectedQuestions.length-1; i>0; i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var tmp = S.selectedQuestions[i]; S.selectedQuestions[i] = S.selectedQuestions[j]; S.selectedQuestions[j] = tmp;
+  }
+  // 构建追问链：找到同偏旁的题对，插入追问标记
+  buildProbePairs();
+  S.answers = new Array(S.selectedQuestions.length).fill(0);
+  S.consistencyData = {}; // { '言': { baseAns:0, probeAns:0 }, ... }
+  S.dimScores=[]; S.radScores=[]; S.result=null; S.step=0; S.view='questions';
+  S.mode = 'normal'; // 'normal' | 'probe'
+
+  render();
+}
+
+// 构建追问链：从未用题库中找同偏旁不同房间的题做追问，绝不重复
+function buildProbePairs(){
+  var newList = [];
+  // 收集已用题索引
+  var usedQIndices = S._usedQIndices || {};
+  // 只选部分基题配追问（隔2道配1道）
+  for(var i = 0; i < S.selectedQuestions.length; i++){
+    var base = S.selectedQuestions[i];
+    newList.push(base);
+    if(i % 3 !== 0) continue; // 隔2道配1道
+
+    var baseRads = (base.rads || []).map(function(r){return r.rad;});
+    // 从完整题库中找未用过的追问（不同房间，同偏旁）
+    for(var qi = 0; qi < QUESTION_BANK.length; qi++){
+      if(usedQIndices[qi]) continue;
+      var cand = QUESTION_BANK[qi];
+      if(cand.room === base.room) continue; // 不同房间
+      var candRads = (cand.rads || []).map(function(r){return r.rad;});
+      var shared = baseRads.filter(function(r){return candRads.indexOf(r) >= 0;});
+      if(shared.length > 0){
+        var probeQ = Object.assign({}, cand); // 浅拷贝，避免修改原题
+        probeQ._isProbe = true;
+        probeQ._probeRad = shared[0];
+        probeQ._baseIdx = newList.length - 1;
+        usedQIndices[qi] = true;
+        newList.push(probeQ);
+        break;
+      }
+    }
+  }
+  S.selectedQuestions = newList;
+  S._usedQIndices = usedQIndices;
+}
+
+// ===== 答题 =====
+function renderQuestion(idx){
+  var total = S.selectedQuestions.length;
+  var q = S.selectedQuestions[idx];
+  var roomTag = q && q.room ? '<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;margin-left:6px;background:rgba(226,176,74,0.1);color:var(--accent);">' + esc(q.room) + '</span>' : '';
+  var prev = S.answers[idx] || 0;
+  var pct = (idx/total*100).toFixed(0);
+
+  var html = '';
+  html += '<div class="header"><h1>🎯 面试风格匹配</h1><div class="subtitle">第 ' + (idx+1) + ' / ' + total + ' 题</div><div class="user-badge">👤 ' + esc(S.nickname) + '</div></div>';
+  html += '<div class="progress-wrap"><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:' + pct + '%"></div></div></div>';
+  html += '<div class="card" style="text-align:center;padding:28px 22px;">';
+  // 面试官 + 房间标签
+  if (q.interviewer) {
+    html += '<div style="font-size:11px;color:var(--accent);margin-bottom:6px;font-weight:600;">🏠 ' + esc(q.room) + ' · ' + esc(q.interviewer) + '</div>';
+  }
+  // 场景描述
+  if (q.scene) {
+    html += '<div style="text-align:left;font-size:14px;line-height:1.9;color:#d0d0d8;background:rgba(15,22,41,0.6);border-radius:10px;padding:16px 18px;margin-bottom:18px;border-left:3px solid var(--accent);">' + esc(q.scene) + '</div>';
+  }
+  if(q.qType === 'choice3'){
+    // 3选1场景题：点击选项直接选择
+    html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">';
+    (q.options||[]).forEach(function(opt, oi){
+      var vals = [2, 4, 6]; // A→2, B→4, C→6 映射到7点量表
+      var sel = prev === vals[oi];
+      html += '<div onclick="selectAndNext(' + vals[oi] + ')" style="cursor:pointer;text-align:left;padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7;color:#c0c0c8;background:' + (sel ? 'rgba(226,176,74,0.12)' : 'rgba(15,22,41,0.4)') + ';border:2px solid ' + (sel ? 'var(--accent)' : 'var(--border)') + ';transition:all 0.2s;">' + esc(opt) + '</div>';
+    });
+    html += '</div>';
+    html += '<div id="selectedHint" style="font-size:12px;color:' + (prev ? 'var(--accent)' : 'var(--sub)') + ';min-height:20px;margin-top:4px;">' + (prev ? '✓ 已选择，自动跳转中…' : '点击上方选项（三选一，自动跳转）') + '</div>';
+  } else {
+    html += '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-bottom:20px;">';
+    html += '<div style="font-size:14px;color:var(--accent);line-height:1.7;text-align:right;padding:8px;opacity:0.75;">' + esc(q.left) + '</div>';
+    html += '<div style="font-size:18px;color:var(--accent);opacity:0.5;">⟷</div>';
+    html += '<div style="font-size:14px;color:var(--accent);line-height:1.7;text-align:left;padding:8px;font-weight:600;">' + esc(q.right) + '</div>';
+    html += '</div>';
+    html += '<div id="dotWrap" style="position:relative;display:flex;align-items:center;justify-content:center;height:100px;margin:4px 0;"></div>';
+    html += '<div id="selectedHint" style="font-size:12px;color:' + (prev ? 'var(--accent)' : 'var(--sub)') + ';min-height:20px;margin-top:4px;">' + (prev ? '✓ 已选择，自动跳转中…' : '点击上方圆点选择倾向（选择后自动跳转）') + '</div>';
+  }
+  html += '<div class="btn-row" style="margin-top:14px;">';
+  if (idx > 0) html += '<button class="btn btn-prev" onclick="prevQ()">← 上一题</button>';
+  html += (idx < total-1) ? '' : '<button class="btn btn-next" onclick="nextQ()">' + (prev ? '提交全部回答 ✓' : '请先选择再提交') + '</button>';
+  html += '</div></div>';
+
+  app.innerHTML = html;
+
+  // 用 DOM 构建圆点 + 轨道
+  setTimeout(function() {
+    var wrap = document.getElementById('dotWrap');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+
+    // 轨道线
+    var track = document.createElement('div');
+    track.style.cssText = 'position:absolute;top:50%;left:4%;right:4%;height:3px;background:linear-gradient(90deg,rgba(226,176,74,0.25),rgba(226,176,74,0.06),rgba(226,176,74,0.02),rgba(226,176,74,0.06),rgba(226,176,74,0.25));border-radius:2px;transform:translateY(-50%);z-index:0;';
+    wrap.appendChild(track);
+
+    // 圆点容器
+    var row = document.createElement('div');
+    row.style.cssText = 'position:relative;display:flex;align-items:center;justify-content:space-evenly;width:92%;z-index:1;';
+    wrap.appendChild(row);
+
+    for (var v = 1; v <= 7; v++) {
+      var dist = Math.abs(v - 4);
+      var r = 10 + dist * 6;
+      var sel = prev === v;
+      var sz = sel ? r + 5 : r;
+      var bg = sel ? 'var(--accent)' : 'rgba(226,176,74,' + (0.05 + dist * 0.09).toFixed(2) + ')';
+      var bd = sel ? 'var(--accent)' : 'rgba(226,176,74,' + (0.10 + dist * 0.15).toFixed(2) + ')';
+      var dot = document.createElement('div');
+      dot.id = 'dot' + v;
+      dot.onclick = (function(val) { return function() { selectAndNext(val); }; })(v);
+      dot.style.cssText = 'width:' + (sz*2) + 'px;height:' + (sz*2) + 'px;border-radius:50%;cursor:pointer;background:' + bg + ';border:2px solid ' + bd + ';transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1.2);box-shadow:' + (sel ? '0 0 14px rgba(226,176,74,0.3)' : 'none') + ';';
+      row.appendChild(dot);
+    }
+  }, 30);
+}
+
+function selectAndNext(val) {
+  S.answers[S.step] = val;
+  var q = S.selectedQuestions[S.step];
+  // 追问一致性追踪
+  if (q._isProbe && q._probeRad) {
+    var rad = q._probeRad;
+    var baseIdx = q._baseIdx;
+    var baseAns = S.answers[baseIdx] || 0;
+    if (!S.consistencyData[rad]) S.consistencyData[rad] = { pairs: [] };
+    S.consistencyData[rad].pairs.push({ base: baseAns, probe: val });
+  }
+  for (var v = 1; v <= 7; v++) {
+    var el = document.getElementById('dot'+v);
+    if (!el) continue;
+    var r = 10 + Math.abs(v-4) * 6;
+    var sel = v === val;
+    var sz = sel ? r+5 : r;
+    el.style.width = (sz*2)+'px'; el.style.height = (sz*2)+'px';
+    el.style.background = sel ? 'var(--accent)' : 'rgba(226,176,74,' + (0.05 + Math.abs(v-4)*0.09) + ')';
+    el.style.border = '2px solid ' + (sel ? 'var(--accent)' : 'rgba(226,176,74,' + (0.10 + Math.abs(v-4)*0.15) + ')');
+    el.style.boxShadow = sel ? '0 0 14px rgba(226,176,74,0.3)' : 'none';
+  }
+  setTimeout(function() {
+    var total = S.selectedQuestions.length;
+    // 中点检查：~50%进度时，检测极端松紧并动态插入追问
+    var midPoint = Math.floor(total * 0.45);
+    if (S.step === midPoint && !S._midChecked) {
+      S._midChecked = true;
+      checkAndInsertProbes();
+      total = S.selectedQuestions.length; // 可能有新增
+    }
+    if (S.step < total - 1) { S.step++; render(); }
+    else { S.view='analyzing';render();setTimeout(function(){S.result=scoreFromLikert(S.answers);saveSession();S.view='report';render();},600); }
+  }, 280);
+}
+
+// 中点检查：极端松紧 + 维度矛盾 → 动态插入追问
+function checkAndInsertProbes(){
+  // === 1) 维度矛盾检测：均分和中位数差距大 → 该维需要更多验证
+  var dimList = {势:{raw:[]},局:{raw:[]},衡:{raw:[]},法:{raw:[]}};
+  for(var i = 0; i <= S.step; i++){
+    var q = S.selectedQuestions[i];
+    if(!q || q._isProbe) continue;
+    (q.dims||[]).forEach(function(d, di){
+      var rawVal = Math.max(1, Math.min(7, S.answers[i]||4));
+      var mapped = d.dir===-1 ? rawVal : (8-rawVal);
+      var sc7 = {1:1,2:2.5,3:4,4:5.5,5:7,6:8.5,7:10};
+      dimList[d.dim].raw.push(sc7[mapped]||5.5);
+    });
+  }
+  var contradictoryDims = [];
+  Object.keys(dimList).forEach(function(dim){
+    var raw = dimList[dim].raw;
+    if(raw.length < 3) return;
+    raw.sort(function(a,b){return a-b;});
+    var mid = Math.floor(raw.length/2);
+    var median = raw.length%2===1 ? raw[mid] : (raw[mid-1]+raw[mid])/2;
+    var mean = raw.reduce(function(a,b){return a+b;},0)/raw.length;
+    if(Math.abs(mean-median) > 1.5) contradictoryDims.push(dim);
+  });
+
+  // === 2) 极端松紧检测 ===
+  var radCounts = {}; var radSums = {};
+  for(var i = 0; i <= S.step; i++){
+    var q = S.selectedQuestions[i];
+    if(!q || q._isProbe) continue;
+    (q.rads||[]).forEach(function(r){
+      if(!radCounts[r.rad]){ radCounts[r.rad]=0; radSums[r.rad]=0; }
+      radCounts[r.rad]++; radSums[r.rad] += (S.answers[i]||4);
+    });
+  }
+  var extremeRads = [];
+  Object.keys(radCounts).forEach(function(rad){
+    if(radCounts[rad] < 2) return;
+    var avg = radSums[rad]/radCounts[rad];
+    // 极端高(≥6)或极端低(≤2) → 需要更多验证
+    if(avg >= 6 || avg <= 2) extremeRads.push(rad);
+  });
+  // 合并极端偏旁和矛盾维度，优先矛盾维度
+  var probeTargets = contradictoryDims.concat(extremeRads);
+  if(probeTargets.length === 0) return;
+  if(!S._usedQIndices) S._usedQIndices = {};
+  var insertCount = 0;
+  for(var ri = 0; ri < probeTargets.length && insertCount < 3; ri++){
+    var target = probeTargets[ri];
+    var isDim = contradictoryDims.indexOf(target) >= 0;
+    for(var qi = 0; qi < QUESTION_BANK.length; qi++){
+      if(S._usedQIndices[qi]) continue;
+      var cand = QUESTION_BANK[qi];
+      var match = false;
+      if(isDim){
+        // 找测试该dim的题
+        match = (cand.dims||[]).some(function(d){return d.dim === target;});
+      } else {
+        // 找测试该rad的题
+        match = (cand.rads||[]).some(function(r){return r.rad === target;});
+      }
+      if(match){
+        var probeQ = Object.assign({}, cand);
+        probeQ._isProbe = true;
+        if(!isDim) probeQ._probeRad = target;
+        S.selectedQuestions.splice(S.step + 1 + insertCount, 0, probeQ);
+        S.answers.splice(S.step + 1 + insertCount, 0, 0);
+        S._usedQIndices[qi] = true;
+        insertCount++;
+        break;
+      }
+    }
+  }
+}
+
+function prevQ(){
+  if(S.step>0){S.step--;render();}
+}
+
+function nextQ(){
+  try {
+    const total = QUESTION_BANK.length;
+    if (!S.answers[S.step]) { alert('请先选择一个程度再继续'); return; }
+    if (S.step < total - 1) { S.step++; render(); }
+    else {
+      S.view = 'analyzing'; render();
+      setTimeout(() => {
+        try {
+          S.result = scoreFromLikert(S.answers);
+          saveSession();
+          S.view = 'report';
+          render();
+        } catch(e) { alert('结果生成出错: ' + e.message + ' ' + (e.stack||'')); }
+      }, 600);
+    }
+  } catch(e) {
+    alert('出错: ' + e.message);
+    console.error(e);
+  }
+}
+
+function saveSession(){
+  const data=getStorage();
+  const {finalDims,finalRadicals,style}=S.result;
+  const tn=getStyleTypeName(style);
+  const now=new Date();
+  const ds=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const typeDist = S.result.typeDist;
+  data.sessions.push({date:ds,typeName:tn,styleStr:`${style.势}·${style.局}·${style.衡}·${style.法}`,style,finalDims,finalRadicals,typeDist,answers:[...S.answers]});
+  if(data.sessions.length>20)data.sessions=data.sessions.slice(-20);
+  saveStorage(data);
+}
+
+// ===== 分析中 =====
+function renderAnalyzing(){
+  app.innerHTML=`
+    <div class="header"><h1>🎯 面试风格匹配</h1><div class="subtitle">AI正在分析你的回答...</div></div>
+    <div class="analyzing"><div class="spinner"></div><p>正在分析你的能量来源、价值取向和偏旁松紧度...</p><p style="font-size:12px;color:#555;">已收到5个场景回答 · 分析中</p></div>
+  `;
+}
+
+// ===== Professional Report Rendering =====
+
+// 能力盘整体评价
+function overallCharAssessment(rads) {
+  const chars = [
+    { name: '能', parts: ['厶','月','匕'] },
+    { name: '历', parts: ['厂','力'] },
+    { name: '格', parts: ['木','各'] },
+    { name: '望', parts: ['亡','月','王'] },
+    { name: '相', parts: ['木','目'] },
+    { name: '詩', parts: ['言','寺'] }
+  ];
+  const scores = chars.map(c => ({
+    ...c,
+    avg: Math.round(c.parts.reduce((s, p) => s + (rads[p] || 5), 0) / c.parts.length * 10) / 10,
+    min: Math.min(...c.parts.map(p => rads[p] || 5)),
+    max: Math.max(...c.parts.map(p => rads[p] || 5))
+  }));
+  const overallAvg = Math.round(scores.reduce((s, c) => s + c.avg, 0) / scores.length * 10) / 10;
+  const strongChars = scores.filter(c => c.avg >= 7).map(c => c.name);
+  const weakChars = scores.filter(c => c.avg <= 4).map(c => c.name);
+  const balanced = scores.filter(c => c.max - c.min >= 5).map(c => c.name); // 偏旁差距大
+
+  let summary = '';
+  if (overallAvg >= 7) summary = '你的能力盘整体牢固，六个字的核心偏旁都有较好的证据支撑。面试中你有充足的操作空间——重点不是"防守"，而是主动用强势字引导面试官的评价方向。';
+  else if (overallAvg >= 5) summary = '你的能力盘处于中等水平，有明确的强势字也有薄弱环节。面试策略应该是"以强字开路，以弱字防守"——主动展示强势字所在的能力，同时对薄弱偏旁做好防御准备。';
+  else summary = '你的能力盘整体偏松，多个字的核心偏旁缺乏足够的证据支撑。在进入面试之前，建议针对薄弱偏旁准备2-3个具体的STAR案例。这不是"你不行"——而是"你还没把行的地方说清楚"。';
+
+  return { scores, overallAvg, strongChars, weakChars, balanced, summary };
+}
+
+// 战术×能力盘交叉分析
+function crossAnalysis(style, rads, charAssess) {
+  const insights = [];
+
+  // 外势+强[言] → 面试中表达有优势
+  if (style.势 === '外势' && rads['言'] >= 7) {
+    insights.push('你的外势战术配合强[言]（表达筹码）偏旁，意味着你在面试中天然擅长引导对话节奏、主动输出价值。建议在每个房间的前三句话中就亮出一个强势偏旁。');
+  }
+  // 外势+弱[言] → 容易说太多但说不准
+  if (style.势 === '外势' && rads['言'] <= 4) {
+    insights.push('外势让你愿意表达，但[言]偏旁偏弱意味着你"说了很多但没有精准命中"。面试前建议为每个核心能力准备一句话版本——用最少的话传递最大的信息密度。');
+  }
+  // 内势+强[厶] → 寡言但有力
+  if (style.势 === '内势' && rads['厶'] >= 7) {
+    insights.push('内势让你不急于展示，但强[厶]（独有能力）让你一旦开口就有分量。你的策略不是"多说"，而是"在该说的时候说对"。在业务面中，准备好2-3个关键追问的精准回答比广泛展示更有效。');
+  }
+  // 远局+强[目] → 高管面杀手
+  if (style.局 === '远局' && rads['目'] >= 7) {
+    insights.push('远局战术+强[目]（视野判断）——这是高管面最理想的组合。你有能力在对话中自然切换到行业判断和未来趋势的讨论层面，这是大多数候选人做不到的。在高管面中主动抛出你对行业的一个判断。');
+  }
+  // 近局+强[力] → 业务面优势
+  if (style.局 === '近局' && rads['力'] >= 7) {
+    insights.push('近局战术+强[力]（产出推动）——你是业务面试官最喜欢的类型：聚焦当下、讲得出具体成果。在业务面中把你的项目数据作为主线，用数据说话。');
+  }
+  // 活法+弱[亡] → 选择太多反而犹豫
+  if (style.法 === '活法' && rads['亡'] <= 4) {
+    insights.push('活法让你保持开放，但弱[亡]（逃离意识）意味着你对自己要逃离什么还不够清晰。面试中对方问到"为什么看机会"时，你的回答可能缺少方向感。建议在面试前把这题的答案写下来，确保它听起来像"在追"而非"在飘"。');
+  }
+  // 定法+强[厂][力] → 可靠感
+  if (style.法 === '定法' && rads['厂'] >= 7 && rads['力'] >= 7) {
+    insights.push('定法战术+强[厂]强[力]——你给人"靠谱、能成事"的感觉，这在HR面和业务面都是强势信号。你的策略不是展示多样性，而是展示"在这个方向上我是最可靠的"。');
+  }
+  // 理衡+强[目][厶] → 技术深度型
+  if (style.衡 === '理衡' && rads['目'] >= 7 && rads['厶'] >= 7) {
+    insights.push('理衡战术+强[目]强[厶]——你是一个"深度思考者"。在面试中你最强的牌是展示你对问题的拆解能力和独特洞察，而不是展示你做过了多少件事。');
+  }
+  // 情衡+强[各] → 人际关系优势
+  if (style.衡 === '情衡' && rads['各'] >= 7) {
+    insights.push('情衡战术+强[各]（差异化表现）——你善于在人际关系中找到自己的独特位置。交叉面是你的优势房间，因为你天然擅长"让人舒服地接受你的与众不同"。');
+  }
+
+  // 多维思维评估：choice3题型中选C（最开放/多维的选项）的频率
+  var multiDimCount = 0, choice3Total = 0;
+  S.selectedQuestions.forEach(function(q, i){
+    if(q.qType === 'choice3' && S.answers[i]){
+      choice3Total++;
+      if(S.answers[i] >= 5) multiDimCount++; // C选项映射到6
+    }
+  });
+  if(choice3Total >= 2){
+    var multiRatio = multiDimCount / choice3Total;
+    if(multiRatio >= 0.6){
+      insights.push('🧠 你在场景选择题中倾向多维/开放的思考路径——不急于锁定一个答案，而是先审视问题本身的前提。这种思维在交叉面和高管面是真正的优势：面试官想看到的就是你"想问题的过程"而非"答题的速度"。');
+    } else if(multiRatio >= 0.3){
+      insights.push('🧠 你在场景选择题中会根据情况切换思维模式——有的题走直答路径，有的题会跳出框架重新审视前提。这种灵活性是好的，但可以更主动地在关键问题上使用多维视角。');
+    } else {
+      insights.push('🧠 你在场景选择题中倾向单维/直接的思考路径——快速锁定答案并给出行动方案。这种效率型思维在业务面是加分项，但在需要展现思考深度的时候（高管面），可以试试先质疑问题本身，再给出判断。');
+    }
+  }
+
+  // 稳定性/Gap评估：双向追问能力
+  var stabAnswers = [];
+  S.selectedQuestions.forEach(function(q, i){
+    if(q.stability && S.answers[i]) stabAnswers.push(S.answers[i]);
+  });
+  if(stabAnswers.length >= 2){
+    var avgStab = stabAnswers.reduce(function(a,b){return a+b;},0)/stabAnswers.length;
+    if(avgStab >= 5.5){
+      insights.push('🔁 面对稳定性质疑时，你倾向「追问式回答」——不急于辩解，而是把单向质疑转化为双向讨论。这种风格在HR面和谈薪面是巨大的优势：你不是在求对方信任你，而是在和对方一起评估匹配度。');
+    } else if(avgStab >= 3.5){
+      insights.push('🔁 面对稳定性质疑时，你有时会进入「防御模式」——直接解释事实但忽略了对方的真实关切。建议在被问到gap/跳槽等问题时，先反问一句对方的期望，把辩解题变成匹配题。');
+    } else {
+      insights.push('🔁 面对稳定性质疑时，你倾向直接解释客观原因——这样回答本身没有问题，但容易让对话变成"你在证自己"。试试在被问到稳定性时反问一句"你希望这个岗位的人具备什么特质"，把单向压力变成双向沟通。');
+    }
+  }
+
+  if (insights.length === 0) {
+    insights.push('你的战术人格和偏旁组合较为均衡，没有明显的"天赋区间"也没有结构性短板。在面试中保持自然发挥即可，各房间通用策略是：展示你最牢固的3个偏旁，避免暴露最薄弱的2个偏旁。');
+  }
+
+  return insights;
+}
+
+// 稳定性评估：判断用户面对gap质疑时的策略模式
+function stabilityEval(){
+  var stabQs = []; var stabAs = [];
+  S.selectedQuestions.forEach(function(q,i){
+    if(q.stability && S.answers[i]){ stabQs.push(q); stabAs.push(S.answers[i]); }
+  });
+  if(stabQs.length === 0) return null;
+  var avg = stabAs.reduce(function(a,b){return a+b;},0)/stabAs.length;
+  var style = avg >= 5.5 ? '追问框架' : avg >= 3.5 ? '混合策略' : '直答框架';
+  var desc = avg >= 5.5
+    ? '你把稳定性问题当成双向匹配的入口——不急于证明自己，而是用追问把对方拉进对话。这不是"回避问题"，而是把面试从审讯变成谈判。'
+    : avg >= 3.5
+    ? '你在直接回应和双向追问之间切换——有时能跳出防御模式，有时还是会习惯性解释。多练几次追问的节奏感，就能更自然地用这个技巧。'
+    : '你面对质疑时更习惯直接解释事实——这种风格真诚但被动。试试在被问到gap/频繁跳槽时先说"我理解你的担心，不过我也想了解..."，把防守变成对话。';
+  return { style: style, avg: avg.toFixed(1), desc: desc };
+}
+
+// 房间策略
+function roomStrategy(style, rads) {
+  const rooms = [
+    {
+      name: 'HR初筛',
+      focus: '筛选效率，排除明显不匹配的候选人',
+      dims: ['稳定性', '速度'],
+      tips: []
+    },
+    {
+      name: '业务面试',
+      focus: '验证专业深度和实际产出能力',
+      dims: ['匹配度', '稳定性'],
+      tips: []
+    },
+    {
+      name: '交叉面试',
+      focus: '评估团队相容性和协作方式',
+      dims: ['稳定性', '相容性'],
+      tips: []
+    },
+    {
+      name: '高管面试',
+      focus: '判断长期价值和投资回报',
+      dims: ['性价比', '成长性'],
+      tips: []
+    },
+    {
+      name: 'HR谈薪',
+      focus: '在预算范围内完成offer闭环',
+      dims: ['性价比', '速度'],
+      tips: []
+    }
+  ];
+
+  rooms.forEach(room => {
+    switch (room.name) {
+      case 'HR初筛':
+        if (rads['信'] !== undefined || rads['木'] >= 6) room.tips.push('你[木]（性格底子）偏旁稳定——HR面中展现真诚即可，不需要过度包装。');
+        if (rads['亡'] <= 4) room.tips.push('[亡]偏旁偏弱——当被问"为什么看机会"时，提前准备好一个听起来像"在追"而非"在逃"的表述。');
+        if (style.势 === '内势') room.tips.push('内势战术：HR可能误读为"不积极"。在结束时准备3个主动提问，展现你的兴趣。');
+        if (style.法 === '活法') room.tips.push('活法战术：HR可能觉得你"不够稳定"。在描述职业规划时使用确定性语言。');
+        break;
+      case '业务面试':
+        if (rads['力'] >= 7) room.tips.push('强[力]偏旁——用数据和具体成果为主线来回答问题。每讲一个项目，跟一句"我做的具体决策是X，产生了Y的结果"。');
+        if (rads['力'] <= 4) room.tips.push('[力]偏旁偏弱——提前准备2个具体的项目案例，用STAR结构（情境-任务-行动-结果）重新组织你的经验叙述。');
+        if (rads['月'] >= 7) room.tips.push('强[月]偏旁说明你有充足的经验深度。业务面中展示"我在不同规模/阶段下都做过"比展示"我做了N年"更有说服力。');
+        if (rads['匕'] <= 4) room.tips.push('[匕]偏旁偏弱——准备好回答"你最擅长什么"的追问。不要回答泛泛的"综合能力强"，说出一个具体的、你最尖锐的能力点。');
+        if (style.衡 === '理衡') room.tips.push('理衡战术在业务面是优势——展示你的逻辑拆解能力。面对场景题时，先拆问题结构再给答案。');
+        break;
+      case '交叉面试':
+        if (rads['各'] >= 7) room.tips.push('强[各]偏旁——交叉面面试官会更关注你和团队现有成员的"化学作用"。你可以展示差异化价值，但要注意用"补位"而非"替代"的语言。');
+        if (rads['木'] >= 7) room.tips.push('[木]偏旁牢固说明你对自己的人格倾向有清晰的认知。交叉面中坦诚比完美更有用——"我知道我的风格是这样，但我和不同类型的人合作时是这样调整的"。');
+        if (style.衡 === '情衡') room.tips.push('情衡战术在交叉面是天然优势。多问对方关于团队氛围和合作模式的问题——让对方多说，你的[合]偏旁会自动积累。');
+        if (style.衡 === '理衡' && rads['木'] <= 4) room.tips.push('理衡战术+弱[木]——交叉面面试官可能觉得你"有点冷"。在回答冲突场景题时，主动加入你对"人"的层面的考虑。');
+        break;
+      case '高管面试':
+        if (rads['目'] >= 7) room.tips.push('强[目]偏旁——这是高管面最看重的。准备一个你对行业/竞品/趋势的独立判断，在对话中自然抛出。不需要长篇大论，一句话的判断比十分钟的综述更有冲击力。');
+        if (rads['王'] >= 7) room.tips.push('强[王]偏旁——你知道自己要什么。高管面不是"求一份工作"，而是"我在找一个值得投入的方向"。这个姿态本身就会拉高对你的估值。');
+        if (rads['目'] <= 4) room.tips.push('[目]偏旁偏弱——高管面可能会暴露出你"只看到眼前的事"。在面试前读一篇行业分析报告，准备好一个你对这个方向的判断。');
+        if (style.局 === '远局') room.tips.push('远局战术+高管面是完美匹配——把话题往行业趋势、公司战略上引导。展示你"不只是来干活的，是来一起想方向的"。');
+        if (style.局 === '近局') room.tips.push('近局战术——高管面中注意不要只讨论具体执行。在被问到"你对行业的看法"时，准备一个从"做过的具体事"自然过渡到"对行业的判断"的回答。');
+        break;
+      case 'HR谈薪':
+        if (rads['言'] >= 7) room.tips.push('强[言]偏旁——你在谈判中有足够的表达能力。准备好在"锚定"环节主动报价（而不是被动回应对方的数字）。');
+        if (rads['寺'] >= 7) room.tips.push('强[寺]偏旁——你知道什么时候该说、什么时候该沉默。谈判中"先开口的人输"——你能沉住气，这是很大的优势。');
+        if (rads['言'] <= 4 && rads['寺'] <= 4) room.tips.push('[言]和[寺]双双偏弱——谈判是你的薄弱环节。至少准备两个要点：1）你期望的数字和理由，2）薪资之外你可以谈的其他维度（职级、项目、弹性工作等）。');
+        if (style.法 === '活法') room.tips.push('活法战术——谈判中不要把焦点只放在薪资上。你的优势在于灵活重组：职级、签字费、试用期、第一年项目分配——这些都可以谈出一个"总价值"更高的包。');
+        break;
+    }
+    // 通用补白
+    if (room.tips.length === 0) {
+      room.tips.push('在这个房间中自然发挥即可，没有明显的风险点需要特别关注。');
+    }
+  });
+
+  return rooms;
+}
+
+// 按房间计算：场景风格评价 + 能力掌控度 + 六字评分拆解
+function computeRoomScores(selectedQuestions, answers, finalRadicals, finalDims, style) {
+  var rooms = ['HR初筛','业务面试','交叉面试','高管面试','HR谈薪'];
+  var chars = [
+    { name:'能', parts:['厶','月','匕'], core:'你能做什么' },
+    { name:'历', parts:['厂','力'], core:'你做过什么' },
+    { name:'格', parts:['木','各'], core:'你是什么样的人' },
+    { name:'望', parts:['亡','月','王'], core:'你想要什么' },
+    { name:'相', parts:['木','目'], core:'你有多合适' },
+    { name:'詩', parts:['言','寺'], core:'你怎么讲故事' }
+  ];
+
+  // 房间信息映射
+  var roomMeta = {
+    'HR初筛': { focus:'快速筛选 · 排除明显不匹配', coreCap:'[詩]表达叙事 · [格]人格呈现', risk:'过度包装或过度坦诚', icon:'🔍' },
+    '业务面试': { focus:'深度验证 · 专业能力与产出', coreCap:'[能]硬实力 · [历]战绩履历', risk:'经验叙述空洞或逻辑断裂', icon:'💼' },
+    '交叉面试': { focus:'团队相容 · 协作风格评估', coreCap:'[格]人格匹配 · [相]文化适配', risk:'过于自我或过于迎合', icon:'🤝' },
+    '高管面试': { focus:'战略视角 · 长期价值判断', coreCap:'[望]求职动机 · [目]视野判断', risk:'格局不够或被看穿动机', icon:'🏔️' },
+    'HR谈薪': { focus:'信息博弈 · 价值谈判闭环', coreCap:'[詩]叙事筹码 · [寺]节奏把控', risk:'底线暴露或僵持不下', icon:'⚖️' }
+  };
+
+  var roomData = [];
+  rooms.forEach(function(room) {
+    var meta = roomMeta[room] || { focus:'', coreCap:'', risk:'', icon:'🏠' };
+    // 收集该房间的题目和回答
+    var roomQs = [];
+    selectedQuestions.forEach(function(q, i) {
+      if (q.room === room) roomQs.push({ q: q, a: answers[i] || 4 });
+    });
+    if (roomQs.length === 0) return;
+
+    // === 1) 场景风格评价：加权+中位数交叉验证 ===
+    var roomDimScores = {
+      势:{weightedSum:0,weightCount:0,rawList:[]},
+      局:{weightedSum:0,weightCount:0,rawList:[]},
+      衡:{weightedSum:0,weightCount:0,rawList:[]},
+      法:{weightedSum:0,weightCount:0,rawList:[]}
+    };
+    var sc7 = {1:1, 2:2.5, 3:4, 4:5.5, 5:7, 6:8.5, 7:10};
+    roomQs.forEach(function(rq) {
+      (rq.q.dims || []).forEach(function(d, di) {
+        var rawVal = Math.max(1, Math.min(7, rq.a || 4));
+        var mapped = d.dir === -1 ? rawVal : (8 - rawVal);
+        var score = sc7[mapped] || 5.5;
+        // 第一位dim权重1.5(该题主要测此维), 其余1.0
+        var w = di === 0 ? 1.5 : 1.0;
+        roomDimScores[d.dim].weightedSum += score * w;
+        roomDimScores[d.dim].weightCount += w;
+        roomDimScores[d.dim].rawList.push(score);
+      });
+    });
+    // 每个dim计算加权均分 + 中位数 + 一致性
+    var dimEvidence = {}; // 记录证据链
+    ['势','局','衡','法'].forEach(function(dim){
+      var ds = roomDimScores[dim];
+      if(ds.rawList.length === 0){ dimEvidence[dim] = null; return; }
+      var weightedAvg = ds.weightCount > 0 ? ds.weightedSum / ds.weightCount : 5.5;
+      var sorted = ds.rawList.slice().sort(function(a,b){return a-b;});
+      var mid = Math.floor(sorted.length/2);
+      var median = sorted.length%2===1 ? sorted[mid] : (sorted[mid-1]+sorted[mid])/2;
+      var divergence = Math.abs(weightedAvg - median);
+      var consistent = divergence <= 1.5;
+      dimEvidence[dim] = {
+        weightedAvg: Math.round(weightedAvg*10)/10,
+        median: Math.round(median*10)/10,
+        divergence: Math.round(divergence*10)/10,
+        consistent: consistent,
+        signals: ds.rawList.length,
+        rawList: ds.rawList
+      };
+    });
+    // 场景风格标签（基于加权均分，而非一刀切）
+    var roomStyle = {};
+    var refStyle = style;
+    var roomScore10 = {};
+    var shiftThreshold = 0.5;
+    ['势','局','衡','法'].forEach(function(dim) {
+      var ev = dimEvidence[dim];
+      var score = ev ? ev.weightedAvg : 5.5;
+      // 考虑中位数修正：如果中位数和均分矛盾，取中位数（更稳健）
+      if(ev && !ev.consistent && ev.signals >= 3) score = ev.median;
+      roomScore10[dim] = score;
+      roomStyle[dim] = score >= 6 ? (dim==='势'?'外势':dim==='局'?'远局':dim==='衡'?'理衡':'活法')
+                     : (dim==='势'?'内势':dim==='局'?'近局':dim==='衡'?'情衡':'定法');
+    });
+    // 四象偏移检测
+    var roomBeastKey = roomStyle['势'] + '_' + roomStyle['局'];
+    var overallBeastKey = refStyle['势'] + '_' + refStyle['局'];
+    var beastShiftText = '';
+    var shiLabelDiff = roomStyle['势'] !== refStyle['势'];
+    var juLabelDiff = roomStyle['局'] !== refStyle['局'];
+    var shiNumDiff = Math.abs(roomScore10['势'] - finalDims['势']);
+    var juNumDiff = Math.abs(roomScore10['局'] - finalDims['局']);
+    if (!shiLabelDiff && !juLabelDiff) {
+      var diffParts = [];
+      if (shiNumDiff >= shiftThreshold) diffParts.push('势差' + (roomScore10['势']-finalDims['势']>=0?'+':'') + (roomScore10['势']-finalDims['势']).toFixed(1));
+      if (juNumDiff >= shiftThreshold) diffParts.push('局差' + (roomScore10['局']-finalDims['局']>=0?'+':'') + (roomScore10['局']-finalDims['局']).toFixed(1));
+      beastShiftText = diffParts.length > 0
+        ? '与本命战术同属一个象限，但' + diffParts.join('，') + '——数值波动未改变整体攻守格局'
+        : '与本命战术同属一个象限，攻守策略在此房间中自然延展';
+    } else if ((shiLabelDiff && shiNumDiff < shiftThreshold) && (juLabelDiff && juNumDiff < shiftThreshold)) {
+      beastShiftText = '四象标签有差异但数值接近——策略未发生实质偏移，自然发挥即可';
+    } else {
+      var beastMap = { '外势_远局':'青龙', '外势_近局':'白虎', '内势_远局':'朱雀', '内势_近局':'玄武' };
+      var overallBeast = beastMap[overallBeastKey] || overallBeastKey;
+      var roomBeast = beastMap[roomBeastKey] || roomBeastKey;
+      beastShiftText = '策略从<strong>' + overallBeast + '系</strong>（' + refStyle['势'] + '×' + refStyle['局'] + '）向<strong>' + roomBeast + '系</strong>（' + roomStyle['势'] + '×' + roomStyle['局'] + '）偏移——本房间的场景特性让你调整了攻守姿态';
+    }
+    // 场景风格适配度评价
+    var sceneStyleLabel = '';
+    var idealStyles = {
+      'HR初筛':  { 势:'外势', 局:'近局', note:'招聘BP关注快速推进——能力匹配就直接推，外求回报×务实当下' },
+      '业务面试': { 势:'内势', 局:'近局', note:'直属leader看能力匹配度和执行力——内求成长×务实当下，用自身实力说话' },
+      '交叉面试': { 势:'外势', 局:'近局', note:'跨部门PM看对外协作和工作推进——外求驱动×务实当下，沟通推动而非自我展示' },
+      '高管面试': { 势:'内势', 局:'远局', note:'VP看内在价值观和战略视野——内求成长×长期主义，格局比能力重要' },
+      'HR谈薪':   { 势:'外势', 局:'远局', note:'HRBP关注长期留任和总包匹配——外求回报×长期主义，不是单次交易' }
+    };
+    var ideal = idealStyles[room];
+    var matchCount = 0;
+    if (ideal) {
+      if (roomStyle['势'] === ideal['势']) matchCount++;
+      if (roomStyle['局'] === ideal['局']) matchCount++;
+    }
+    if (matchCount >= 2) sceneStyleLabel = '✅ 本房间场景风格与最佳策略高度一致，自然发挥即可';
+    else if (matchCount >= 1) sceneStyleLabel = '⚡ 与最佳策略部分一致——注意调整' + (roomStyle['势']!==ideal['势']?'「势」':'「局」') + '维度展示方式';
+    else sceneStyleLabel = '⚠️ 与最佳策略存在偏差，建议重新审视此房间的表达方式';
+
+    // === 2) 能力掌控度：该房间各偏旁松紧度（统一用 sc7 映射到 1-10 标尺）===
+    var radScores = {};
+    roomQs.forEach(function(rq) {
+      (rq.q.rads || []).forEach(function(r) {
+        var rawVal = Math.max(1, Math.min(7, rq.a || 4));
+        // 偏旁：距离中点法——坚定=松，犹豫=紧
+        var distFromMid = Math.abs(rawVal - 4);
+        var firmness = distFromMid + 4;
+        if (!radScores[r.rad]) radScores[r.rad] = { sum: 0, count: 0 };
+        radScores[r.rad].sum += (sc7[firmness] || 5.5);
+        radScores[r.rad].count += 1;
+      });
+    });
+    // 汇总该房间涉及的所有偏旁及其松紧度（均为 1-10 标尺）
+    var radTightnessList = [];
+    Object.keys(radScores).forEach(function(rad) {
+      var avg10 = Math.round(radScores[rad].sum / radScores[rad].count * 10) / 10;
+      var globalAvg = finalRadicals[rad] || 5;
+      var gap = Math.round((avg10 - globalAvg) * 10) / 10;
+      radTightnessList.push({ rad: rad, name: RADICAL_DEFS[rad] ? RADICAL_DEFS[rad].name : rad, roomVal: avg10, globalVal: globalAvg, gap: gap });
+    });
+    radTightnessList.sort(function(a, b) { return a.roomVal - b.roomVal; });
+    var weakRads = radTightnessList.filter(function(r) { return r.roomVal <= 4; });
+    var strongRads = radTightnessList.filter(function(r) { return r.roomVal >= 8; });
+
+    var controlSummary = '';
+    if (weakRads.length === 0) controlSummary = '所有偏旁都处于可控状态，没有明显防御盲区';
+    else if (weakRads.length <= 2) controlSummary = '有' + weakRads.length + '个薄弱偏旁（' + weakRads.map(function(r){return '['+r.rad+']'+r.name;}).join('、') + '）——面试官可能从这些点切入追问';
+    else controlSummary = '有' + weakRads.length + '个薄弱偏旁，防御面较宽——建议针对最弱的两个偏旁准备补充案例';
+
+    // === 3) 六字评分 + 房间综合分 ===
+    // 风格契合度：你的本命四象 vs 房间理想四象
+    var dimMatch = 0;
+    if (roomStyle['势'] === ideal['势']) dimMatch++;
+    if (roomStyle['局'] === ideal['局']) dimMatch++;
+    // 风格契合：主场不加成但标注，客场不重罚——用户应聚焦主场而非纠结客场
+    var styleMatch = dimMatch >= 2 ? 1.05 : dimMatch >= 1 ? 1.0 : 0.9;
+    var matchLabel = dimMatch >= 2 ? '主场' : dimMatch >= 1 ? '中性' : '客场';
+
+    // 每个字：松紧度即得分（1-10），干净直观
+    var charScores = chars.map(function(c) {
+      var tightSum = 0, tightCount = 0;
+      c.parts.forEach(function(p) {
+        if (radScores[p]) {
+          tightSum += radScores[p].sum / radScores[p].count;
+          tightCount += 1;
+        }
+      });
+      var roomTightness10 = tightCount > 0 ? Math.round(tightSum / tightCount * 10) / 10 : 5;
+      // 该房间是否重点考察此字
+      var isKey = false;
+      if (room === 'HR初筛' && (c.name === '詩' || c.name === '格')) isKey = true;
+      if (room === '业务面试' && (c.name === '能' || c.name === '历')) isKey = true;
+      if (room === '交叉面试' && (c.name === '格')) isKey = true;
+      if (room === '高管面试' && (c.name === '望' || c.name === '相')) isKey = true;
+      if (room === 'HR谈薪' && (c.name === '詩')) isKey = true;
+      return { name: c.name, score: roomTightness10, isKey: isKey, core: c.core, parts: c.parts };
+    });
+
+    // 房间综合分 = 加权均分（重点字权重1.5，常规字1.0）× 风格契合
+    var weightedSum = 0, weightTotal = 0;
+    charScores.forEach(function(c) {
+      // 重点字权重高，常规字仅作参考（不触发严重问题则忽略）
+      var w = c.isKey ? 2.0 : 0.3;
+      weightedSum += c.score * w;
+      weightTotal += w;
+    });
+    var roomAvg = Math.round(weightedSum / weightTotal * 10) / 10;
+    var roomFinal = Math.round(roomAvg * styleMatch * 10) / 10;
+
+    // 找出最弱字和最强字（仅在重点字中排序，常规字除非极弱否则忽略）
+    var sortedChars = charScores.slice().sort(function(a, b) { return a.score - b.score; });
+    var weakest = sortedChars[0];
+    var strongest = sortedChars[sortedChars.length - 1];
+
+    // 扣分原因 + 战术改进：聚焦重点字
+    var deductions = [];
+    var tactics = [];
+    // 重点字中最低分
+    var keyChars = charScores.filter(function(c) { return c.isKey; });
+    var weakKeys = keyChars.filter(function(c) { return c.score < 6; });
+    if (weakKeys.length > 0) {
+      weakKeys.sort(function(a, b) { return a.score - b.score; });
+      deductions.push('重点字' + weakKeys.map(function(c){return '「'+c.name+'」';}).join('、') + '偏弱——本房间面试官会重点考察这些能力');
+      weakKeys.forEach(function(wk) {
+        if (wk.score < 5) tactics.push('「' + wk.name + '」(' + wk.core + ')仅' + wk.score.toFixed(1) + '分——准备2-3个针对' + room + '场景的STAR案例');
+      });
+    }
+    // 常规字仅当极弱(≤3)才提醒
+    var regChars = charScores.filter(function(c) { return !c.isKey; });
+    var criticalReg = regChars.filter(function(c) { return c.score <= 3; });
+    if (criticalReg.length > 0 && weakKeys.length === 0) {
+      deductions.push('常规字' + criticalReg.map(function(c){return '「'+c.name+'」';}).join('、') + '出现严重短板');
+    }
+    // 强势重点字
+    var strongKeys = keyChars.filter(function(c) { return c.score >= 7.5; });
+    if (strongKeys.length > 0) {
+      tactics.push('本房间强势重点字：' + strongKeys.map(function(c){return '「'+c.name+'」('+c.score.toFixed(1)+')';}).join('、') + '——主动以此开路，掌握对话主动权');
+    }
+
+    // === 偏旁脱落与重组（能力掌控）===
+    var shedRads = weakRads.map(function(r){return r.rad;});
+    var recombineTips = [];
+    chars.forEach(function(c) {
+      var weakParts = c.parts.filter(function(p){return shedRads.indexOf(p) >= 0;});
+      var strongParts = c.parts.filter(function(p){return shedRads.indexOf(p) < 0;});
+      if (weakParts.length > 0 && strongParts.length > 0) {
+        // 该字有脱落但未全毁——可以重组
+        var weakNames = weakParts.map(function(p){return '['+p+']'+ (RADICAL_DEFS[p]?RADICAL_DEFS[p].name:p);}).join('、');
+        var strongNames = strongParts.map(function(p){return '['+p+']'+ (RADICAL_DEFS[p]?RADICAL_DEFS[p].name:p);}).join('+');
+       recombineTips.push('「' + c.name + '」不稳——' +weakNames + '在本房间松动，但' +strongNames + '仍牢固。可侧重展示' +strongNames+ '面来守住这个字的核心');
+      } else if (weakParts.length === c.parts.length) {
+        recombineTips.push('「' + c.name + '」全线承压——所有构成偏旁均偏弱。建议回避此字的正面展示，转为防守姿态');
+      }
+    });
+    var recombineText = recombineTips.length > 0 ? recombineTips.join('；') : '本房间无明显的偏旁脱落风险，六个字的结构保持完整';
+
+    // 房间级战术总结
+    var roomTactic = '';
+    if (room === 'HR初筛') roomTactic = '快速建立「安全可靠」第一印象。控制信息输出节奏，不该说的不说。用[格]展示人格稳定感，用[詩]控制叙事节奏。';
+    else if (room === '业务面试') roomTactic = '「深度验证」是核心。每个回答必须有数据、有逻辑、有复盘。用[能]和[历]撑起专业深度，弱[力]或弱[月]会被放大。';
+    else if (room === '交叉面试') roomTactic = '测「相容性」而非「能力」。展示你能和不同风格的人协作。用[格]体现差异化价值，用[相]论证与团队的互补关系。';
+    else if (room === '高管面试') roomTactic = '要求「战略视角」。不只讲做过什么，要讲为什么做、未来怎么做。用[望]阐明职业动机，用[目]展示行业判断。';
+    else if (room === 'HR谈薪') roomTactic = '「信息博弈」定胜负。谁掌握更多信息谁有主动权。用[詩]组织价值论述，用[寺]控制谈判节奏——先开口的人输。';
+
+    roomData.push({
+      room: room,
+      meta: meta,
+      // 场景风格
+      roomStyle: roomStyle,
+      beastShiftText: beastShiftText,
+      sceneStyleLabel: sceneStyleLabel,
+      ideal: ideal,
+      // 能力掌控度
+      radTightnessList: radTightnessList,
+      weakRads: weakRads,
+      strongRads: strongRads,
+      controlSummary: controlSummary,
+      // 六字评分 + 房间综合
+      charScores: charScores,
+      roomAvg: roomAvg,
+      roomFinal: roomFinal,
+      styleMatch: styleMatch,
+      matchLabel: matchLabel,
+      weakest: weakest,
+      strongest: strongest,
+      deductions: deductions,
+      tactics: tactics,
+      recombineText: recombineText,
+      roomTactic: roomTactic
+    });
+  });
+
+  // === 汇总：从房间数据推导总体结论（多数原则，非阈值一刀切）===
+  var overall = {};
+  // 风格：5个房间中最高频的势×局组合
+  var styleVotes = {};
+  roomData.forEach(function(rd){
+    var key = rd.roomStyle['势'] + '_' + rd.roomStyle['局'];
+    styleVotes[key] = (styleVotes[key] || 0) + 1;
+  });
+  var topKey = '', topCount = 0;
+  Object.keys(styleVotes).forEach(function(k){
+    if(styleVotes[k] > topCount){ topKey = k; topCount = styleVotes[k]; }
+  });
+  var parts = topKey.split('_');
+  overall.style = { 势: parts[0], 局: parts[1] };
+  // 衡和法：房间多数
+  var hengVotes={}, faVotes={};
+  roomData.forEach(function(rd){
+    hengVotes[rd.roomStyle['衡']] = (hengVotes[rd.roomStyle['衡']]||0)+1;
+    faVotes[rd.roomStyle['法']] = (faVotes[rd.roomStyle['法']]||0)+1;
+  });
+  var topHeng='',topFa='',cHeng=0,cFa=0;
+  Object.keys(hengVotes).forEach(function(k){if(hengVotes[k]>cHeng){topHeng=k;cHeng=hengVotes[k];}});
+  Object.keys(faVotes).forEach(function(k){if(faVotes[k]>cFa){topFa=k;cFa=faVotes[k];}});
+  overall.style.衡 = topHeng; overall.style.法 = topFa;
+  overall.styleLabel = topKey + '_' + topHeng + '_' + topFa;
+  // 风格灵活度
+  var sameRoomCount = roomData.filter(function(rd){
+    return rd.roomStyle['势'] === overall.style.势 && rd.roomStyle['局'] === overall.style.局;
+  }).length;
+  overall.flexibility = sameRoomCount; // 和多数风格一致的房间数（越高越稳定，越低越灵活）
+
+  // 字得分：取各房间的中位数（不受极端房间影响）
+  var chars = ['能','历','格','望','相','詩'];
+  overall.charScores = {};
+  chars.forEach(function(cn){
+    var scores = [];
+    roomData.forEach(function(rd){
+      rd.charScores.forEach(function(c){
+        if(c.name === cn) scores.push(c.score);
+      });
+    });
+    scores.sort(function(a,b){return a-b;});
+    var mid = Math.floor(scores.length/2);
+    overall.charScores[cn] = scores.length > 0 ? scores[mid] : 5;
+  });
+
+  // 偏旁：中位数聚合
+  overall.radicals = {};
+  var allRads = ['厶','月','匕','厂','力','木','各','亡','王','目','言','寺'];
+  allRads.forEach(function(rad){
+    var vals = [];
+    roomData.forEach(function(rd){
+      rd.radTightnessList.forEach(function(rt){
+        if(rt.rad === rad) vals.push(rt.roomVal);
+      });
+    });
+    vals.sort(function(a,b){return a-b;});
+    overall.radicals[rad] = vals.length > 0 ? vals[Math.floor(vals.length/2)] : 5;
+  });
+
+  return { roomData: roomData, overall: overall };
+}
+
+
+function renderReport() {
+  try {
+  const r = S.result;
+  if (!r) { app.innerHTML='<div class="header"><h1>错误</h1><p>S.result 为空</p></div>'; return; }
+  // 从 computeRoomScores 获取房间数据和总体聚合
+  const roomResult = computeRoomScores(S.selectedQuestions, S.answers, r.finalRadicals, r.finalDims, r.style);
+  const roomData = roomResult.roomData;
+  const overall = roomResult.overall;
+  const style = overall.style;
+  // 从房间多数投票获取类型名称
+  const typeName = getStyleTypeName(style);
+  // 用旧引擎获取 typeDist（仅用于概率展示）
+  const typeDist = r.typeDist || computeTypeDistribution(r.finalDims);
+  const { dimProbs, top3 } = typeDist;
+  // 查找所属神兽（用多数投票风格）
+  const beastKey = style.势 + '_' + style.局;
+  let beastInfo = null;
+  for (let b of FOUR_BEASTS) {
+    for (let t of b.types) {
+      if (t.key.startsWith(beastKey)) { beastInfo = { beast: b, type: t }; break; }
+    }
+    if (beastInfo) break;
+  }
+  if (!typeDist || !typeName) { app.innerHTML='<div class="header"><h1>错误</h1><p>typeDist 缺失</p></div>'; return; }
+
+  const finalRadicals = overall.radicals;
+  const charAssess = overallCharAssessment(finalRadicals);
+  const crossInsights = crossAnalysis(style, finalRadicals, charAssess);
+  const chars = ['能', '历', '格', '望', '相', '詩'];
+
+  // 维度概率条（含个性化评价）
+  const dimProbHtml = dimProbs.map(dp => {
+    const tagCls1 = {势:'tag-in',局:'tag-near',衡:'tag-feel',法:'tag-fixed'}[dp.dim];
+    const tagCls2 = {势:'tag-out',局:'tag-far',衡:'tag-logic',法:'tag-flex'}[dp.dim];
+    const score = r.finalDims[dp.dim];
+    const evalText = buildDimEvaluation(dp.dim, score);
+    return `<div style="background:var(--input-bg);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-weight:700;color:var(--accent);font-size:14px;">${dp.dim} · ${score >= 6 ? dp.pole2 : dp.pole1}倾向</span>
+        <span style="font-size:11px;color:var(--sub);">评分 ${score}/10</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:11px;margin-bottom:8px;">
+        <span class="tag ${tagCls1}" style="width:36px;text-align:center;">${dp.pole1}</span>
+        <div style="flex:1;height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;display:flex;">
+          <div style="width:${dp.p1}%;height:100%;background:${tagCls1==='tag-in'?'#8b5b9f':tagCls1==='tag-near'?'#9f7b5b':tagCls1==='tag-feel'?'#c59b5b':'#7b8b9f'};border-radius:4px 0 0 4px;"></div>
+          <div style="width:${dp.p2}%;height:100%;background:${tagCls2==='tag-out'?'#5b8cbf':tagCls2==='tag-far'?'#5b9f7b':tagCls2==='tag-logic'?'#c56b5b':'#5b9f9f'};border-radius:0 4px 4px 0;"></div>
+        </div>
+        <span class="tag ${tagCls2}" style="width:36px;text-align:center;">${dp.pole2}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--sub);margin-bottom:8px;">
+        <span>${dp.p1.toFixed(1)}% ${dp.pole1}</span><span>${dp.p2.toFixed(1)}% ${dp.pole2}</span>
+      </div>
+      <div style="font-size:13px;line-height:1.8;color:#d0d0d8;background:rgba(226,176,74,0.04);border-radius:8px;padding:10px 14px;border-left:3px solid var(--accent);">
+        ${evalText}
+      </div>
+    </div>`;
+  }).join('');
+
+  // 能力盘总结
+  const charSummaryHtml = chars.map(cn => {
+    const d = CHAR_DEFS[cn];
+    const parts = d.parts;
+    const avg = Math.round(parts.reduce((s, p) => s + (finalRadicals[p] || 5), 0) / parts.length);
+    const qual = charOverallLabel(avg);
+    return `<div class="char-card" style="border-left:3px solid ${qual.cls};">
+      <div class="char-name" style="color:${qual.cls};">「${cn}」<span style="font-size:11px;margin-left:6px;">${qual.label}</span></div>
+      <div class="char-parts">${d.core}</div>
+      <div style="font-size:11px;color:var(--sub);margin-bottom:8px;">${qual.desc}</div>
+      ${parts.map(p => {
+        const v = finalRadicals[p] || 5;
+        const tl = tightnessLabel(v);
+        return `<div class="tightness-item">
+          <span class="t-label">[${p}]</span><span style="font-size:10px;color:var(--sub);width:40px;">${RADICAL_DEFS[p].name}</span>
+          <div class="t-bar"><div class="t-fill" style="width:${v*10}%;background:${getBarColor(v)}"></div></div>
+          <span class="t-val" style="color:${getBarColor(v)};">${v}</span>
+          <span style="font-size:9px;color:var(--sub);width:28px;">${tl.label}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+
+  // ===== 总-分结构报告 =====
+
+  // 房间得分总和（用于总评）
+  var totalRoomAvg = 0, roomCount = 0;
+  roomData.forEach(function(rd) {
+    totalRoomAvg += rd.roomFinal; roomCount++;
+  });
+  totalRoomAvg = roomCount > 0 ? Math.round(totalRoomAvg / roomCount * 10) / 10 : 5;
+  var totalLabel = totalRoomAvg >= 6.5 ? '强势适应' : totalRoomAvg >= 4.5 ? '中等适应' : '需要加强';
+
+  app.innerHTML = `
+    <div class="header">
+      <h1>🎯 战术人格评估报告</h1>
+      <div class="subtitle">能量来源×价值取向</div>
+      <div class="user-badge">👤 ${esc(S.nickname)}</div>
+    </div>
+
+    <!-- ═══════════ 总：综合战术评价 ═══════════ -->
+    <div class="report-section" style="border:2px solid var(--accent);border-radius:16px;padding:24px 20px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="font-size:20px;">📊</span>
+        <h2 style="margin:0;font-size:18px;">综合战术评价</h2>
+      </div>
+      <div style="font-size:11px;color:var(--sub);margin-bottom:18px;">基于30道场景题的五房间综合分析</div>
+
+      <!-- 总摘要卡：战术人格 + 六字 + 房间均分 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+        <!-- 战术人格 -->
+        <div style="background:var(--input-bg);border-radius:12px;padding:16px;text-align:center;
+          ${beastInfo ? 'border:2px solid '+beastInfo.beast.color+';' : 'border:1px solid var(--border);'}">
+          <div style="font-size:32px;margin-bottom:2px;">${beastInfo?beastInfo.beast.symbol:'🎯'}</div>
+          <div style="font-weight:800;font-size:17px;color:${beastInfo?beastInfo.beast.color:'var(--accent)'};margin-bottom:2px;">${typeName}</div>
+          <div style="font-size:10px;color:var(--sub);margin-bottom:6px;">${style.势} · ${style.局} · ${style.衡} · ${style.法}</div>
+          <div style="font-size:10px;color:${beastInfo?beastInfo.beast.color:'var(--accent)'};">${beastInfo?beastInfo.beast.name+'系':'四象'}</div>
+          <div style="margin-top:8px;font-size:9px;color:var(--sub);">五房间多数投票</div>
+        </div>
+        <!-- 六字总览 -->
+        <div style="background:var(--input-bg);border-radius:12px;padding:14px;border:1px solid var(--border);">
+          <div style="font-size:11px;color:var(--sub);margin-bottom:8px;text-align:center;">📋 六字总览</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+            ${chars.map(cn => {
+              var d = CHAR_DEFS[cn];
+              var avg = Math.round(d.parts.reduce(function(s,p){return s+(finalRadicals[p]||5);},0)/d.parts.length*10)/10;
+              var clr = avg >= 7 ? '#4eca7a' : avg >= 5 ? '#e2b04a' : '#ca5b5b';
+              return '<div style="text-align:center;padding:4px 2px;">' +
+                '<div style="font-size:18px;font-weight:800;color:'+clr+';">「'+cn+'」</div>' +
+                '<div style="font-size:9px;color:var(--sub);">'+d.core.substring(0,6)+'</div>' +
+                '<div style="font-size:14px;font-weight:700;color:'+clr+';">'+avg+'</div></div>';
+            }).join('')}
+          </div>
+        </div>
+        <!-- 综合评分（进度条样式） -->
+        <div style="background:var(--input-bg);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border);">
+          <div style="font-size:11px;color:var(--sub);margin-bottom:8px;">🏠 五房间综合</div>
+          <!-- 分数 -->
+          <div style="font-size:32px;font-weight:800;color:${totalRoomAvg>=6?'#4eca7a':totalRoomAvg>=4?'#e2b04a':'#ca5b5b'};margin-bottom:2px;">${totalRoomAvg.toFixed(1)}</div>
+          <div style="font-size:13px;color:var(--sub);margin-bottom:8px;"><span style="color:#888;">/</span> <strong style="color:#4eca7a;">10.0</strong> · ${totalLabel}</div>
+          <!-- 进度条 -->
+          <div style="width:100%;height:10px;background:rgba(255,255,255,0.06);border-radius:5px;overflow:hidden;position:relative;">
+            <div style="width:${totalRoomAvg*10}%;height:100%;border-radius:5px;background:linear-gradient(90deg,#ca5b5b 0%,#e2b04a 50%,#4eca7a 100%);transition:width 0.8s ease;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--sub);margin-top:3px;">
+            <span>0</span><span>5.0</span><span>10.0</span>
+          </div>
+          <div style="font-size:9px;color:var(--sub);margin-top:6px;">基础分 × 松紧系数 × 战术加成 × 房间适配度</div>
+        </div>
+      </div>
+
+      <!-- 核心洞察（精简为3条） -->
+      <div style="background:rgba(226,176,74,0.05);border-radius:10px;padding:14px 18px;border-left:3px solid var(--accent);">
+        <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px;">💡 核心战术洞察</div>
+        ${crossInsights.slice(0,3).map(function(t){return '<div style="font-size:12px;line-height:1.8;color:#c0c0c8;margin-bottom:4px;">• '+t+'</div>';}).join('')}
+        ${charAssess.strongChars.length ? '<div style="font-size:12px;line-height:1.8;color:#4eca7a;margin-bottom:4px;">• 强势字：' + charAssess.strongChars.map(function(c){return '「'+c+'」';}).join(' ') + '——面试中用这些字开路</div>' : ''}
+        ${charAssess.weakChars.length ? '<div style="font-size:12px;line-height:1.8;color:#ca5b5b;margin-bottom:4px;">• 薄弱字：' + charAssess.weakChars.map(function(c){return '「'+c+'」';}).join(' ') + '——面试官可能从这些字切入追问</div>' : ''}
+        ${function(){
+          // 一致性验证摘要
+          if(!S.consistencyData) return '';
+          var solidRads = [], flexRads = [], uncertainRads = [];
+          Object.keys(S.consistencyData).forEach(function(rad){
+            var cd = S.consistencyData[rad];
+            var allOk = true;
+            (cd.pairs||[]).forEach(function(p){
+              var bd = (p.base||4)>4?1:(p.base||4)<4?-1:0;
+              var pd = (p.probe||4)>4?1:(p.probe||4)<4?-1:0;
+              if(bd !== pd && bd !== 0 && pd !== 0) allOk = false;
+            });
+            var tightness = (finalRadicals && finalRadicals[rad]) ? finalRadicals[rad] : 5;
+            if(allOk) solidRads.push(rad);
+            else if(tightness >= 7) flexRads.push(rad);       // 掌握度高但场景间切换 → 灵活
+            else uncertainRads.push(rad);                      // 掌握度低 + 不一致 → 拿捏不准
+          });
+          var html = '';
+          if(solidRads.length > 0) html += '<div style="font-size:11px;line-height:1.6;color:#4eca7a;margin-bottom:2px;">🔒 稳固掌握：' + solidRads.map(function(r){return '['+r+']'+(RADICAL_DEFS[r]?RADICAL_DEFS[r].name:'');}).join(' ') + '——不同场景下策略一致，应对自如</div>';
+          if(flexRads.length > 0) html += '<div style="font-size:11px;line-height:1.6;color:var(--accent);margin-bottom:2px;">🔀 灵活变通：' + flexRads.map(function(r){return '['+r+']'+(RADICAL_DEFS[r]?RADICAL_DEFS[r].name:'');}).join(' ') + '——场景不同策略不同，非拿捏不准而是因势而变</div>';
+          if(uncertainRads.length > 0) html += '<div style="font-size:11px;line-height:1.6;color:#e67e22;margin-bottom:2px;">🔓 需加强：' + uncertainRads.map(function(r){return '['+r+']'+(RADICAL_DEFS[r]?RADICAL_DEFS[r].name:'');}).join(' ') + '——不同场景下策略摇摆且掌握度偏低，建议重点加固</div>';
+          return html;
+        }()}
+        ${function(){
+          var se = stabilityEval();
+          if(!se) return '';
+          return '<div style="font-size:11px;line-height:1.6;color:#c0c0c8;margin-top:2px;border-top:1px dashed var(--border);padding-top:6px;">🔁 <strong>稳定性策略</strong>：' + se.style + '（均分' + se.avg + '）——' + se.desc + '</div>';
+        }()}
+      </div>
+    </div>
+
+    <!-- ═══════════ 分：五房间场景拆解 ═══════════ -->
+    <div class="report-section" style="margin-top:20px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="font-size:20px;">🔍</span>
+        <h2 style="margin:0;font-size:18px;">五房间场景拆解</h2>
+      </div>
+      <div style="font-size:11px;color:var(--sub);margin-bottom:18px;">每个房间独立评估：场景风格评价 → 能力掌控度 → 六字评分 → 战术改进</div>
+
+      ${roomData.map(function(rd, ri) {
+        return '<div style="margin-bottom:20px;background:var(--card);border-radius:14px;padding:20px;border:1px solid var(--border);">' +
+          // 房间标题
+          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">' +
+            '<span style="font-size:28px;">' + rd.meta.icon + '</span>' +
+            '<div style="flex:1;">' +
+              '<div style="font-weight:800;font-size:17px;color:var(--accent);">' + rd.room + '</div>' +
+              '<div style="font-size:11px;color:var(--sub);">' + rd.meta.focus + '</div>' +
+            '</div>' +
+            '<div style="text-align:right;font-size:9px;color:var(--sub);background:rgba(15,22,41,0.6);padding:4px 10px;border-radius:6px;">核心能力<br>' + rd.meta.coreCap + '</div>' +
+          '</div>' +
+
+          // === 场景风格评价 ===
+          '<div style="margin-bottom:14px;">' +
+            '<div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px;">🎯 场景风格评价</div>' +
+            '<div style="font-size:12px;line-height:1.8;color:#c0c0c8;margin-bottom:6px;">' + rd.sceneStyleLabel + '</div>' +
+            // 四维标签
+            '<div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">' +
+              ['势','局','衡','法'].map(function(dim) {
+                var st = rd.roomStyle[dim];
+                var cls = {外势:'tag-out',内势:'tag-in',远局:'tag-far',近局:'tag-near',理衡:'tag-logic',情衡:'tag-feel',活法:'tag-flex',定法:'tag-fixed'}[st] || '';
+                return '<span class="tag ' + cls + '" style="font-size:10px;">' + dim + '·' + st + '</span>';
+              }).join('') +
+            '</div>' +
+            // 四象偏移
+            '<div style="font-size:11px;color:var(--sub);line-height:1.7;margin-bottom:4px;">' + rd.beastShiftText + '</div>' +
+            // 信号分歧提示（仅在有矛盾时显示双倾向）
+            (function(){
+              if(!rd.dimEvidence) return '';
+              var parts = [];
+              ['势','局'].forEach(function(dim){
+                var ev = rd.dimEvidence[dim];
+                if(!ev || ev.signals===0) return;
+                if(ev.consistent) return;
+                var raw = ev.rawList || [];
+                var labelNow = rd.roomStyle[dim];
+                var opposite = {'外势':'内势','内势':'外势','远局':'近局','近局':'远局'}[labelNow] || '';
+                var oppCount = raw.filter(function(v){
+                  return dim==='势' ? (labelNow==='外势' && v<6) || (labelNow==='内势' && v>=6)
+                       : (labelNow==='远局' && v<6) || (labelNow==='近局' && v>=6);
+                }).length;
+                var oppPct = raw.length>0 ? Math.round(oppCount/raw.length*100) : 0;
+                if(oppPct >= 25 && oppPct <= 75){
+                  parts.push(dim + '信号有分歧，也可呈现<strong>' + opposite + '</strong>倾向（' + oppPct + '%信号偏此方向）');
+                }
+              });
+              return parts.length>0 ? '<div style="font-size:10px;color:var(--accent);margin-bottom:4px;line-height:1.6;">⚠ ' + parts.join('；') + '</div>' : '';
+            }()) +
+            (rd.ideal ? '<div style="font-size:10px;color:var(--sub);">最佳策略：' + rd.ideal['势'] + ' × ' + rd.ideal['局'] + '——' + rd.ideal.note + '</div>' : '') +
+          '</div>' +
+
+          // === 能力掌控度 ===
+          '<div style="margin-bottom:14px;background:var(--input-bg);border-radius:10px;padding:14px;">' +
+            '<div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px;">🔗 能力掌控度（偏旁松紧度）</div>' +
+            '<div style="font-size:11px;color:var(--sub);margin-bottom:8px;">' + rd.controlSummary + '</div>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+              rd.radTightnessList.map(function(rt) {
+                var barColor = rt.roomVal >= 8 ? '#4eca7a' : rt.roomVal >= 5 ? '#e2b04a' : '#ca5b5b';
+                return '<div style="flex:1;min-width:80px;text-align:center;background:rgba(15,22,41,0.6);border-radius:8px;padding:8px 4px;">' +
+                  '<div style="font-weight:700;font-size:13px;color:' + barColor + ';">[' + rt.rad + ']</div>' +
+                  '<div style="font-size:9px;color:var(--sub);">' + rt.name + '</div>' +
+                  '<div style="font-size:16px;font-weight:800;color:' + barColor + ';">' + rt.roomVal.toFixed(1) + '</div>' +
+                  '<div style="font-size:8px;color:var(--sub);">全局' + rt.globalVal.toFixed(1) + ' ' + (rt.gap >= 0 ? '+' : '') + rt.gap.toFixed(1) + '</div>' +
+                  '</div>';
+              }).join('') +
+            '</div>' +
+          '</div>' +
+
+          // === 六字评分 ===
+          '<div style="margin-bottom:12px;">' +
+            '<div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px;">📐 六字房间评分</div>' +
+            // 房间综合分+六字得分
+            '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;background:rgba(15,22,41,0.4);border-radius:10px;padding:12px 14px;">' +
+              // 综合得分（大字）
+              '<div style="text-align:center;min-width:64px;">' +
+                '<div style="font-size:30px;font-weight:800;color:' + (rd.roomFinal>=7?'#4eca7a':rd.roomFinal>=5?'#e2b04a':'#ca5b5b') + ';">' + rd.roomFinal.toFixed(1) + '</div>' +
+                '<div style="font-size:9px;color:var(--sub);">综合分</div>' +
+              '</div>' +
+              // 拆分说明：能力得分 + 风格匹配，用大白话
+              '<div style="flex:1;font-size:10px;color:var(--sub);line-height:1.8;">' +
+                '<div><span style="color:#8892a6;">答题表现</span> <span style="color:#c0c0c8;font-weight:600;">' + rd.roomAvg.toFixed(1) + '分</span>' +
+                ' · 风格 <span style="color:' + (rd.matchLabel==='客场'?'#95a5a6':rd.matchLabel==='中性'?'#e2b04a':'#4eca7a') + ';font-weight:600;">' + (rd.matchLabel==='客场'?'不太对路':rd.matchLabel==='中性'?'部分对路':'完全对路') + '（×' + rd.styleMatch.toFixed(1) + '）</span></div>' +
+                '<div style="font-size:9px;color:#6b7280;">' + (rd.matchLabel === '客场' ? '⚠️ 你的风格和这个房间气场不合——不用硬改自己，重点补弱项能力' : rd.matchLabel === '中性' ? '⚡ 风格对了一半——发挥对路的能力，微调表达方式' : '✅ 风格跟房间完全对路——这是你的优势战场，放手发挥') + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">' +
+              rd.charScores.sort(function(a,b){return a.name.localeCompare(b.name,'zh');}).map(function(c) {
+                var barColor = c.score >= 8 ? '#4eca7a' : c.score >= 5 ? '#e2b04a' : '#ca5b5b';
+                // 构建偏旁明细
+                var partsDetail = (c.parts||[]).map(function(p){
+                  var found = rd.radTightnessList.filter(function(rt){return rt.rad===p;});
+                  var v = found.length>0 ? found[0].roomVal : '-';
+                  return '['+p+']' + (typeof v==='number'?v.toFixed(1):v);
+                }).join(' ');
+                return '<div style="flex:1;min-width:65px;text-align:center;background:rgba(15,22,41,0.6);border-radius:8px;padding:6px 3px;">' +
+                  '<div style="font-weight:700;font-size:13px;color:' + barColor + ';">「' + c.name + '」</div>' +
+                  (c.isKey ? '<div style="font-size:7px;color:var(--accent);">⭐重点</div>' : '') +
+                  '<div style="font-size:16px;font-weight:800;color:' + barColor + ';">' + c.score.toFixed(1) + '</div>' +
+                  '<div style="font-size:7px;color:var(--sub);line-height:1.3;">' + partsDetail + '</div>' +
+                  '</div>';
+              }).join('') +
+            '</div>' +
+          '</div>' +
+
+          // === 扣分原因 + 战术改进 + 偏旁重组 ===
+          '<div style="background:rgba(226,176,74,0.04);border-radius:10px;padding:12px 16px;border-left:3px solid var(--accent);">' +
+            (rd.deductions.length > 0 ? '<div style="font-size:12px;margin-bottom:6px;line-height:1.7;"><span style="color:#ca5b5b;">⚠ 扣分原因：</span>' + rd.deductions.join('；') + '</div>' : '') +
+            (rd.tactics.length > 0 ? '<div style="font-size:12px;margin-bottom:6px;line-height:1.7;"><span style="color:#4eca7a;">💡 战术改进：</span>' + rd.tactics.join('；') + '</div>' : '') +
+            '<div style="font-size:11px;color:var(--sub);line-height:1.6;margin-bottom:4px;">📋 <strong>房间战术：</strong>' + rd.roomTactic + '</div>' +
+            '<div style="font-size:11px;line-height:1.7;color:#c0c0c8;background:rgba(15,22,41,0.4);border-radius:6px;padding:8px 12px;border-left:2px solid var(--accent2);"><span style="color:var(--accent2);font-weight:600;">📜 能力重组：</span>' + rd.recombineText + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('')}
+
+      <!-- 五房间风格分布 -->
+      <details style="margin-top:12px;font-size:12px;color:var(--sub);cursor:pointer;">
+        <summary style="margin-bottom:8px;">🧬 五房间场景风格分布（展开）</summary>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          ${roomData.map(function(rd){
+            var beastMap = {'外势_远局':'🐉青龙','外势_近局':'🐅白虎','内势_远局':'🐦朱雀','内势_近局':'🐢玄武'};
+            var key = rd.roomStyle['势']+'_'+rd.roomStyle['局'];
+            return '<div style="background:var(--input-bg);border-radius:8px;padding:8px 12px;font-size:11px;">' +
+              rd.meta.icon + ' ' + rd.room + '：' + (beastMap[key]||key) + ' ' + rd.roomStyle['势']+'×'+rd.roomStyle['局'] +
+              '</div>';
+          }).join('')}
+        </div>
+        <div style="margin-top:6px;font-size:11px;color:var(--sub);">总风格 = 多数投票：<strong>${style.势}×${style.局}</strong>（${overall.flexibility}/5房间与此一致）</div>
+      </details>
+    </div>
+
+    <div class="btn-row-center">
+      <button class="btn-restart" onclick="restart()">⟳ 重新评估</button>
+      <button class="btn-restart" onclick="switchTo('history')">📋 历史记录</button>
+      <button class="btn-restart" onclick="switchTo('login')">🏠 返回首页</button>
+      <button class="btn-ai" id="aiBtn" onclick="aiDeepAnalysis()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;">🤖 AI深度解读</button>
+    </div>
+    <div id="aiResult" style="margin-top:16px;"></div>
+  `;
+  } catch(e) {
+    app.innerHTML = `<div class="header"><h1>报告渲染出错</h1><p style="color:var(--bar-low);">${e.message}</p><pre style="font-size:11px;color:var(--sub);white-space:pre-wrap;">${e.stack||''}</pre><br><button class="btn-restart" onclick="restart()">⟳ 重新评估</button></div>`;
+  }
+}
+
+// ===== 历史记录页 =====
+function renderHistory(){
+  const data=getStorage();
+  const sessions=data.sessions||[];
+  let list='';
+  if(!sessions.length){
+    list='<div class="no-history">还没有评估记录。<br>完成一次评估后，结果会自动保存在这里。</div>';
+  }else{
+    list=sessions.slice().reverse().map((s,i)=>{
+      const idx=sessions.length-1-i;
+      return `<div class="history-item" onclick="viewHistory(${idx})">
+        <div><div class="h-type">${s.typeName} · ${s.styleStr}</div><div class="h-date">${s.date}</div></div>
+        <span class="h-delete" onclick="event.stopPropagation();delSession(${idx})">删除</span>
+      </div>`;
+    }).join('');
+  }
+  app.innerHTML=`
+    <div class="header"><h1>🎯 历史记录</h1><div class="subtitle">战术人格评估历史</div></div>
+    <div class="history-list">${list}</div>
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn-restart" onclick="switchTo('login')">← 返回首页</button>
+      ${sessions.length>0?`<button class="btn-restart" onclick="clearAll()" style="color:var(--bar-low);">清空全部</button>`:''}
+    </div>
+  `;
+}
+function viewHistory(idx){
+  const data=getStorage(); const s=data.sessions[idx]; if(!s)return;
+  S.result={finalDims:s.finalDims,finalRadicals:s.finalRadicals,style:s.style,typeDist:s.typeDist||computeTypeDistribution(s.finalDims)};
+  S.answers=s.answers||[]; S.questions=s.questions||[]; S.nickname=data.nickname;
+  S.view='report'; render();
+}
+function delSession(idx){if(!confirm('确定删除这条记录？'))return;const d=getStorage();d.sessions.splice(idx,1);saveStorage(d);render();}
+function clearAll(){if(!confirm('确定清空全部历史记录？不可恢复。'))return;const d=getStorage();d.sessions=[];saveStorage(d);render();}
+
+// ============================================================
+// 四象神兽 · 16战术人格总揽
+// ============================================================
+const FOUR_BEASTS = [
+  {
+    name: '青龙', element: '木', season: '春', direction: '东',
+    symbol: '🐉', color: '#4a9e7b', bg: 'rgba(74,158,123,0.08)',
+    desc: '青龙属木，主东方，象征生发与权威。青龙战术者追求外部世界的认可与回报，同时以长期主义视角布局——他们是天生的「造局者」，既看重结果也看重方向。',
+    rule: '外势 × 远局', ruleDesc: '外求回报 · 长期主义',
+    types: [
+      { key: '外势_远局_理衡_定法', name: '布局型', desc: '如青龙盘踞，静观全局而后动。你追求外部世界的认可和回报，同时以长期主义视角布局每一步。面试中你最强的牌是「格局感」——你不仅关注岗位本身，更关注这件事在更大图景中的位置，而且你知道自己要什么。' },
+      { key: '外势_远局_理衡_活法', name: '演化型', desc: '如青龙乘云，不拘一格而求变。你以外求驱动，有清晰的长期方向但不拘泥于固定路径——相信演化比计划更有力量。面试中你能根据对方的反馈实时重组你的优势展示，灵活但不失方向。' },
+      { key: '外势_远局_情衡_定法', name: '感召型', desc: '如青龙吟啸，以信念凝聚人心。你以外求驱动搭配长期主义——用愿景和价值观来影响他人，坚定来自于你对自己所选方向的深信不疑。面试中你不是在「说服」面试官，而是在「感召」志同道合的人。' },
+      { key: '外势_远局_情衡_活法', name: '渗透型', desc: '如青龙化雨，润物无声而渐成气候。你以外求驱动但不急于展示全部实力——通过持续的关系经营和软性影响，让对方在不知不觉中倾向于你。面试中你的优势在于「让人舒服地被你说服」。' }
+    ]
+  },
+  {
+    name: '白虎', element: '金', season: '秋', direction: '西',
+    symbol: '🐅', color: '#d4a853', bg: 'rgba(212,168,83,0.08)',
+    desc: '白虎属金，主西方，象征锐利与行动。白虎战术者目标明确、出手果决——他们关注外部回报和当下结果，是「拿结果说话」的行动派。',
+    rule: '外势 × 近局', ruleDesc: '外求回报 · 务实当下',
+    types: [
+      { key: '外势_近局_理衡_定法', name: '压制型', desc: '如白虎下山，正面强攻不留余地。你以外求驱动和务实当下为准则——擅长用事实和数据直接展示专业能力。面试中你的战术是「正面碾压」：用最有说服力的案例直接拿下关键评价点。' },
+      { key: '外势_近局_理衡_活法', name: '拆解型', desc: '如白虎猎食，精准锁定而后各个击破。你以外求驱动务实分析对方的评价体系，逐一拆解每个评估维度并有针对性地回应。面试中每一句话都瞄准一个具体的评分点——不做无意义的展示。' },
+      { key: '外势_近局_情衡_定法', name: '共鸣型', desc: '如白虎护佑，以情动人建立信任。你以外求驱动快速感知面试官的关注点，并与之建立情感连接。面试中你不是在回答问题——你是在建立一种「我们是一类人」的共鸣感，用关系达成结果。' },
+      { key: '外势_近局_情衡_活法', name: '适应型', desc: '如白虎巡猎，随猎物变换策略。你以外求驱动敏锐感知面试现场的微妙氛围，实时调整表达方式和节奏。面试中没有固定的「你」——你能成为对方最想看到的那种候选人，以变制胜。' }
+    ]
+  },
+  {
+    name: '朱雀', element: '火', season: '夏', direction: '南',
+    symbol: '🐦', color: '#c43a31', bg: 'rgba(196,58,49,0.08)',
+    desc: '朱雀属火，主南方，象征内省与超越。朱雀战术者以内心的价值判断为驱动力，追求长期的意义而非短期的回报——他们「向内求索，向上突破」，是自我迭代的深度思考者。',
+    rule: '内势 × 远局', ruleDesc: '内求成长 · 长期主义',
+    types: [
+      { key: '内势_远局_理衡_定法', name: '孤局型', desc: '如朱雀独立高枝，不依赖外部认可而自成体系。你以内求成长驱动，有独立且自洽的职业判断系统。面试中你的力量在于「独立思考」——你能提出别人想不到的洞察，让面试官觉得你不是在应聘，而是在提供咨询。' },
+      { key: '内势_远局_理衡_活法', name: '深度型', desc: '如朱雀浴火，每一次自我重构都是一次进化。你以内求成长和长期主义驱动——善于向内挖掘，不断拆解重组认知框架。面试中你的优势是「思考的深度」：一个问题往下挖三层，展现远超岗位要求的思维质量。' },
+      { key: '内势_远局_情衡_定法', name: '信念型', desc: '如朱雀衔木，以内心信念为燃料不断燃烧。你以内求成长驱动——职业选择不是「找一份工作」而是「找一个值得投入的使命」。面试中你的真诚和信念感能让面试官觉得你不是来打工的——你是来一起做事的。' },
+      { key: '内势_远局_情衡_活法', name: '流动型', desc: '如朱雀随风，如水般适配各种形态而不失本心。你以内求成长和长期主义驱动——无论环境如何变化，都能找到让自己舒适的存在方式。面试中你展现了「千面而不失我」的特质，让对方看到你的弹性和韧性。' }
+    ]
+  },
+  {
+    name: '玄武', element: '水', season: '冬', direction: '北',
+    symbol: '🐢', color: '#5b7b9f', bg: 'rgba(91,123,159,0.08)',
+    desc: '玄武属水，主北方，象征守护与积累。玄武战术者以内心的标准为锚，在现实中稳步构建自己的壁垒——他们不追逐风口，而是「向内扎根，就地固守」，用持续的深耕换取不可替代性。',
+    rule: '内势 × 近局', ruleDesc: '内求成长 · 务实当下',
+    types: [
+      { key: '内势_近局_理衡_定法', name: '深耕型', desc: '如玄武负碑，以不可动摇的专业深度构筑护城河。你以内求成长和务实当下为准则——在一个领域持续积累直到成为不可替代的专家。面试中你不需要展示广度——你只需要展示在这个方向上「没有人比你更深」。' },
+      { key: '内势_近局_理衡_活法', name: '解析型', desc: '如玄武观纹，以缜密的分析力拆解复杂问题。你以内求成长驱动，在静默中深入分析——别人还在讨论表面时你已经找到了底层逻辑。面试中你的思维密度是你的王牌：你说的每一句话都经过了深度加工。' },
+      { key: '内势_近局_情衡_定法', name: '守护型', desc: '如玄武护穴，以忠诚和责任感守护自己的领域。你以内求成长和务实当下为准则——对自己认定的人和事有极强的承诺感，是团队中最可靠的存在。面试中你的「可靠感」是最大的资本：让对方觉得把重要的事交给你可以完全放心。' },
+      { key: '内势_近局_情衡_活法', name: '直觉型', desc: '如玄武感应，以敏锐的直觉判断人和事的本质。你以内求成长和务实当下驱动——有一种难以言说的判断力，能在信息不完全的情况下凭感觉做出正确的选择。面试中你依靠的是「对人的直觉」：快速读懂面试官真正关心的是什么。' }
+    ]
+  }
+];
+
+function renderBeasts() {
+  let html = '';
+  html += '<div class="header"><h1>🎯 四象神兽 · 16战术人格</h1><div class="subtitle">青龙·白虎·朱雀·玄武 —— 四方守护，各领四型</div></div>';
+
+  // 四象总揽 2×2 网格
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">';
+  FOUR_BEASTS.forEach(beast => {
+    html += '<div style="background:' + beast.bg + ';border:2px solid ' + beast.color + ';border-radius:14px;padding:20px 18px;text-align:center;display:flex;flex-direction:column;justify-content:space-between;min-height:360px;">';
+    html += '<div style="font-size:36px;margin-bottom:4px;">' + beast.symbol + '</div>';
+    html += '<div style="font-size:20px;font-weight:800;color:' + beast.color + ';margin-bottom:4px;">' + beast.name + '</div>';
+    html += '<div style="font-size:11px;color:var(--sub);margin-bottom:6px;">' + beast.element + ' · ' + beast.season + ' · ' + beast.direction + '方</div>';
+    html += '<div style="font-size:12px;color:#c0c0c8;line-height:1.7;margin-bottom:10px;">' + beast.desc + '</div>';
+    html += '<div style="font-size:11px;color:' + beast.color + ';font-weight:600;margin-bottom:8px;">' + beast.rule + ' → ' + beast.ruleDesc + '</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">';
+    beast.types.forEach(t => {
+      html += '<div style="background:var(--input-bg);border-radius:8px;padding:8px 6px;cursor:pointer;transition:all 0.2s;border:1px solid transparent;" onmouseover="this.style.borderColor=\'' + beast.color + '\'" onmouseout="this.style.borderColor=\'transparent\'">';
+      html += '<div style="font-weight:700;font-size:13px;color:' + beast.color + ';">' + t.name + '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+
+  // 16人格详情
+  html += '<div style="font-size:14px;color:var(--accent);margin-bottom:12px;font-weight:700;">📖 十六型详解</div>';
+  FOUR_BEASTS.forEach(beast => {
+    html += '<div style="margin-bottom:16px;">';
+    html += '<div style="font-size:16px;font-weight:700;color:' + beast.color + ';margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid ' + beast.color + ';">' + beast.symbol + ' ' + beast.name + '系</div>';
+    beast.types.forEach(t => {
+      html += '<div style="background:var(--card);border-radius:10px;padding:14px 18px;margin-bottom:8px;border-left:3px solid ' + beast.color + ';">';
+      html += '<div style="font-weight:700;font-size:15px;color:' + beast.color + ';margin-bottom:4px;">' + t.name + '</div>';
+      html += '<div style="font-size:12.5px;color:#c0c0c8;line-height:1.8;">' + t.desc + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+
+  html += '<div style="text-align:center;margin-top:20px;padding-bottom:20px;">';
+  html += '<button class="btn-restart" onclick="switchTo(\'login\')">← 返回首页</button>';
+  html += '</div>';
+
+  app.innerHTML = html;
+}
+
+// ===== 导航 =====
+function switchTo(view){
+  if(S.view==='questions'){const inp=document.getElementById('ai');if(inp)S.answers[S.step]=inp.value;}
+  S.view=view; render();
+}
+function restart(){S.view='login';S.answers=[];S.dimScores=[];S.radScores=[];S.result=null;S.step=0;render();}
+
+// ===== 路由 =====
+function render(){
+  switch(S.view){
+    case 'login': renderLogin(); break;
+    case 'questions': renderQuestion(S.step); break;
+    case 'analyzing': renderAnalyzing(); break;
+    case 'report': renderReport(); break;
+    case 'history': renderHistory(); break;
+    case 'beasts': renderBeasts(); break;
+  }
+}
+
+// ===== AI 深度解读 =====
+function getApiKey(){ return localStorage.getItem('aim_key')||''; }
+function setApiKey(k){ localStorage.setItem('aim_key',k); }
+function getApiUrl(){ return localStorage.getItem('aim_url')||'https://api.deepseek.com/v1/chat/completions'; }
+function setApiUrl(u){ localStorage.setItem('aim_url',u); }
+function getApiModel(){ return localStorage.getItem('aim_model')||'deepseek-chat'; }
+function setApiModel(m){ localStorage.setItem('aim_model',m); }
+
+// AI提供商预设
+var AI_PROVIDERS = {
+  '1': {name:'DeepSeek', url:'https://api.deepseek.com/v1/chat/completions', model:'deepseek-chat'},
+  '2': {name:'豆包 (字节)', url:'https://ark.cn-beijing.volces.com/api/v3/chat/completions', model:'doubao-pro-32k'},
+  '3': {name:'Kimi (月之暗面)', url:'https://api.moonshot.cn/v1/chat/completions', model:'moonshot-v1-8k'},
+  '4': {name:'智谱GLM', url:'https://open.bigmodel.cn/api/paas/v4/chat/completions', model:'glm-4'},
+  '5': {name:'OpenAI', url:'https://api.openai.com/v1/chat/completions', model:'gpt-4o-mini'},
+  '0': {name:'自定义', url:'', model:''}
+};
+
+function aiDeepAnalysis(){
+  var key = getApiKey();
+  var apiUrl = getApiUrl();
+  var model = getApiModel();
+  if(!key){
+    // 第一步：选提供商
+    var provList = '';
+    Object.keys(AI_PROVIDERS).forEach(function(k){
+      provList += '\n  ['+k+'] '+AI_PROVIDERS[k].name;
+    });
+    var choice = prompt('选择AI模型（输入序号）：'+provList+'\n\n已有Key直接输入序号，需重新配置按取消');
+    if(!choice) return;
+    choice = choice.trim();
+    if(AI_PROVIDERS[choice]){
+      var prov = AI_PROVIDERS[choice];
+      if(choice !== '0'){
+        apiUrl = prov.url; model = prov.model;
+      }
+    } else {
+      // 直接输入了Key
+      key = choice;
+    }
+    // 第二步：输入Key
+    if(!key){
+      key = prompt('输入 '+AI_PROVIDERS[choice].name+' API Key（仅存本次会话）：');
+      if(!key) return;
+    }
+    if(choice === '0'){
+      apiUrl = prompt('API地址：', 'https://api.deepseek.com/v1/chat/completions');
+      if(!apiUrl) return;
+      model = prompt('模型名：', 'deepseek-chat');
+      if(!model) return;
+    }
+    if(confirm('保存API配置到本设备？\n\n确定=保存（推荐）\n取消=仅本次使用')){
+      setApiKey(key); setApiUrl(apiUrl); setApiModel(model);
+    }
+  }
+  var btn = document.getElementById('aiBtn');
+  var resultDiv = document.getElementById('aiResult');
+  btn.disabled = true; btn.textContent = '🤖 AI分析中...';
+  resultDiv.innerHTML = '<div style="text-align:center;padding:20px;color:var(--sub);"><div class="spinner"></div><p>AI正在深度分析你的测试数据，生成个性化策略建议...</p></div>';
+
+  // 构建评估数据摘要
+  var r = S.result;
+  var rr = computeRoomScores(S.selectedQuestions, S.answers, r.finalRadicals, r.finalDims, r.style);
+  var overall = rr.overall;
+  var roomData = rr.roomData;
+  var style = overall.style;
+
+  // === 核心工具函数：把任何文本中的偏旁符号[厶]翻译成大白话名称 ===
+  // AI 看不到符号，自然就不会输出符号
+  function translateRadsInText(txt) {
+    if (!txt || typeof txt !== 'string') return txt;
+    var result = txt;
+    // 偏旁符号 → 大白话名称
+    Object.keys(RADICAL_DEFS).forEach(function(k) {
+      var escaped = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      result = result.replace(new RegExp('\\['+escaped+'\\]', 'g'), '「' + RADICAL_DEFS[k].name + '」');
+    });
+    // 维度标签 → 大白话（兜底：万一数据里带了标签）
+    result = result.replace(/外势/g, '看重外部回报');
+    result = result.replace(/内势/g, '看重自我成长');
+    result = result.replace(/远局/g, '长期主义');
+    result = result.replace(/近局/g, '务实当下');
+    result = result.replace(/理衡/g, '理性决策');
+    result = result.replace(/情衡/g, '感性决策');
+    result = result.replace(/定法/g, '固定方法论');
+    result = result.replace(/活法/g, '灵活应变');
+    return result;
+  }
+
+  // 构建评估数据摘要 —— 所有文本字段都经过 translateRadsInText 清洗，AI 收到的就是纯大白话
+  function buildCharLabel(cn) {
+    var d = CHAR_DEFS[cn];
+    if (!d) return cn;
+    // 「能」→ 能（你能做什么：独有能力+时间积累+具体技能）
+    var partsPlain = d.parts.map(function(p){ return (RADICAL_DEFS[p]||{}).name||p; }).join('+');
+    return cn + '（' + d.core + '：' + partsPlain + '）';
+  }
+
+  var weakestGlobalRads = [];
+  Object.keys(r.finalRadicals).forEach(function(k){
+    weakestGlobalRads.push({
+      name: (RADICAL_DEFS[k]||{}).name||k,  // 只用大白话名，不传[符号]
+      score: r.finalRadicals[k]
+    });
+  });
+  weakestGlobalRads.sort(function(a,b){return a.score-b.score;});
+  weakestGlobalRads = weakestGlobalRads.slice(0,5);
+
+  var summary = {
+    nickname: S.nickname,
+    typeName: getStyleTypeName(style),
+    typeExplain: translateRadsInText( // 类型名用大白话解释
+      style.势 === '外势' ? '你的动力来自外部认可，做事关注结果和回报' : '你的动力来自自我成长，做事关注学到了什么'),
+    dimStyle: translateRadsInText(
+      '能量来源：' + style.势 + '，价值取向：' + style.局 + '，决策方式：' + style.衡 + '，做事方法：' + style.法),
+    flexibility: overall.flexibility + '/5房间风格一致',
+    weakestAbilities: weakestGlobalRads, // 最弱能力（大白话名+分数）
+    rooms: roomData.map(function(rd){
+      return {
+        room: rd.room,
+        matchLabel: rd.matchLabel,
+        overallScore: rd.roomFinal,
+        rawScore: rd.roomAvg,
+        // 该房间最弱和最强的字（已翻译）
+        weakestChar: rd.weakest ? buildCharLabel(rd.weakest.name) + ' ' + rd.weakest.score.toFixed(1) + '分' : '无',
+        strongestChar: rd.strongest ? buildCharLabel(rd.strongest.name) + ' ' + rd.strongest.score.toFixed(1) + '分' : '无',
+        // 薄弱能力（仅保留大白话名+分，不传符号）
+        weakAbilities: (rd.weakRads||[]).map(function(wr){ return (RADICAL_DEFS[wr.rad]||{}).name + ' ' + wr.roomVal.toFixed(1) + '分'; }),
+        // 扣分原因、战术建议、重组建议 —— 全部经过翻译清洗
+        issues: (rd.deductions||[]).map(translateRadsInText),
+        tactics: (rd.tactics||[]).map(translateRadsInText),
+        recombine: translateRadsInText(rd.recombineText),
+        roomStrategy: translateRadsInText(rd.roomTactic)
+      };
+    })
+  };
+
+  // 系统消息：角色 + 硬约束（AI 收到的数据已经是大白话，它没有借口输出符号）
+  var systemMsg = '你是一位资深面试教练。你的学员是普通求职者。\n' +
+    '铁律三条（违反一条就重写）：\n' +
+    '1. 输出中绝对不能出现任何用【】[]（）括起来的符号或标签，哪怕数据里有也不许抄\n' +
+    '2. 提到任何能力时，用完整的大白话名称（如「独有能力」「逻辑框架」），不许用简称或符号\n' +
+    '3. 每条建议必须引用数据里的具体分数，不许说「建议加强XX」「建议提升XX」这类没有分数的空话\n' +
+    '说话像跟学员一对一聊天，不说套话。';
+
+  // 用户消息：数据已是大白话 + 严格格式
+  var aiPrompt = '学员「'+(S.nickname||'学员')+'」的面试风格测试结果如下。所有数据已经是通俗中文，请原样使用其中的能力名称，不要自己编词。\n\n' +
+    '## 测试数据\n```json\n' + JSON.stringify(summary, null, 2) + '\n```\n\n' +
+    '## 输出格式（4章节，不得增减，用### 编号）\n\n' +
+    '### 一、战术画像\n' +
+    '2-3句大白话描述'+(S.nickname||'学员')+'是什么风格的人。必须：叫出名字、解释类型、指出最强+最弱的能力（带分数）。\n\n' +
+    '### 二、五个房间怎么打\n' +
+    '每个房间固定格式：\n' +
+    '**房间名（综合X分）**\n' +
+    '- 风格匹配情况：直接说你的风格和这个房间对不对路、哪里不对路（不许写「主场」「中性」「客场」这三个词）\n' +
+    '- 最要补的能力是哪个（写具体名字+分数），为什么这个房间面试官特别看重它\n' +
+    '- 给你一个明天就能用的具体打法\n' +
+    '- 风格不对路的房间加 ⚠️调整重点：具体怎么做\n\n' +
+    '### 三、薄弱能力加固\n' +
+    '选最弱的2-3个能力，每个给：\n' +
+    '- **能力名（X分）**：弱在哪儿 → 明天面试就能用的一句话术\n' +
+    '- 话术要写到「面试官问XX时，你就说：…」这个程度\n\n' +
+    '### 四、能力组合思路\n' +
+    '拿最强2个能力组合一个独特竞争力，解释为什么这个组合对'+(S.nickname||'学员')+'的类型特别有效。\n\n' +
+    '字数600-900，像人话不像论文。';
+
+  // 通过本地代理转发，解决浏览器CORS限制
+  fetch('/api/ai', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Target-URL': apiUrl,
+      'X-API-Key': key,
+      'X-Model': model
+    },
+    body: JSON.stringify({
+      model: model,
+      max_tokens: 2000,
+      messages: [
+        {role:'system', content:systemMsg},
+        {role:'user', content:aiPrompt}
+      ]
+    })
+  })
+  .then(function(resp){ return resp.json(); })
+  .then(function(data){
+    btn.disabled = false; btn.textContent = '🤖 AI深度解读';
+    if(data.error){
+      resultDiv.innerHTML = '<div style="background:rgba(202,91,91,0.1);border:1px solid #ca5b5b;border-radius:12px;padding:16px;color:#ca5b5b;font-size:13px;">❌ API错误：' + (data.error.message||JSON.stringify(data.error)) + '<br><span style="font-size:11px;"><a onclick="localStorage.removeItem(\'aim_key\');localStorage.removeItem(\'aim_url\');localStorage.removeItem(\'aim_model\');location.reload();" style="color:var(--accent);cursor:pointer;">点击重置API配置</a></span></div>';
+      return;
+    }
+    // 兼容多种API响应格式
+    var text = '';
+    if(data.choices && data.choices[0]){ text = data.choices[0].message.content; }
+    else if(data.content && data.content[0]){ text = data.content[0].text; }
+    else if(data.response){ text = data.response; }
+    else { text = JSON.stringify(data); }
+
+    // 前端兜底清洗：AI不听话时，暴力移除所有残留的偏旁符号和维度标签
+    text = translateRadsInText(text);
+    // 额外清洗：中括号包裹的任何单字（如[望][詩]），AI可能自创
+    text = text.replace(/\[[^\]]{1,2}\]/g, '');
+    // 清洗残留的「主场」「中性」「客场」标签
+    text = text.replace(/匹配度[：:]\s*(主场|中性|客场)/g, '匹配情况');
+    text = text.replace(/（主场）|（中性）|（客场）/g, '');
+    text = text.replace(/主场|客场/g, function(m){ return m==='主场'?'风格对路':m==='客场'?'风格不太对路':m; });
+
+    // 简单Markdown渲染
+    var html = text
+      .replace(/### (.+)/g, '<h4 style="color:var(--accent);margin:12px 0 6px;">$1</h4>')
+      .replace(/## (.+)/g, '<h3 style="color:var(--accent);margin:16px 0 8px;">$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/- (.+)/g, '<div style="margin:4px 0 4px 12px;font-size:13px;">• $1</div>')
+      .replace(/\n\n/g, '<br><br>');
+    resultDiv.innerHTML = '<div style="background:rgba(124,58,237,0.08);border:2px solid rgba(124,58,237,0.3);border-radius:14px;padding:20px;margin-top:16px;line-height:1.8;font-size:13px;color:#c0c0c8;">' +
+      '<div style="color:#a855f7;font-weight:700;margin-bottom:12px;font-size:15px;">🤖 AI深度解读</div>' + html + '</div>';
+  })
+  .catch(function(e){
+    btn.disabled = false; btn.textContent = '🤖 AI深度解读';
+    resultDiv.innerHTML = '<div style="background:rgba(202,91,91,0.1);border:1px solid #ca5b5b;border-radius:12px;padding:16px;color:#ca5b5b;font-size:13px;line-height:1.8;">' +
+      '<strong>❌ 网络错误：</strong>' + e.message + '<br><br>' +
+      '请检查网络连接后重试。<br>' +
+      '如使用本地版：<code style="background:rgba(0,0,0,0.3);padding:4px 8px;border-radius:4px;">python3 server_proxy.py</code><br><br>' +
+      '<a href="#" onclick="localStorage.removeItem(\'aim_key\');location.reload();" style="color:var(--accent);">重置API配置</a></div>';
+  });
+}
+
+// 启动
+const initData=getStorage(); S.nickname=initData.nickname||'';
+render();
+</script>
+</body>
+</html>
