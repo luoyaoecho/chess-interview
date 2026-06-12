@@ -2406,20 +2406,24 @@ function toggleReportDetail(showDetail) {
 
 // ===== 大白话总结生成 =====
 function buildPlainSummary(style, finalDims, roomData, charAssess, totalRoomAvg) {
-  // 维度映射到日常语言
+  // 维度映射到日常语言（阈值与评分系统一致：6分为pole2/pole1分界）
   var dimTalk = {
-    '势': finalDims['势']>=7 ? {me:'很看重外部反馈', them:'主动表达期望'} :
-         finalDims['势']>=5 ? {me:'既在意外部认可，也有自己的标准', them:'该主动时主动，该守时守'} :
-         {me:'更在意自己的标准和感受', them:'不太主动争取外部资源'},
-    '局': finalDims['局']>=7 ? {me:'习惯从长远角度想问题', them:'擅长谈方向和愿景'} :
-         finalDims['局']>=5 ? {me:'长远和当下兼顾', them:'能聊方向也能落地'} :
-         {me:'更关注当下具体的事', them:'执行力强，务实靠谱'},
-    '衡': finalDims['衡']>=7 ? {me:'用逻辑和数据做判断', them:'分析问题有理有据'} :
-         finalDims['衡']>=5 ? {me:'逻辑和人际感受都会考虑', them:'既能讲道理也能讲人情'} :
-         {me:'做决定时很在意人的因素', them:'善于理解他人，团队协作强'},
-    '法': finalDims['法']>=7 ? {me:'喜欢灵活多变的工作方式', them:'适应力强，不怕变化'} :
-         finalDims['法']>=5 ? {me:'在稳定和变化之间找平衡', them:'能深耕也能应变'} :
-         {me:'偏好稳定和明确的规则', them:'做事有章法，让人放心'}
+    '势': finalDims['势']>=8 ? {me:'非常看重外部回报和认可', them:'主动对外展示价值'} :
+         finalDims['势']>=6 ? {me:'比较看重外部反馈', them:'愿意表达期望和诉求'} :
+         finalDims['势']>=4 ? {me:'更偏内在驱动，有自己的标准', them:'不太主动争取外部资源'} :
+         {me:'完全以自己的标准为主', them:'倾向于被动应答而非主动引导'},
+    '局': finalDims['局']>=8 ? {me:'典型的长期主义者', them:'擅长从行业趋势和愿景切入'} :
+         finalDims['局']>=6 ? {me:'更偏长远视角', them:'能兼顾方向和落地'} :
+         finalDims['局']>=4 ? {me:'更关注当下具体的事', them:'务实靠谱，执行力强'} :
+         {me:'完全的务实派', them:'优先解决眼前问题，不空谈方向'},
+    '衡': finalDims['衡']>=8 ? {me:'习惯用数据和逻辑做判断', them:'理性分析，有理有据'} :
+         finalDims['衡']>=6 ? {me:'更偏理性分析', them:'逻辑和人情兼顾'} :
+         finalDims['衡']>=4 ? {me:'做决定时会考虑人的因素', them:'在意关系和他人的感受'} :
+         {me:'非常看重人和关系', them:'善于理解他人，关注团队和谐'},
+    '法': finalDims['法']>=8 ? {me:'非常灵活，享受变化', them:'适应力强，不怕不确定性'} :
+         finalDims['法']>=6 ? {me:'比较灵活，能接受变化', them:'在稳定和变化间找平衡'} :
+         finalDims['法']>=4 ? {me:'更偏好稳定和明确的规则', them:'做事有章法，让人放心'} :
+         {me:'需要确定性和秩序感', them:'深耕一个方向，不轻易改变'}
   };
 
   // 找到最强和最弱的房间
@@ -2597,17 +2601,15 @@ function renderReport() {
 
     <!-- 大白话总结卡 -->
     <div style="background:linear-gradient(135deg,rgba(226,176,74,0.08),rgba(168,85,247,0.06));border-radius:14px;padding:20px 24px;margin-bottom:20px;border:1px solid rgba(226,176,74,0.2);">
-      <div style="font-size:14px;color:var(--sub);margin-bottom:6px;">📋 大白话总结</div>
       ${beastInfo ? `
-        <!-- 神兽描述 -->
+        <div style="font-size:12px;color:${beastInfo.beast.color};margin-bottom:8px;font-weight:600;letter-spacing:1px;">
+          ${beastInfo.beast.rule} → ${beastInfo.beast.ruleDesc}
+        </div>
         <div style="font-size:18px;font-weight:800;color:${beastInfo.beast.color};margin-bottom:4px;">
           ${beastInfo.beast.symbol} ${beastInfo.beast.name} · ${beastInfo.type.name}
         </div>
         <div style="font-size:13px;line-height:1.8;color:#d0d0d8;margin-bottom:6px;">
           ${beastInfo.beast.desc}
-        </div>
-        <div style="font-size:12px;color:${beastInfo.beast.color};margin-bottom:10px;padding:4px 10px;background:rgba(15,22,41,0.4);border-radius:6px;display:inline-block;">
-          ${beastInfo.beast.rule} → ${beastInfo.beast.ruleDesc}
         </div>
         <div style="font-size:13px;line-height:1.8;color:#c0c0c8;margin-bottom:14px;padding:8px 12px;background:rgba(15,22,41,0.3);border-radius:8px;border-left:3px solid ${beastInfo.beast.color};">
           ${beastInfo.type.desc}
