@@ -376,6 +376,61 @@
   .collapse-toggle:hover { text-decoration: underline; }
   .collapse-content { display: none; }
   .collapse-content.open { display: block; }
+
+  /* === 移动端响应式 === */
+  @media (max-width: 600px) {
+    .container { padding: 6px !important; }
+    .header h1 { font-size: 18px !important; }
+    .header p { font-size: 12px !important; }
+    body { font-size: 13px !important; }
+
+    /* 所有2列→单列 */
+    div[style*="1fr 1fr"] { grid-template-columns: 1fr !important; }
+    div[style*="repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
+    div[style*="repeat(2, 1fr)"] { grid-template-columns: 1fr !important; }
+    div[style*="1fr auto 1fr"] { grid-template-columns: 1fr !important; gap: 6px !important; }
+
+    /* Likert 左右文字 */
+    div[style*="1fr auto 1fr"] > div:first-child,
+    div[style*="1fr auto 1fr"] > div:last-child {
+      font-size: 12px !important; text-align: center !important;
+    }
+
+    /* 圆点缩小 */
+    #dotWrap { height: 50px !important; }
+    #dotWrap > div > div {
+      transform: scale(0.55); margin: 0 -3px;
+    }
+
+    /* 按钮 */
+    .btn { font-size: 12px !important; padding: 10px 14px !important; width: 100% !important; }
+    .btn-row { flex-direction: column !important; gap: 6px !important; }
+    .btn-ai { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
+
+    /* 场景描述 */
+    div[style*="font-size:14px"][style*="line-height:1.9"] { font-size: 12px !important; padding: 10px 12px !important; }
+
+    /* 报告卡片 */
+    .cn-card { padding: 14px 10px !important; }
+    .cn-card h3 { font-size: 14px !important; }
+    .cn-card p { font-size: 11px !important; }
+    .char-card { padding: 10px 8px !important; }
+    .room-card { padding: 12px 8px !important; }
+    .dim-row { font-size: 10px !important; }
+
+    /* 折叠区 */
+    details { font-size: 11px !important; }
+    details summary { padding: 8px 6px !important; }
+
+    /* 输入框 */
+    input[type="text"] { font-size: 14px !important; padding: 10px !important; }
+
+    /* choice3 选项 */
+    div[onclick*="selectAndNext"] { font-size: 12px !important; padding: 10px 12px !important; }
+
+    /* 隐藏部分桌面装饰 */
+    .beast-icon-large { font-size: 40px !important; }
+  }
 </style>
 </head>
 <body>
@@ -1233,11 +1288,13 @@ function renderLogin(){
         -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
         面试风格匹配
       </h1>
-      <p style="color:var(--sub);font-size:14px;margin:0 0 20px;">
+      <p style="color:var(--sub);font-size:14px;margin:0 0 6px;">
         战术人格评估 · 能力掌控体系 · 能量来源×价值取向×场景博弈
       </p>
+      <p style="color:var(--accent);font-size:11px;margin:0 0 20px;opacity:0.7;">@17_lL</p>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
         <input type="text" id="ni" placeholder="输入你的昵称" value="${esc(sn)}" maxlength="20"
+          onfocus="if(this.value==='匿名棋手'||this.value==='匿名选手')this.value=''"
           style="width:200px;padding:12px 16px;background:var(--input-bg);color:var(--text);
             border:2px solid var(--border);border-radius:12px;font-size:15px;text-align:center;
             font-family:inherit;transition:border-color 0.3s;">
@@ -2982,8 +3039,11 @@ function aiDeepAnalysis(){
     '拿最强2个能力组合一个独特竞争力，解释为什么这个组合对'+(S.nickname||'学员')+'的类型特别有效。\n\n' +
     '字数600-900，像人话不像论文。';
 
-  // 通过本地代理转发，解决浏览器CORS限制
-  fetch('/api/ai', {
+  // 智能选择代理：本地用Python代理，线上用Vercel函数
+  var proxyUrl = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? '/api/ai'
+    : 'https://chess-deploy-phi.vercel.app/api/ai';
+  fetch(proxyUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
