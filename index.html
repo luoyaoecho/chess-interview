@@ -6,17 +6,21 @@
 <title>面试风格匹配测试</title>
 <style>
   :root {
-    --bg: #1a1a2e; --card: #16213e; --accent: #e2b04a; --accent2: #c58940;
-    --text: #e8e8e8; --sub: #a0a0b0; --input-bg: #0f1629; --border: #2a2a4a;
-    --tag-out: #5b8cbf; --tag-in: #8b5b9f; --tag-far: #5b9f7b;
-    --tag-near: #9f7b5b; --tag-logic: #c56b5b; --tag-feel: #c59b5b;
-    --tag-flex: #5b9f9f; --tag-fixed: #7b8b9f;
-    --bar-high: #4eca7a; --bar-mid: #e2b04a; --bar-low: #ca5b5b;
+    --bg: #f5ede0; --card: #faf5ea; --accent: #b53836; --accent2: #5b3a29;
+    --text: #3d3028; --sub: #9b8b78; --input-bg: #faf5ea; --border: #d9c9a8;
+    --tag-out: #3d7a9e; --tag-in: #6b3d8a; --tag-far: #3d8a5e;
+    --tag-near: #8a6b3d; --tag-logic: #b04d3d; --tag-feel: #b08a3d;
+    --tag-flex: #3d8a7a; --tag-fixed: #5b6b8a;
+    --bar-high: #3a9d5e; --bar-mid: #b07820; --bar-low: #c04040;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     font-family: 'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;
-    background: var(--bg); color: var(--text); min-height: 100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(181,56,54,0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(90,60,40,0.03) 0%, transparent 50%);
+    color: var(--text); min-height: 100vh;
     display: flex; flex-direction: column; align-items: center;
   }
   .container { max-width: 760px; width: 100%; padding: 20px; }
@@ -25,15 +29,23 @@
   .header { text-align: center; padding: 24px 0 12px; }
   .header h1 {
     font-size: 28px; font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), #f0d78c);
+    background: linear-gradient(135deg, #8b2020, #b53836);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     margin-bottom: 6px;
   }
   .header .subtitle { color: var(--sub); font-size: 14px; }
   .header .user-badge {
-    display: inline-block; font-size: 12px; color: var(--accent);
-    margin-top: 6px; padding: 2px 10px; border-radius: 10px;
-    background: rgba(226,176,74,0.1);
+    display: inline-block; font-size: 12px; color: #fff;
+    margin-top: 6px; padding: 3px 14px; border-radius: 2px;
+    background: var(--accent);
+  }
+
+  /* 印章风格标签 */
+  .seal-badge {
+    display: inline-block; font-size: 11px; color: var(--accent);
+    padding: 3px 12px; border: 1px solid var(--accent);
+    font-weight: 700; letter-spacing: 2px;
+    transform: rotate(-2deg);
   }
 
   /* Cards */
@@ -61,8 +73,8 @@
     font-weight: 600; cursor: pointer; border: none; font-family: inherit;
     transition: all 0.3s;
   }
-  .btn-next { background: var(--accent); color: #1a1a2e; flex: 1; }
-  .btn-next:hover { background: #f0d78c; transform: translateY(-1px); }
+  .btn-next { background: var(--accent); color: #fff; flex: 1; }
+  .btn-next:hover { background: #8b2020; transform: translateY(-1px); }
   .btn-prev { background: transparent; color: var(--sub); border: 1px solid var(--border); }
   .btn-prev:hover { background: rgba(255,255,255,0.05); }
   .btn-restart {
@@ -135,7 +147,7 @@
   .scene-tag {
     display: inline-block; font-size: 11px; font-weight: 600;
     padding: 3px 10px; border-radius: 12px; margin-bottom: 14px;
-    background: rgba(226,176,74,0.15); color: var(--accent);
+    background: rgba(139,32,32,0.10); color: var(--accent);
   }
   .scene-desc {
     font-size: 15px; line-height: 1.9; color: var(--text);
@@ -168,7 +180,7 @@
   .report-section { margin-bottom: 28px; }
   .report-section h2 { font-size: 18px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); color: var(--accent); }
   .personality-type-box {
-    background: linear-gradient(135deg, rgba(226,176,74,0.1), rgba(226,176,74,0.02));
+    background: linear-gradient(135deg, rgba(181,56,54,0.10), rgba(181,56,54,0.02));
     border: 2px solid var(--accent); border-radius: 16px;
     padding: 24px; text-align: center; margin-bottom: 20px;
   }
@@ -237,7 +249,7 @@
     .cn-layout { grid-template-columns: 1fr; }
   }
   .cn-card {
-    background: linear-gradient(180deg, rgba(22,33,62,0.9) 0%, rgba(15,22,41,0.95) 100%);
+    background: linear-gradient(180deg, var(--input-bg) 0%, var(--input-bg) 100%);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 20px 18px;
@@ -258,7 +270,7 @@
   .cn-card h3 {
     font-size: 15px; color: var(--accent);
     margin: 0 0 10px 0; padding-bottom: 8px;
-    border-bottom: 1px dashed rgba(226,176,74,0.2);
+    border-bottom: 1px dashed rgba(181,56,54,0.18);
     letter-spacing: 1px;
   }
   .cn-card p {
@@ -289,13 +301,13 @@
     margin-top: 10px;
   }
   .cn-dim-card {
-    background: rgba(15,22,41,0.8);
+    background: var(--input-bg);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 8px;
     padding: 10px 12px;
     transition: border-color 0.3s;
   }
-  .cn-dim-card:hover { border-color: rgba(226,176,74,0.3); }
+  .cn-dim-card:hover { border-color: rgba(181,56,54,0.25); }
   .cn-dim-card .dim-title {
     font-size: 13px; font-weight: 700; color: var(--accent);
     margin-bottom: 4px;
@@ -314,16 +326,16 @@
   }
   .cn-char-mini {
     text-align: center;
-    background: rgba(15,22,41,0.8);
+    background: var(--input-bg);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 8px;
     padding: 8px 4px;
     transition: border-color 0.3s;
   }
-  .cn-char-mini:hover { border-color: rgba(226,176,74,0.3); }
+  .cn-char-mini:hover { border-color: rgba(181,56,54,0.25); }
   .cn-char-mini .cn-char-symbol {
     font-size: 26px; font-weight: 800;
-    background: linear-gradient(135deg, var(--accent), #f0d78c);
+    background: linear-gradient(135deg, #b8830a, #d4940b);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
   .cn-char-mini .cn-char-parts {
@@ -366,7 +378,7 @@
   .cn-login-bar input[type=text]:focus { outline: none; border-color: var(--accent); }
 
   /* Likert rows */
-  .likert-row:hover { border-color: var(--accent) !important; background: rgba(226,176,74,0.06) !important; }
+  .likert-row:hover { border-color: var(--accent) !important; background: rgba(181,56,54,0.06) !important; }
 
   /* Collapsible */
   .collapse-toggle {
@@ -430,6 +442,63 @@
 
     /* 隐藏部分桌面装饰 */
     .beast-icon-large { font-size: 40px !important; }
+  }
+
+  /* ===== 博弈动画 ===== */
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(139,32,32,0.10); }
+    50% { box-shadow: 0 0 40px rgba(181,56,54,0.2), 0 0 80px rgba(181,56,54,0.10); }
+  }
+  @keyframes float-up {
+    0% { transform: translateY(0) scale(1); opacity: 0.6; }
+    50% { transform: translateY(-40px) scale(1.1); opacity: 0.3; }
+    100% { transform: translateY(-80px) scale(0.8); opacity: 0; }
+  }
+  @keyframes piece-breathe {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes grid-fade {
+    0% { opacity: 0.03; }
+    50% { opacity: 0.08; }
+    100% { opacity: 0.03; }
+  }
+  .hero-anim { animation: pulse-glow 3s ease-in-out infinite; }
+  .float-particle { animation: float-up 4s ease-out infinite; position: absolute; pointer-events: none; }
+  .piece-breathe { animation: piece-breathe 2.5s ease-in-out infinite; }
+  .grid-bg { animation: grid-fade 4s ease-in-out infinite; }
+  .beast-quad { cursor: pointer; transition: all 0.3s ease; }
+  .beast-quad:hover { transform: translateY(-4px); filter: brightness(1.3); }
+  .beast-detail { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+  .beast-detail.open { max-height: 600px; }
+  .char-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .char-detail.open { max-height: 400px; }
+
+  /* ===== 字拆解重组动画 ===== */
+  @keyframes char-cycle {
+    0%, 28% { opacity: 0.20; transform: scale(1); }
+    35%, 38% { opacity: 0; transform: scale(0.6); }
+    65%, 95% { opacity: 0; transform: scale(0.6); }
+    98%, 100% { opacity: 0.20; transform: scale(1); }
+  }
+  @keyframes rads-cycle {
+    0%, 32% { opacity: 0; transform: scale(0.5) translateY(4px); }
+    38%, 62% { opacity: 0.22; transform: scale(1.05) translateY(0); }
+    68%, 100% { opacity: 0; transform: scale(0.5) translateY(-4px); }
+  }
+  .decon-char { animation: char-cycle 12s ease-in-out infinite; position: absolute; pointer-events: none; }
+  .decon-rads { animation: rads-cycle 12s ease-in-out infinite; position: absolute; pointer-events: none; white-space: nowrap; }
+  /* 纯粒子漂浮（偏旁单字） */
+  .bg-particle {
+    position: absolute; pointer-events: none; user-select: none;
+    animation: float-particle 14s ease-in-out infinite;
+  }
+  @keyframes float-particle {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); }
+    25%  { transform: translateY(-35px) translateX(18px) rotate(5deg); }
+    50%  { transform: translateY(-55px) translateX(-15px) rotate(-3deg); }
+    75%  { transform: translateY(-25px) translateX(10px) rotate(4deg); }
+    100% { transform: translateY(0) translateX(0) rotate(0deg); }
   }
 </style>
 </head>
@@ -1276,23 +1345,187 @@ function dbg(msg) { if (DEBUG && console && console.log) console.log('[棋局DBG
 function renderLogin(){
   const data=getStorage();
   const sn=data.nickname||'';
-  const rads=['厶','月','匕','厂','力','木','各','亡','王','目','言','寺'];
-  let radRows=rads.map(r=>{const d=RADICAL_DEFS[r];return `<tr><td class="rc">[${r}]</td><td class="rn">${d.name}</td><td>${d.desc}</td><td class="ra">${d.ability}</td></tr>`;}).join('');
+
+  // 6个拆解重组区域：每个字在「完整字」↔「偏旁拆解」之间循环
+  var deconZones = [
+    { char:'相', rads:'木 · 目', x:'5%', y:'10%', d:'0s' },
+    { char:'格', rads:'木 · 各', x:'78%', y:'8%', d:'2s' },
+    { char:'能', rads:'厶 · 月 · 匕', x:'5%', y:'42%', d:'4s' },
+    { char:'詩', rads:'言 · 寺', x:'74%', y:'40%', d:'6s' },
+    { char:'望', rads:'亡 · 月 · 王', x:'8%', y:'72%', d:'3s' },
+    { char:'历', rads:'厂 · 力', x:'75%', y:'70%', d:'5s' },
+  ];
+  // 少量飘浮偏旁粒子做氛围
+  var bgParticles = [
+    { t:'厶', x:'30%', y:'5%', s:'20px', d:'1s' },
+    { t:'目', x:'55%', y:'12%', s:'16px', d:'7s' },
+    { t:'各', x:'40%', y:'28%', s:'18px', d:'3s' },
+    { t:'力', x:'62%', y:'25%', s:'22px', d:'9s' },
+    { t:'亡', x:'35%', y:'58%', s:'15px', d:'4s' },
+    { t:'言', x:'58%', y:'55%', s:'20px', d:'8s' },
+    { t:'王', x:'28%', y:'85%', s:'16px', d:'2s' },
+    { t:'寺', x:'60%', y:'80%', s:'18px', d:'6s' },
+  ];
+
+  // 六字示例数据
+  var charExamples = {
+    '能': '如「独立主导从0到1的项目，实现40%增长」——展现独有能力',
+    '历': '如「负责XX业务线，年GMV从200万做到800万」——用数字量化战绩',
+    '格': '如「团队中扮演粘合剂角色，跨部门协调最终都由我推进」——体现人格特质',
+    '望': '如「期望在AI方向深耕，三年内成长为技术负责人」——表达清晰诉求',
+    '相': '如「这个岗位需要的用户洞察力，恰好是我过去三年一直在做的」——论证匹配度',
+    '詩': '如「把零散项目串成一条成长线——从执行者到策略者的升级路径」——讲好故事'
+  };
+  // 六字展示卡（可点击展开）
+  var sixCharCards = ['能','历','格','望','相','詩'].map(function(cn, ci){
+    var d=CHAR_DEFS[cn];
+    var radsDetail = d.parts.map(function(p){
+      var rd = RADICAL_DEFS[p] || {};
+      return '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:4px;font-size:10px;">'+
+        '<span style="font-weight:700;color:var(--accent);min-width:40px;">['+p+'] '+rd.name+'</span>'+
+        '<span style="color:var(--sub);">'+rd.ability+'</span>'+
+      '</div>';
+    }).join('');
+    return '<div style="background:var(--input-bg);border-radius:10px;overflow:hidden;">'+
+      // 标题（可点击）
+      '<div onclick="toggleCharDetail('+ci+')" style="cursor:pointer;padding:10px 6px;text-align:center;transition:background 0.2s;">'+
+        '<div style="font-size:26px;font-weight:800;background:linear-gradient(135deg,#7a1818,#b53836);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">「'+cn+'」</div>'+
+        '<div style="font-size:10px;color:var(--accent);margin:2px 0;">'+d.core+'</div>'+
+        '<div style="font-size:9px;color:var(--sub);">点击展开 ↕</div>'+
+      '</div>'+
+      // 展开详情
+      '<div id="charDetail'+ci+'" class="char-detail" style="padding:0 12px;">'+
+        '<div style="border-top:1px solid var(--border);padding:10px 0;">'+
+          '<div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:8px;">偏旁组成</div>'+
+          radsDetail+
+          '<div style="font-size:11px;color:var(--accent);font-weight:600;margin:10px 0 6px;">面试中如何体现</div>'+
+          '<div style="font-size:10px;color:var(--sub);line-height:1.6;margin-bottom:6px;">'+d.desc+'</div>'+
+          '<div style="font-size:10px;color:var(--accent2);line-height:1.6;background:rgba(181,56,54,0.04);border-radius:6px;padding:6px 10px;">💡 '+(charExamples[cn]||'')+'</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
 
   app.innerHTML=`
-    <!-- ===== 英雄区 ===== -->
-    <div style="text-align:center;padding:32px 20px 24px;">
-      <div style="font-size:42px;margin-bottom:4px;">🎯</div>
-      <h1 style="font-size:28px;font-weight:800;margin:0 0 6px;
-        background:linear-gradient(135deg,#e2b04a,#f0d78c,#e2b04a);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+    <!-- ===== 字拆解重组背景 ===== -->
+    <div style="position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;overflow:hidden;">
+      <!-- 棋盘格底纹 -->
+      <div class="grid-bg" style="position:absolute;top:0;left:0;right:0;bottom:0;
+        background-image:linear-gradient(rgba(181,56,54,0.03) 1px,transparent 1px),
+                         linear-gradient(90deg,rgba(181,56,54,0.03) 1px,transparent 1px);
+        background-size:50px 50px;"></div>
+      <!-- 6个拆解重组区域：完整字 ↔ 偏旁 -->
+      ${deconZones.map(function(z){
+        return '<div style="position:absolute;left:'+z.x+';top:'+z.y+';width:140px;height:70px;text-align:center;">'+
+          '<div class="decon-char" style="left:0;top:0;width:100%;animation-delay:'+z.d+';font-size:36px;font-weight:800;color:rgba(139,32,32,0.16);">「'+z.char+'」</div>'+
+          '<div class="decon-rads" style="left:0;top:4px;width:100%;animation-delay:'+z.d+';font-size:15px;color:rgba(139,32,32,0.18);letter-spacing:3px;">'+z.rads+'</div>'+
+        '</div>';
+      }).join('')}
+      <!-- 氛围粒子 -->
+      ${bgParticles.map(function(p){
+        return '<span class="bg-particle" style="left:'+p.x+';top:'+p.y+';font-size:'+p.s+';animation-delay:'+p.d+';animation-duration:'+(13+Math.random()*8).toFixed(1)+'s;color:rgba(139,32,32,0.10);">'+p.t+'</span>';
+      }).join('')}
+    </div>
+
+    <div style="position:relative;z-index:1;max-width:680px;margin:0 auto;">
+
+    <!-- ===== HERO ===== -->
+    <div style="text-align:center;padding:36px 20px 18px;">
+      <!-- 卷轴图标 -->
+      <div class="piece-breathe hero-anim" style="display:inline-block;width:80px;height:80px;border-radius:50%;
+        background:radial-gradient(circle at 35% 35%,rgba(181,56,54,0.20),rgba(255,255,255,0.4));
+        border:2px solid rgba(181,56,54,0.25);line-height:80px;margin-bottom:12px;">
+        <span style="font-size:42px;">📜</span>
+      </div>
+      <h1 style="font-size:32px;font-weight:800;margin:0 0 8px;
+        background:linear-gradient(135deg,#7a1818,#b53836,#7a1818);
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.3;">
         面试风格匹配
       </h1>
-      <p style="color:var(--sub);font-size:14px;margin:0 0 6px;">
-        战术人格评估 · 能力掌控体系 · 能量来源×价值取向×场景博弈
+      <p style="color:var(--accent);font-size:13px;margin:0 0 6px;font-weight:600;">
+        战术人格评估 · 五房间场景博弈
       </p>
-      <p style="color:var(--accent);font-size:11px;margin:0 0 20px;opacity:0.7;">有问题咨询 <a href="https://www.xiaohongshu.com/user/profile/67866055000000000803c13e" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);">🍠@17_lL</a></p>
-      <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <p style="color:var(--sub);font-size:11px;margin:0 0 4px;line-height:1.7;max-width:480px;margin-left:auto;margin-right:auto;">
+        将你的面试风格解构为<strong style="color:var(--accent);">可识别、可训练、可调整</strong>的战术模式
+      </p>
+    </div>
+
+    <!-- ===== 核心理念：仓颉造字 ===== -->
+    <div style="text-align:center;margin-bottom:24px;padding:12px 20px 16px;
+      background:linear-gradient(180deg,rgba(181,56,54,0.02),transparent);
+      border-bottom:1px solid rgba(181,56,54,0.08);">
+      <!-- 双定位（置顶） -->
+      <div style="display:flex;justify-content:center;gap:24px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px dotted rgba(181,56,54,0.1);font-size:10px;color:var(--sub);">
+        <span>🎯 不是测你<strong style="color:var(--accent);">「是谁」</strong>，而是看你<strong style="color:var(--accent);">「怎么出牌」</strong></span>
+        <span>🔬 不是<strong style="color:var(--accent);">贴标签</strong>，而是帮你<strong style="color:var(--accent);">识别战术</strong></span>
+      </div>
+      <!-- 三角关系图 -->
+      <div style="position:relative;max-width:300px;margin:0 auto 10px;height:110px;">
+        <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);text-align:center;z-index:2;
+          background:var(--bg);padding:4px 12px;border-radius:6px;">
+          <span style="font-weight:700;color:var(--accent);font-size:13px;">偏旁部首</span>
+          <span style="font-size:9px;color:var(--sub);margin-left:4px;">能力基元</span>
+        </div>
+        <div style="position:absolute;bottom:0;left:8px;text-align:center;z-index:2;
+          background:var(--bg);padding:4px 10px;border-radius:6px;">
+          <span style="font-weight:700;color:var(--accent);font-size:13px;">松紧度分析</span>
+          <span style="font-size:9px;color:var(--sub);margin-left:4px;">拆解</span>
+        </div>
+        <div style="position:absolute;bottom:0;right:8px;text-align:center;z-index:2;
+          background:var(--bg);padding:4px 10px;border-radius:6px;">
+          <span style="font-weight:700;color:var(--accent);font-size:13px;">可训练·可调整</span>
+          <span style="font-size:9px;color:var(--sub);margin-left:4px;">战术</span>
+        </div>
+        <svg style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;" viewBox="0 0 300 110">
+          <polygon points="150,24 50,96 250,96" fill="rgba(181,56,54,0.02)" stroke="rgba(181,56,54,0.12)" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="150" y="72" text-anchor="middle" fill="rgba(181,56,54,0.28)" font-size="10">独特多维的答题场景测评</text>
+        </svg>
+      </div>
+      <div style="font-size:10px;color:var(--sub);line-height:1.6;">
+        能力基元可自由解码编码——不同场景调用不同组合，形成你的专属战术风格
+      </div>
+    </div>
+
+    <!-- ===== 四象神兽 · 四象限点击 ===== -->
+    <h2 style="text-align:center;font-size:16px;color:var(--accent);margin:0 0 4px;">🐉 四象神兽 · 16战术人格</h2>
+    <div style="text-align:center;font-size:11px;color:var(--sub);margin-bottom:14px;">能量来源×价值取向 交叠为四象 · 点击四象限查看详情</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;" id="beastGrid">
+      ${FOUR_BEASTS.map(function(beast,bi){
+        return '<div class="beast-quad" onclick="toggleBeast('+bi+')" style="background:'+beast.bg+';border:2px solid '+beast.color+';border-radius:14px;padding:14px 10px;text-align:center;">'+
+          '<div style="font-size:30px;transition:transform 0.3s;">'+beast.symbol+'</div>'+
+          '<div style="font-weight:800;font-size:16px;color:'+beast.color+';margin-bottom:2px;">'+beast.name+'</div>'+
+          '<div style="font-size:10px;color:var(--sub);margin-bottom:2px;">'+beast.rule+'</div>'+
+          '<div style="font-size:9px;color:var(--sub);">'+beast.ruleDesc+'</div>'+
+          '<div style="font-size:10px;color:var(--text);line-height:1.6;margin:8px 0;padding:6px 10px;background:rgba(181,56,54,0.03);border-radius:6px;">'+
+            ['属火，主南方。内求成长，追求长期意义——自我迭代的思考者',
+             '属木，主东方。追求外部认可，以长期主义布局——天生的造局者',
+             '属水，主北方。向内扎根，构建壁垒——持续深耕的守护者',
+             '属金，主西方。目标明确、出手果决——拿结果说话的行动派'][bi]+
+          '</div>'+
+          '<div style="font-size:9px;color:var(--accent);opacity:0.7;">点击查看4种战术 →</div>'+
+          // 展开的4型详情
+          '<div id="beastDetail'+bi+'" class="beast-detail" style="margin-top:12px;">'+
+            beast.types.map(function(t){
+              return '<div style="background:rgba(181,56,54,0.03);border-radius:8px;padding:10px 12px;border-left:3px solid '+beast.color+';margin-bottom:6px;text-align:left;">'+
+                '<div style="font-weight:700;font-size:13px;color:'+beast.color+';">'+t.name+'</div>'+
+                '<div style="font-size:10px;color:var(--sub);line-height:1.5;margin-top:2px;">'+t.desc+'</div>'+
+              '</div>';
+            }).join('')+
+          '</div>'+
+        '</div>';
+      }).join('')}
+    </div>
+
+    <!-- ===== 六字能力盘 ===== -->
+    <h2 style="text-align:center;font-size:16px;color:var(--accent);margin:0 0 4px;">📋 六字能力盘</h2>
+    <div style="text-align:center;font-size:11px;color:var(--sub);margin-bottom:14px;">六字是你的入场券——不同关注与掌控程度，本质是你的权衡与选择：你真正想要什么？</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;">
+      ${sixCharCards}
+    </div>
+
+    <!-- ===== CTA ===== -->
+    <div style="text-align:center;padding-bottom:28px;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:6px;">
         <input type="text" id="ni" placeholder="输入你的昵称" value="${esc(sn)}" maxlength="20"
           onfocus="if(this.value==='匿名棋手'||this.value==='匿名选手')this.value=''"
           style="width:200px;padding:12px 16px;background:var(--input-bg);color:var(--text);
@@ -1302,172 +1535,19 @@ function renderLogin(){
           开始评估 →
         </button>
       </div>
-      <div style="font-size:10px;color:var(--sub);margin-top:8px;">动态选题 · 按需分配场景权重 · 结果仅保存在本设备</div>
-
-      <!-- 房间分配选择器 -->
-      <div style="margin-top:14px;background:var(--input-bg);border-radius:12px;padding:14px 18px;max-width:480px;margin-left:auto;margin-right:auto;">
-        <div style="font-size:11px;color:var(--sub);margin-bottom:10px;text-align:center;">📊 场景权重分配（每题约1分钟，建议总题数20-40）</div>
+      <div style="font-size:10px;color:var(--sub);margin-bottom:12px;">30道场景题 · 约10分钟 · 结果仅保存在本设备</div>
+      <!-- 场景权重折叠 -->
+      <details style="max-width:480px;margin:0 auto 16px;font-size:12px;color:var(--sub);cursor:pointer;text-align:left;">
+        <summary style="margin-bottom:6px;text-align:center;">📊 场景权重分配（展开调整，默认各5题共30题）</summary>
         <div id="roomSliders"></div>
         <div style="text-align:center;font-size:12px;color:var(--accent);margin-top:8px;font-weight:600;" id="totalQHint">共 30 题</div>
-      </div>
-
-      <div style="margin-top:12px;">
-        <a onclick="switchTo('beasts')" style="color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;text-decoration:none;border-bottom:1px dashed var(--accent);padding-bottom:2px;">🐉 四象神兽 · 16战术总揽 →</a>
-      </div>
-    </div>
-
-    <!-- ===== 双核心理念（对称双卡）===== -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-      <!-- 战术 · 四象象限 -->
-      <div style="background:var(--card);border-radius:14px;padding:18px 16px;border:1px solid var(--border);
-        text-align:center;position:relative;overflow:hidden;">
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;
-          background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5;"></div>
-        <h3 style="font-size:15px;color:var(--accent);margin:0 0 4px;">🎯 战术 · 博弈之道</h3>
-        <p style="font-size:11px;color:#c0c0c8;line-height:1.75;margin:0 0 10px;">战术是你在不同场景下的<strong style="color:var(--accent);">博弈模式</strong>。<br>场景变换、时间推移，你的风格会发生<strong style="color:var(--accent);">迁移和调整</strong>——<br><strong style="color:var(--accent);">多变</strong>的战术让你适配不同战场，<br><strong style="color:var(--accent);">不变</strong>的战术是你的个人底色，引人入局、吃棋制胜。</p>
-        <!-- 四象 2x2 象限 -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
-          <div style="background:rgba(74,158,123,0.08);border:1px solid rgba(74,158,123,0.2);border-radius:8px;padding:8px 6px;text-align:center;">
-            <div style="font-size:20px;">🐉</div>
-            <div style="font-weight:700;font-size:11px;color:#4a9e7b;">青龙</div>
-            <div style="font-size:9px;color:var(--sub);">外势×远局</div>
-            <div style="font-size:9px;color:#4a9e7b;">外求·长期</div>
-          </div>
-          <div style="background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:8px;padding:8px 6px;text-align:center;">
-            <div style="font-size:20px;">🐅</div>
-            <div style="font-weight:700;font-size:11px;color:#d4a853;">白虎</div>
-            <div style="font-size:9px;color:var(--sub);">外势×近局</div>
-            <div style="font-size:9px;color:#d4a853;">外求·务实</div>
-          </div>
-          <div style="background:rgba(196,58,49,0.08);border:1px solid rgba(196,58,49,0.2);border-radius:8px;padding:8px 6px;text-align:center;">
-            <div style="font-size:20px;">🐦</div>
-            <div style="font-weight:700;font-size:11px;color:#c43a31;">朱雀</div>
-            <div style="font-size:9px;color:var(--sub);">内势×远局</div>
-            <div style="font-size:9px;color:#c43a31;">内求·长期</div>
-          </div>
-          <div style="background:rgba(91,123,159,0.08);border:1px solid rgba(91,123,159,0.2);border-radius:8px;padding:8px 6px;text-align:center;">
-            <div style="font-size:20px;">🐢</div>
-            <div style="font-weight:700;font-size:11px;color:#5b7b9f;">玄武</div>
-            <div style="font-size:9px;color:var(--sub);">内势×近局</div>
-            <div style="font-size:9px;color:#5b7b9f;">内求·务实</div>
-          </div>
-        </div>
-        <div style="margin-top:8px;font-size:10px;color:var(--sub);">
-          能量来源×价值取向 交叠为四象 · 判断基准×行动方式 各生四型 → 共16种战术
-        </div>
-      </div>
-
-      <!-- 能力掌控 -->
-      <div style="background:var(--card);border-radius:14px;padding:18px 16px;border:1px solid var(--border);
-        text-align:center;position:relative;overflow:hidden;">
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;
-          background:linear-gradient(90deg,transparent,var(--accent2),transparent);opacity:0.5;"></div>
-        <h3 style="font-size:15px;color:var(--accent2);margin:0 0 6px;">📜 能力掌控 · 拆解与重组</h3>
-        <p style="font-size:11px;color:#c0c0c8;line-height:1.75;margin:0 0 8px;">
-          <span style="font-size:10px;color:var(--sub);">取意「仓颉造字」——偏旁为基，拆解重组，化繁为简。</span><br>
-          你的经验、技能、关系，都是<strong style="color:var(--accent2);">能力偏旁</strong>。<br>
-          <strong style="color:var(--accent2);">松紧度</strong>衡量你对此能力的掌控程度——<br>
-          面试就是对方<strong style="color:var(--accent2);">拆解你的能力</strong>、你<strong style="color:var(--accent2);">守住核心优势</strong>的博弈。
-        </p>
-        <p style="font-size:10.5px;color:#c0c0c8;line-height:1.65;margin:0 0 10px;">
-          职场中没有<strong style="color:var(--accent2);">非黑即白</strong>，也没有<strong style="color:var(--accent2);">赢家通吃</strong>。一个能力偏旁松动，不等于全局失守——你可以用剩下的牢固偏旁重新<strong style="color:var(--accent2);">组合展示</strong>。这就是能力掌控：不被拆散，而是不断地拆、组、拼、变。
-        </p>
-        <!-- 拆字重组图示 -->
-        <div style="background:rgba(15,22,41,0.6);border-radius:10px;padding:14px 10px;">
-          <div style="display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;">
-            <div style="background:rgba(196,58,49,0.12);border:2px solid rgba(196,58,49,0.35);border-radius:10px;padding:6px 10px;font-size:22px;font-weight:800;color:#c43a31;">「相」</div>
-            <div style="font-size:13px;color:var(--sub);margin:0 5px;">→</div>
-            <div style="display:flex;gap:3px;">
-              <div style="background:rgba(226,176,74,0.12);border:1px solid rgba(226,176,74,0.3);border-radius:6px;padding:3px 7px;font-size:12px;color:var(--accent);">木</div>
-              <div style="background:rgba(226,176,74,0.12);border:1px solid rgba(226,176,74,0.3);border-radius:6px;padding:3px 7px;font-size:12px;color:var(--accent);">目</div>
-            </div>
-            <div style="font-size:13px;color:var(--sub);margin:0 5px;">→</div>
-            <div style="display:flex;gap:3px;">
-              <div style="background:rgba(74,158,123,0.12);border:1px solid rgba(74,158,123,0.3);border-radius:6px;padding:3px 7px;font-size:12px;color:#4a9e7b;">木</div>
-            </div>
-            <div style="font-size:13px;color:var(--sub);margin:0 5px;">→</div>
-            <div style="background:rgba(74,158,123,0.12);border:2px solid rgba(74,158,123,0.35);border-radius:10px;padding:6px 10px;font-size:22px;font-weight:800;color:#4a9e7b;">「格」</div>
-          </div>
-          <div style="font-size:9px;color:var(--sub);margin-top:6px;line-height:1.6;">失去[目]（视野）→ 剩余[木]（本质）仍可独当一面。<strong style="color:#4a9e7b;">「相」被拆，[木]还在——你的性格底子本身就是一个完整的展示面。</strong></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== 四维 + 六字 对称区 ===== -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-      <!-- 战术四维 -->
-      <div style="background:var(--card);border-radius:14px;padding:20px 18px;border:1px solid var(--border);">
-        <h3 style="font-size:14px;color:var(--accent);margin:0 0 12px;text-align:center;">🧭 战术四维</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div style="background:var(--input-bg);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-weight:700;color:var(--accent);font-size:12px;">势 · 能量来源</div>
-            <div style="font-size:10px;color:var(--sub);margin-top:4px;line-height:1.6;">
-              <span class="tag tag-out">外势</span> 外部回报<br>
-              <span class="tag tag-in">内势</span> 自我成长
-            </div>
-          </div>
-          <div style="background:var(--input-bg);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-weight:700;color:var(--accent);font-size:12px;">局 · 价值取向</div>
-            <div style="font-size:10px;color:var(--sub);margin-top:4px;line-height:1.6;">
-              <span class="tag tag-far">远局</span> 长期主义<br>
-              <span class="tag tag-near">近局</span> 务实当下
-            </div>
-          </div>
-          <div style="background:var(--input-bg);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-weight:700;color:var(--accent);font-size:12px;">衡 · 判断基准</div>
-            <div style="font-size:10px;color:var(--sub);margin-top:4px;line-height:1.6;">
-              <span class="tag tag-logic">理衡</span> 逻辑最优<br>
-              <span class="tag tag-feel">情衡</span> 关系优先
-            </div>
-          </div>
-          <div style="background:var(--input-bg);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-weight:700;color:var(--accent);font-size:12px;">法 · 行动方式</div>
-            <div style="font-size:10px;color:var(--sub);margin-top:4px;line-height:1.6;">
-              <span class="tag tag-flex">活法</span> 灵活重组<br>
-              <span class="tag tag-fixed">定法</span> 锁定深耕
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 六字能力盘 -->
-      <div style="background:var(--card);border-radius:14px;padding:20px 18px;border:1px solid var(--border);">
-        <h3 style="font-size:14px;color:var(--accent);margin:0 0 12px;text-align:center;">📋 六字能力盘</h3>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
-          ${['能','历','格','望','相','詩'].map(cn=>{
-            const d=CHAR_DEFS[cn];
-            return `<div style="background:var(--input-bg);border-radius:8px;padding:8px 4px;text-align:center;">
-              <div style="font-size:24px;font-weight:800;background:linear-gradient(135deg,#e2b04a,#f0d78c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">「${cn}」</div>
-              <div style="font-size:9px;color:var(--sub);margin:2px 0;">${d.parts.map(p=>'['+p+']').join('')}</div>
-              <div style="font-size:9px;color:var(--accent);">${d.core}</div>
-            </div>`;
-          }).join('')}
-        </div>
-        <div style="text-align:center;font-size:10px;color:var(--sub);margin-top:10px;">
-          面试中每个字都可能被拆解——守住则牢固，被夺则松动
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== 偏旁字典（全宽）===== -->
-    <div style="background:var(--card);border-radius:14px;padding:20px 18px;border:1px solid var(--border);margin-bottom:20px;">
-      <h3 style="font-size:14px;color:var(--accent);margin:0 0 12px;text-align:center;">🔤 十二偏旁字典</h3>
-      <div style="font-size:11px;color:var(--sub);text-align:center;margin-bottom:10px;">
-        偏旁是构成字的零件。每个偏旁代表你的一项<strong style="color:var(--accent);">职场资源或能力</strong>——松紧度越高，面试中越难被拆走。
-      </div>
-      <div style="overflow-x:auto;">
-        <table class="rad-compact-table">
-          <thead><tr><th>偏旁</th><th>名称</th><th>含义</th><th>核心能力</th></tr></thead>
-          <tbody>${radRows}</tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 底部 -->
-    <div style="text-align:center;padding-bottom:20px;">
+      </details>
       <a onclick="switchTo('history')" style="color:var(--sub);cursor:pointer;font-size:12px;text-decoration:none;border-bottom:1px dashed var(--border);padding-bottom:2px;">📋 查看历史评估记录</a>
-	      &nbsp;&nbsp;
-	      <a onclick="switchTo('beasts')" style="color:var(--sub);cursor:pointer;font-size:12px;text-decoration:none;border-bottom:1px dashed var(--border);padding-bottom:2px;"></a>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--sub);">
+        有问题咨询 <a href="https://www.xiaohongshu.com/user/profile/67866055000000000803c13e" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);">🍠@17_lL</a>
+      </div>
+    </div>
+
     </div>
   `;
   // 渲染房间分配滑块
@@ -1477,7 +1557,23 @@ function renderLogin(){
   },100);
 }
 
-// 房间分配滑块渲染
+// 四象限展开/收起
+window.toggleBeast = function(idx){
+  var detail = document.getElementById('beastDetail'+idx);
+  if(!detail) return;
+  var isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.beast-detail.open').forEach(function(el){ el.classList.remove('open'); });
+  if(!isOpen){ detail.classList.add('open'); detail.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+};
+// 六字展开/收起
+window.toggleCharDetail = function(idx){
+  var detail = document.getElementById('charDetail'+idx);
+  if(!detail) return;
+  var isOpen = detail.classList.contains('open');
+  if(!isOpen){ detail.classList.add('open'); detail.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  else { detail.classList.remove('open'); }
+};
+
 var roomAlloc = { 'HR初筛':5, '业务面试':5, '交叉面试':5, '高管面试':5, 'HR谈薪':5 };
 function renderRoomSliders(){
   var wrap = document.getElementById('roomSliders');
@@ -1600,7 +1696,7 @@ function buildProbePairs(){
 function renderQuestion(idx){
   var total = S.selectedQuestions.length;
   var q = S.selectedQuestions[idx];
-  var roomTag = q && q.room ? '<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;margin-left:6px;background:rgba(226,176,74,0.1);color:var(--accent);">' + esc(q.room) + '</span>' : '';
+  var roomTag = q && q.room ? '<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;margin-left:6px;background:rgba(181,56,54,0.10);color:var(--accent);">' + esc(q.room) + '</span>' : '';
   var prev = S.answers[idx] || 0;
   var pct = (idx/total*100).toFixed(0);
 
@@ -1614,7 +1710,7 @@ function renderQuestion(idx){
   }
   // 场景描述
   if (q.scene) {
-    html += '<div style="text-align:left;font-size:14px;line-height:1.9;color:#d0d0d8;background:rgba(15,22,41,0.6);border-radius:10px;padding:16px 18px;margin-bottom:18px;border-left:3px solid var(--accent);">' + esc(q.scene) + '</div>';
+    html += '<div style="text-align:left;font-size:14px;line-height:1.9;color:var(--text);background:var(--input-bg);border-radius:10px;padding:16px 18px;margin-bottom:18px;border-left:3px solid var(--accent);">' + esc(q.scene) + '</div>';
   }
   if(q.qType === 'choice3'){
     // 3选1场景题：点击选项直接选择
@@ -1622,7 +1718,7 @@ function renderQuestion(idx){
     (q.options||[]).forEach(function(opt, oi){
       var vals = [2, 4, 6]; // A→2, B→4, C→6 映射到7点量表
       var sel = prev === vals[oi];
-      html += '<div onclick="selectAndNext(' + vals[oi] + ')" style="cursor:pointer;text-align:left;padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7;color:#c0c0c8;background:' + (sel ? 'rgba(226,176,74,0.12)' : 'rgba(15,22,41,0.4)') + ';border:2px solid ' + (sel ? 'var(--accent)' : 'var(--border)') + ';transition:all 0.2s;">' + esc(opt) + '</div>';
+      html += '<div onclick="selectAndNext(' + vals[oi] + ')" style="cursor:pointer;text-align:left;padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.7;color:var(--text);background:' + (sel ? 'rgba(200,138,12,0.08)' : 'var(--input-bg)') + ';border:2px solid ' + (sel ? 'var(--accent)' : 'var(--border)') + ';transition:all 0.2s;">' + esc(opt) + '</div>';
     });
     html += '</div>';
     html += '<div id="selectedHint" style="font-size:12px;color:' + (prev ? 'var(--accent)' : 'var(--sub)') + ';min-height:20px;margin-top:4px;">' + (prev ? '✓ 已选择，自动跳转中…' : '点击上方选项（三选一，自动跳转）') + '</div>';
@@ -1650,7 +1746,7 @@ function renderQuestion(idx){
 
     // 轨道线
     var track = document.createElement('div');
-    track.style.cssText = 'position:absolute;top:50%;left:4%;right:4%;height:3px;background:linear-gradient(90deg,rgba(226,176,74,0.25),rgba(226,176,74,0.06),rgba(226,176,74,0.02),rgba(226,176,74,0.06),rgba(226,176,74,0.25));border-radius:2px;transform:translateY(-50%);z-index:0;';
+    track.style.cssText = 'position:absolute;top:50%;left:4%;right:4%;height:3px;background:linear-gradient(90deg,rgba(226,176,74,0.25),rgba(181,56,54,0.06),rgba(181,56,54,0.02),rgba(181,56,54,0.06),rgba(226,176,74,0.25));border-radius:2px;transform:translateY(-50%);z-index:0;';
     wrap.appendChild(track);
 
     // 圆点容器
@@ -1668,7 +1764,7 @@ function renderQuestion(idx){
       var dot = document.createElement('div');
       dot.id = 'dot' + v;
       dot.onclick = (function(val) { return function() { selectAndNext(val); }; })(v);
-      dot.style.cssText = 'width:' + (sz*2) + 'px;height:' + (sz*2) + 'px;border-radius:50%;cursor:pointer;background:' + bg + ';border:2px solid ' + bd + ';transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1.2);box-shadow:' + (sel ? '0 0 14px rgba(226,176,74,0.3)' : 'none') + ';';
+      dot.style.cssText = 'width:' + (sz*2) + 'px;height:' + (sz*2) + 'px;border-radius:50%;cursor:pointer;background:' + bg + ';border:2px solid ' + bd + ';transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1.2);box-shadow:' + (sel ? '0 0 14px rgba(181,56,54,0.25)' : 'none') + ';';
       row.appendChild(dot);
     }
   }, 30);
@@ -1694,7 +1790,7 @@ function selectAndNext(val) {
     el.style.width = (sz*2)+'px'; el.style.height = (sz*2)+'px';
     el.style.background = sel ? 'var(--accent)' : 'rgba(226,176,74,' + (0.05 + Math.abs(v-4)*0.09) + ')';
     el.style.border = '2px solid ' + (sel ? 'var(--accent)' : 'rgba(226,176,74,' + (0.10 + Math.abs(v-4)*0.15) + ')');
-    el.style.boxShadow = sel ? '0 0 14px rgba(226,176,74,0.3)' : 'none';
+    el.style.boxShadow = sel ? '0 0 14px rgba(181,56,54,0.25)' : 'none';
   }
   setTimeout(function() {
     var total = S.selectedQuestions.length;
@@ -1823,6 +1919,8 @@ function nextQ(){
   }
 }
 
+var FEISHU_WEBHOOK = 'https://open.feishu.cn/open-apis/bot/v2/hook/521dc2f6-b01b-4b6b-9fd2-e6db0f86a472';
+
 function saveSession(){
   const data=getStorage();
   const {finalDims,finalRadicals,style}=S.result;
@@ -1833,6 +1931,32 @@ function saveSession(){
   data.sessions.push({date:ds,typeName:tn,styleStr:`${style.势}·${style.局}·${style.衡}·${style.法}`,style,finalDims,finalRadicals,typeDist,answers:[...S.answers],questions:S.selectedQuestions});
   if(data.sessions.length>20)data.sessions=data.sessions.slice(-20);
   saveStorage(data);
+
+  // 推送飞书
+  try {
+    var beastKey = style.势 + '_' + style.局 + '_' + style.衡 + '_' + style.法;
+    var beastName = ''; var beastSymbol = '';
+    for(var bi=0; bi<FOUR_BEASTS.length; bi++){
+      for(var ti=0; ti<FOUR_BEASTS[bi].types.length; ti++){
+        if(FOUR_BEASTS[bi].types[ti].key === beastKey){ beastName = FOUR_BEASTS[bi].name; beastSymbol = FOUR_BEASTS[bi].symbol; break; }
+      }
+      if(beastName) break;
+    }
+    var chars = ['能','历','格','望','相','詩'];
+    var charScores = chars.map(function(c){
+      var d = CHAR_DEFS[c];
+      var avg = Math.round(d.parts.reduce(function(s,p){return s+(finalRadicals[p]||5);},0)/d.parts.length*10)/10;
+      return c+':'+avg.toFixed(1);
+    }).join(' ');
+    var msg = '👤 '+(S.nickname||'匿名棋手')+' · '+ds+'\n'+
+      beastSymbol+' '+tn+' · '+beastName+'系\n'+
+      '势'+finalDims['势'].toFixed(1)+' 局'+finalDims['局'].toFixed(1)+' 衡'+finalDims['衡'].toFixed(1)+' 法'+finalDims['法'].toFixed(1)+'\n'+
+      '六字: '+charScores;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', FEISHU_WEBHOOK, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({msg_type:'text',content:{text:msg}}));
+  } catch(e) { console.log('飞书推送失败:', e); }
 }
 
 // ===== 分析中 =====
@@ -2552,7 +2676,7 @@ function renderReport() {
       <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--sub);margin-bottom:8px;">
         <span>${dp.p1.toFixed(1)}% ${dp.pole1}</span><span>${dp.p2.toFixed(1)}% ${dp.pole2}</span>
       </div>
-      <div style="font-size:13px;line-height:1.8;color:#d0d0d8;background:rgba(226,176,74,0.04);border-radius:8px;padding:10px 14px;border-left:3px solid var(--accent);">
+      <div style="font-size:13px;line-height:1.8;color:var(--text);background:rgba(200,138,12,0.04);border-radius:8px;padding:10px 14px;border-left:3px solid var(--accent);">
         ${evalText}
       </div>
     </div>`;
@@ -2612,7 +2736,7 @@ function renderReport() {
     </div>
 
     <!-- 大白话总结卡 -->
-    <div style="background:linear-gradient(135deg,rgba(226,176,74,0.08),rgba(168,85,247,0.06));border-radius:14px;padding:20px 24px;margin-bottom:20px;border:1px solid rgba(226,176,74,0.2);">
+    <div style="background:linear-gradient(135deg,rgba(200,138,12,0.08),rgba(168,85,247,0.06));border-radius:14px;padding:20px 24px;margin-bottom:20px;border:1px solid rgba(181,56,54,0.18);">
       ${beastInfo ? `
         <div style="font-size:12px;color:${beastInfo.beast.color};margin-bottom:8px;font-weight:600;letter-spacing:1px;">
           ${beastInfo.beast.rule} → ${beastInfo.beast.ruleDesc}
@@ -2620,15 +2744,15 @@ function renderReport() {
         <div style="font-size:18px;font-weight:800;color:${beastInfo.beast.color};margin-bottom:4px;">
           ${beastInfo.beast.symbol} ${beastInfo.beast.name} · ${beastInfo.type.name}
         </div>
-        <div style="font-size:13px;line-height:1.8;color:#d0d0d8;margin-bottom:6px;">
+        <div style="font-size:13px;line-height:1.8;color:var(--text);margin-bottom:6px;">
           ${beastInfo.beast.desc}
         </div>
-        <div style="font-size:13px;line-height:1.8;color:#c0c0c8;margin-bottom:14px;padding:8px 12px;background:rgba(15,22,41,0.3);border-radius:8px;border-left:3px solid ${beastInfo.beast.color};">
+        <div style="font-size:13px;line-height:1.8;color:var(--text);margin-bottom:14px;padding:8px 12px;background:var(--input-bg);border-radius:8px;border-left:3px solid ${beastInfo.beast.color};">
           ${beastInfo.type.desc}
         </div>
       ` : ''}
       ${plainLines.map(function(line,i){
-        return '<div style="font-size:13px;line-height:1.9;color:#d0d0d8;margin-bottom:4px;">• ' + line + '</div>';
+        return '<div style="font-size:13px;line-height:1.9;color:var(--text);margin-bottom:4px;">• ' + line + '</div>';
       }).join('')}
     </div>
 
@@ -2684,9 +2808,9 @@ function renderReport() {
       </div>
 
       <!-- 核心洞察（精简为3条） -->
-      <div style="background:rgba(226,176,74,0.05);border-radius:10px;padding:14px 18px;border-left:3px solid var(--accent);">
+      <div style="background:rgba(200,138,12,0.05);border-radius:10px;padding:14px 18px;border-left:3px solid var(--accent);">
         <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px;">💡 核心战术洞察</div>
-        ${crossInsights.slice(0,3).map(function(t){return '<div style="font-size:12px;line-height:1.8;color:#c0c0c8;margin-bottom:4px;">• '+t+'</div>';}).join('')}
+        ${crossInsights.slice(0,3).map(function(t){return '<div style="font-size:12px;line-height:1.8;color:var(--text);margin-bottom:4px;">• '+t+'</div>';}).join('')}
         ${charAssess.strongChars.length ? '<div style="font-size:12px;line-height:1.8;color:#4eca7a;margin-bottom:4px;">• 强势字：' + charAssess.strongChars.map(function(c){return '「'+c+'」';}).join(' ') + '——面试中用这些字开路</div>' : ''}
         ${charAssess.weakChars.length ? '<div style="font-size:12px;line-height:1.8;color:#ca5b5b;margin-bottom:4px;">• 薄弱字：' + charAssess.weakChars.map(function(c){return '「'+c+'」';}).join(' ') + '——面试官可能从这些字切入追问</div>' : ''}
         ${function(){
@@ -2715,7 +2839,7 @@ function renderReport() {
         ${function(){
           var se = stabilityEval();
           if(!se) return '';
-          return '<div style="font-size:11px;line-height:1.6;color:#c0c0c8;margin-top:2px;border-top:1px dashed var(--border);padding-top:6px;">🔁 <strong>稳定性策略</strong>：' + se.style + '（均分' + se.avg + '）——' + se.desc + '</div>';
+          return '<div style="font-size:11px;line-height:1.6;color:var(--text);margin-top:2px;border-top:1px dashed var(--border);padding-top:6px;">🔁 <strong>稳定性策略</strong>：' + se.style + '（均分' + se.avg + '）——' + se.desc + '</div>';
         }()}
       </div>
     </div>
@@ -2737,13 +2861,13 @@ function renderReport() {
               '<div style="font-weight:800;font-size:17px;color:var(--accent);">' + rd.room + '</div>' +
               '<div style="font-size:11px;color:var(--sub);">' + rd.meta.focus + '</div>' +
             '</div>' +
-            '<div style="text-align:right;font-size:9px;color:var(--sub);background:rgba(15,22,41,0.6);padding:4px 10px;border-radius:6px;">核心能力<br>' + rd.meta.coreCap + '</div>' +
+            '<div style="text-align:right;font-size:9px;color:var(--sub);background:var(--input-bg);padding:4px 10px;border-radius:6px;">核心能力<br>' + rd.meta.coreCap + '</div>' +
           '</div>' +
 
           // === 场景风格评价 ===
           '<div style="margin-bottom:14px;">' +
             '<div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px;">🎯 场景风格评价</div>' +
-            '<div style="font-size:12px;line-height:1.8;color:#c0c0c8;margin-bottom:6px;">' + rd.sceneStyleLabel + '</div>' +
+            '<div style="font-size:12px;line-height:1.8;color:var(--text);margin-bottom:6px;">' + rd.sceneStyleLabel + '</div>' +
             // 四维标签
             '<div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">' +
               ['势','局','衡','法'].map(function(dim) {
@@ -2786,7 +2910,7 @@ function renderReport() {
             '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
               rd.radTightnessList.map(function(rt) {
                 var barColor = rt.roomVal >= 8 ? '#4eca7a' : rt.roomVal >= 5 ? '#e2b04a' : '#ca5b5b';
-                return '<div style="flex:1;min-width:80px;text-align:center;background:rgba(15,22,41,0.6);border-radius:8px;padding:8px 4px;">' +
+                return '<div style="flex:1;min-width:80px;text-align:center;background:var(--input-bg);border-radius:8px;padding:8px 4px;">' +
                   '<div style="font-weight:700;font-size:13px;color:' + barColor + ';">[' + rt.rad + ']</div>' +
                   '<div style="font-size:9px;color:var(--sub);">' + rt.name + '</div>' +
                   '<div style="font-size:16px;font-weight:800;color:' + barColor + ';">' + rt.roomVal.toFixed(1) + '</div>' +
@@ -2800,7 +2924,7 @@ function renderReport() {
           '<div style="margin-bottom:12px;">' +
             '<div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px;">📐 六字房间评分</div>' +
             // 房间综合分+六字得分
-            '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;background:rgba(15,22,41,0.4);border-radius:10px;padding:12px 14px;">' +
+            '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;background:var(--input-bg);border-radius:10px;padding:12px 14px;">' +
               // 综合得分（大字）
               '<div style="text-align:center;min-width:64px;">' +
                 '<div style="font-size:30px;font-weight:800;color:' + (rd.roomFinal>=7?'#4eca7a':rd.roomFinal>=5?'#e2b04a':'#ca5b5b') + ';">' + rd.roomFinal.toFixed(1) + '</div>' +
@@ -2808,9 +2932,9 @@ function renderReport() {
               '</div>' +
               // 拆分说明：能力得分 + 风格匹配，用大白话
               '<div style="flex:1;font-size:10px;color:var(--sub);line-height:1.8;">' +
-                '<div><span style="color:#8892a6;">答题表现</span> <span style="color:#c0c0c8;font-weight:600;">' + rd.roomAvg.toFixed(1) + '分</span>' +
+                '<div><span style="color:var(--sub);">答题表现</span> <span style="color:var(--text);font-weight:600;">' + rd.roomAvg.toFixed(1) + '分</span>' +
                 ' · 风格 <span style="color:' + (rd.matchLabel==='客场'?'#95a5a6':rd.matchLabel==='中性'?'#e2b04a':'#4eca7a') + ';font-weight:600;">' + (rd.matchLabel==='客场'?'不太对路':rd.matchLabel==='中性'?'部分对路':'完全对路') + '（×' + rd.styleMatch.toFixed(1) + '）</span></div>' +
-                '<div style="font-size:9px;color:#6b7280;">' + (rd.matchLabel === '客场' ? '⚠️ 你的风格和这个房间气场不合——不用硬改自己，重点补弱项能力' : rd.matchLabel === '中性' ? '⚡ 风格对了一半——发挥对路的能力，微调表达方式' : '✅ 风格跟房间完全对路——这是你的优势战场，放手发挥') + '</div>' +
+                '<div style="font-size:9px;color:var(--sub);">' + (rd.matchLabel === '客场' ? '⚠️ 你的风格和这个房间气场不合——不用硬改自己，重点补弱项能力' : rd.matchLabel === '中性' ? '⚡ 风格对了一半——发挥对路的能力，微调表达方式' : '✅ 风格跟房间完全对路——这是你的优势战场，放手发挥') + '</div>' +
               '</div>' +
             '</div>' +
             '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">' +
@@ -2822,7 +2946,7 @@ function renderReport() {
                   var v = found.length>0 ? found[0].roomVal : '-';
                   return '['+p+']' + (typeof v==='number'?v.toFixed(1):v);
                 }).join(' ');
-                return '<div style="flex:1;min-width:65px;text-align:center;background:rgba(15,22,41,0.6);border-radius:8px;padding:6px 3px;">' +
+                return '<div style="flex:1;min-width:65px;text-align:center;background:var(--input-bg);border-radius:8px;padding:6px 3px;">' +
                   '<div style="font-weight:700;font-size:13px;color:' + barColor + ';">「' + c.name + '」</div>' +
                   (c.isKey ? '<div style="font-size:7px;color:var(--accent);">⭐重点</div>' : '') +
                   '<div style="font-size:16px;font-weight:800;color:' + barColor + ';">' + c.score.toFixed(1) + '</div>' +
@@ -2833,11 +2957,11 @@ function renderReport() {
           '</div>' +
 
           // === 扣分原因 + 战术改进 + 偏旁重组 ===
-          '<div style="background:rgba(226,176,74,0.04);border-radius:10px;padding:12px 16px;border-left:3px solid var(--accent);">' +
+          '<div style="background:rgba(200,138,12,0.04);border-radius:10px;padding:12px 16px;border-left:3px solid var(--accent);">' +
             (rd.deductions.length > 0 ? '<div style="font-size:12px;margin-bottom:6px;line-height:1.7;"><span style="color:#ca5b5b;">⚠ 扣分原因：</span>' + rd.deductions.join('；') + '</div>' : '') +
             (rd.tactics.length > 0 ? '<div style="font-size:12px;margin-bottom:6px;line-height:1.7;"><span style="color:#4eca7a;">💡 战术改进：</span>' + rd.tactics.join('；') + '</div>' : '') +
             '<div style="font-size:11px;color:var(--sub);line-height:1.6;margin-bottom:4px;">📋 <strong>房间战术：</strong>' + rd.roomTactic + '</div>' +
-            '<div style="font-size:11px;line-height:1.7;color:#c0c0c8;background:rgba(15,22,41,0.4);border-radius:6px;padding:8px 12px;border-left:2px solid var(--accent2);"><span style="color:var(--accent2);font-weight:600;">📜 能力重组：</span>' + rd.recombineText + '</div>' +
+            '<div style="font-size:11px;line-height:1.7;color:var(--text);background:var(--input-bg);border-radius:6px;padding:8px 12px;border-left:2px solid var(--accent2);"><span style="color:var(--accent2);font-weight:600;">📜 能力重组：</span>' + rd.recombineText + '</div>' +
           '</div>' +
         '</div>';
       }).join('')}
@@ -2865,6 +2989,9 @@ function renderReport() {
       <button class="btn-ai" id="aiBtn" onclick="aiDeepAnalysis()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;">🤖 AI深度解读</button>
     </div>
     <div id="aiResult" style="margin-top:16px;"></div>
+    <div style="text-align:center;padding:16px 0 8px;margin-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--sub);">
+      有问题咨询 <a href="https://www.xiaohongshu.com/user/profile/67866055000000000803c13e" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);">🍠@17_lL</a>
+    </div>
   `;
   // 双页拆分：默认显示总览，隐藏详细拆解
   (function(){
@@ -2914,6 +3041,9 @@ function renderHistory(){
       <button class="btn-restart" onclick="switchTo('login')">← 返回首页</button>
       ${sessions.length>0?`<button class="btn-restart" onclick="clearAll()" style="color:var(--bar-low);">清空全部</button>`:''}
     </div>
+    <div style="text-align:center;padding:16px 0 8px;margin-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--sub);">
+      有问题咨询 <a href="https://www.xiaohongshu.com/user/profile/67866055000000000803c13e" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);">🍠@17_lL</a>
+    </div>
   `;
 }
 function viewHistory(idx){
@@ -2930,30 +3060,6 @@ function clearAll(){if(!confirm('确定清空全部历史记录？不可恢复�
 // ============================================================
 const FOUR_BEASTS = [
   {
-    name: '青龙', element: '木', season: '春', direction: '东',
-    symbol: '🐉', color: '#4a9e7b', bg: 'rgba(74,158,123,0.08)',
-    desc: '青龙属木，主东方，象征生发与权威。青龙战术者追求外部世界的认可与回报，同时以长期主义视角布局——他们是天生的「造局者」，既看重结果也看重方向。',
-    rule: '外势 × 远局', ruleDesc: '外求回报 · 长期主义',
-    types: [
-      { key: '外势_远局_理衡_定法', name: '布局型', desc: '如青龙盘踞，静观全局而后动。你追求外部世界的认可和回报，同时以长期主义视角布局每一步。面试中你最强的牌是「格局感」——你不仅关注岗位本身，更关注这件事在更大图景中的位置，而且你知道自己要什么。' },
-      { key: '外势_远局_理衡_活法', name: '演化型', desc: '如青龙乘云，不拘一格而求变。你以外求驱动，有清晰的长期方向但不拘泥于固定路径——相信演化比计划更有力量。面试中你能根据对方的反馈实时重组你的优势展示，灵活但不失方向。' },
-      { key: '外势_远局_情衡_定法', name: '感召型', desc: '如青龙吟啸，以信念凝聚人心。你以外求驱动搭配长期主义——用愿景和价值观来影响他人，坚定来自于你对自己所选方向的深信不疑。面试中你不是在「说服」面试官，而是在「感召」志同道合的人。' },
-      { key: '外势_远局_情衡_活法', name: '渗透型', desc: '如青龙化雨，润物无声而渐成气候。你以外求驱动但不急于展示全部实力——通过持续的关系经营和软性影响，让对方在不知不觉中倾向于你。面试中你的优势在于「让人舒服地被你说服」。' }
-    ]
-  },
-  {
-    name: '白虎', element: '金', season: '秋', direction: '西',
-    symbol: '🐅', color: '#d4a853', bg: 'rgba(212,168,83,0.08)',
-    desc: '白虎属金，主西方，象征锐利与行动。白虎战术者目标明确、出手果决——他们关注外部回报和当下结果，是「拿结果说话」的行动派。',
-    rule: '外势 × 近局', ruleDesc: '外求回报 · 务实当下',
-    types: [
-      { key: '外势_近局_理衡_定法', name: '压制型', desc: '如白虎下山，正面强攻不留余地。你以外求驱动和务实当下为准则——擅长用事实和数据直接展示专业能力。面试中你的战术是「正面碾压」：用最有说服力的案例直接拿下关键评价点。' },
-      { key: '外势_近局_理衡_活法', name: '拆解型', desc: '如白虎猎食，精准锁定而后各个击破。你以外求驱动务实分析对方的评价体系，逐一拆解每个评估维度并有针对性地回应。面试中每一句话都瞄准一个具体的评分点——不做无意义的展示。' },
-      { key: '外势_近局_情衡_定法', name: '共鸣型', desc: '如白虎护佑，以情动人建立信任。你以外求驱动快速感知面试官的关注点，并与之建立情感连接。面试中你不是在回答问题——你是在建立一种「我们是一类人」的共鸣感，用关系达成结果。' },
-      { key: '外势_近局_情衡_活法', name: '适应型', desc: '如白虎巡猎，随猎物变换策略。你以外求驱动敏锐感知面试现场的微妙氛围，实时调整表达方式和节奏。面试中没有固定的「你」——你能成为对方最想看到的那种候选人，以变制胜。' }
-    ]
-  },
-  {
     name: '朱雀', element: '火', season: '夏', direction: '南',
     symbol: '🐦', color: '#c43a31', bg: 'rgba(196,58,49,0.08)',
     desc: '朱雀属火，主南方，象征内省与超越。朱雀战术者以内心的价值判断为驱动力，追求长期的意义而非短期的回报——他们「向内求索，向上突破」，是自我迭代的深度思考者。',
@@ -2966,6 +3072,18 @@ const FOUR_BEASTS = [
     ]
   },
   {
+    name: '青龙', element: '木', season: '春', direction: '东',
+    symbol: '🐉', color: '#4a9e7b', bg: 'rgba(74,158,123,0.08)',
+    desc: '青龙属木，主东方，象征生发与权威。青龙战术者追求外部世界的认可与回报，同时以长期主义视角布局——他们是天生的「造局者」，既看重结果也看重方向。',
+    rule: '外势 × 远局', ruleDesc: '外求回报 · 长期主义',
+    types: [
+      { key: '外势_远局_理衡_定法', name: '布局型', desc: '如青龙盘踞，静观全局而后动。你追求外部世界的认可和回报，同时以长期主义视角布局每一步。面试中你最强的牌是「格局感」——你不仅关注岗位本身，更关注这件事在更大图景中的位置，而且你知道自己要什么。' },
+      { key: '外势_远局_理衡_活法', name: '演化型', desc: '如青龙乘云，不拘一格而求变。你以外求驱动，有清晰的长期方向但不拘泥于固定路径——相信演化比计划更有力量。面试中你能根据对方的反馈实时重组你的优势展示，灵活但不失方向。' },
+      { key: '外势_远局_情衡_定法', name: '感召型', desc: '如青龙吟啸，以信念凝聚人心。你以外求驱动搭配长期主义——用愿景和价值观来影响他人，坚定来自于你对自己所选方向的深信不疑。面试中你不是在「说服」面试官，而是在「感召」志同道合的人。' },
+      { key: '外势_远局_情衡_活法', name: '渗透型', desc: '如青龙化雨，润物无声而渐成气候。你以外求驱动但不急于展示全部实力——通过持续的关系经营和软性影响，让对方在不知不觉中倾向于你。面试中你的优势在于「让人舒服地被你说服」。' }
+    ]
+  },
+  {
     name: '玄武', element: '水', season: '冬', direction: '北',
     symbol: '🐢', color: '#5b7b9f', bg: 'rgba(91,123,159,0.08)',
     desc: '玄武属水，主北方，象征守护与积累。玄武战术者以内心的标准为锚，在现实中稳步构建自己的壁垒——他们不追逐风口，而是「向内扎根，就地固守」，用持续的深耕换取不可替代性。',
@@ -2975,6 +3093,18 @@ const FOUR_BEASTS = [
       { key: '内势_近局_理衡_活法', name: '解析型', desc: '如玄武观纹，以缜密的分析力拆解复杂问题。你以内求成长驱动，在静默中深入分析——别人还在讨论表面时你已经找到了底层逻辑。面试中你的思维密度是你的王牌：你说的每一句话都经过了深度加工。' },
       { key: '内势_近局_情衡_定法', name: '守护型', desc: '如玄武护穴，以忠诚和责任感守护自己的领域。你以内求成长和务实当下为准则——对自己认定的人和事有极强的承诺感，是团队中最可靠的存在。面试中你的「可靠感」是最大的资本：让对方觉得把重要的事交给你可以完全放心。' },
       { key: '内势_近局_情衡_活法', name: '直觉型', desc: '如玄武感应，以敏锐的直觉判断人和事的本质。你以内求成长和务实当下驱动——有一种难以言说的判断力，能在信息不完全的情况下凭感觉做出正确的选择。面试中你依靠的是「对人的直觉」：快速读懂面试官真正关心的是什么。' }
+    ]
+  },
+  {
+    name: '白虎', element: '金', season: '秋', direction: '西',
+    symbol: '🐅', color: '#d4a853', bg: 'rgba(212,168,83,0.08)',
+    desc: '白虎属金，主西方，象征锐利与行动。白虎战术者目标明确、出手果决——他们关注外部回报和当下结果，是「拿结果说话」的行动派。',
+    rule: '外势 × 近局', ruleDesc: '外求回报 · 务实当下',
+    types: [
+      { key: '外势_近局_理衡_定法', name: '压制型', desc: '如白虎下山，正面强攻不留余地。你以外求驱动和务实当下为准则——擅长用事实和数据直接展示专业能力。面试中你的战术是「正面碾压」：用最有说服力的案例直接拿下关键评价点。' },
+      { key: '外势_近局_理衡_活法', name: '拆解型', desc: '如白虎猎食，精准锁定而后各个击破。你以外求驱动务实分析对方的评价体系，逐一拆解每个评估维度并有针对性地回应。面试中每一句话都瞄准一个具体的评分点——不做无意义的展示。' },
+      { key: '外势_近局_情衡_定法', name: '共鸣型', desc: '如白虎护佑，以情动人建立信任。你以外求驱动快速感知面试官的关注点，并与之建立情感连接。面试中你不是在回答问题——你是在建立一种「我们是一类人」的共鸣感，用关系达成结果。' },
+      { key: '外势_近局_情衡_活法', name: '适应型', desc: '如白虎巡猎，随猎物变换策略。你以外求驱动敏锐感知面试现场的微妙氛围，实时调整表达方式和节奏。面试中没有固定的「你」——你能成为对方最想看到的那种候选人，以变制胜。' }
     ]
   }
 ];
@@ -2990,7 +3120,7 @@ function renderBeasts() {
     html += '<div style="font-size:36px;margin-bottom:4px;">' + beast.symbol + '</div>';
     html += '<div style="font-size:20px;font-weight:800;color:' + beast.color + ';margin-bottom:4px;">' + beast.name + '</div>';
     html += '<div style="font-size:11px;color:var(--sub);margin-bottom:6px;">' + beast.element + ' · ' + beast.season + ' · ' + beast.direction + '方</div>';
-    html += '<div style="font-size:12px;color:#c0c0c8;line-height:1.7;margin-bottom:10px;">' + beast.desc + '</div>';
+    html += '<div style="font-size:12px;color:var(--text);line-height:1.7;margin-bottom:10px;">' + beast.desc + '</div>';
     html += '<div style="font-size:11px;color:' + beast.color + ';font-weight:600;margin-bottom:8px;">' + beast.rule + ' → ' + beast.ruleDesc + '</div>';
     html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">';
     beast.types.forEach(t => {
@@ -3010,7 +3140,7 @@ function renderBeasts() {
     beast.types.forEach(t => {
       html += '<div style="background:var(--card);border-radius:10px;padding:14px 18px;margin-bottom:8px;border-left:3px solid ' + beast.color + ';">';
       html += '<div style="font-weight:700;font-size:15px;color:' + beast.color + ';margin-bottom:4px;">' + t.name + '</div>';
-      html += '<div style="font-size:12.5px;color:#c0c0c8;line-height:1.8;">' + t.desc + '</div>';
+      html += '<div style="font-size:12.5px;color:var(--text);line-height:1.8;">' + t.desc + '</div>';
       html += '</div>';
     });
     html += '</div>';
@@ -3019,6 +3149,7 @@ function renderBeasts() {
   html += '<div style="text-align:center;margin-top:20px;padding-bottom:20px;">';
   html += '<button class="btn-restart" onclick="switchTo(\'login\')">← 返回首页</button>';
   html += '</div>';
+  html += '<div style="text-align:center;padding:8px 0 24px;font-size:11px;color:var(--sub);">有问题咨询 <a href="https://www.xiaohongshu.com/user/profile/67866055000000000803c13e" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);">🍠@17_lL</a></div>';
 
   app.innerHTML = html;
 }
@@ -3259,7 +3390,7 @@ function aiDeepAnalysis(){
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/- (.+)/g, '<div style="margin:4px 0 4px 12px;font-size:13px;">• $1</div>')
       .replace(/\n\n/g, '<br><br>');
-    resultDiv.innerHTML = '<div style="background:rgba(124,58,237,0.08);border:2px solid rgba(124,58,237,0.3);border-radius:14px;padding:20px;margin-top:16px;line-height:1.8;font-size:13px;color:#c0c0c8;">' +
+    resultDiv.innerHTML = '<div style="background:rgba(124,58,237,0.08);border:2px solid rgba(124,58,237,0.3);border-radius:14px;padding:20px;margin-top:16px;line-height:1.8;font-size:13px;color:var(--text);">' +
       '<div style="color:#a855f7;font-weight:700;margin-bottom:12px;font-size:15px;">🤖 AI深度解读</div>' + html + '</div>';
   })
   .catch(function(e){
