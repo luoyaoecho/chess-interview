@@ -2000,16 +2000,31 @@ function saveSession(){
       }
       if(beastName) break;
     }
-    var chars = ['能','历','格','望','相','詩'];
-    var charScores = chars.map(function(c){
-      var d = CHAR_DEFS[c];
-      var avg = Math.round(d.parts.reduce(function(s,p){return s+(finalRadicals[p]||5);},0)/d.parts.length*10)/10;
-      return c+':'+avg.toFixed(1);
-    }).join(' ');
-    var msg = '👤 '+(S.nickname||'匿名棋手')+' · '+ds+'\n'+
-      beastSymbol+' '+tn+' · '+beastName+'系\n'+
-      '势'+finalDims['势'].toFixed(1)+' 局'+finalDims['局'].toFixed(1)+' 衡'+finalDims['衡'].toFixed(1)+' 法'+finalDims['法'].toFixed(1)+'\n'+
-      '六字: '+charScores;
+    // 设备信息
+    var ua = navigator.userAgent;
+    var device = ua.match(/iPhone|iPad|Android|Mac|Windows|Linux/) || ['未知'];
+    var deviceStr = device[0] + (ua.match(/Mobile/)?'手机':'电脑');
+    // 各房间信息
+    var rr = computeRoomScores(S.selectedQuestions, S.answers, finalRadicals, finalDims, style);
+    var roomLines = '';
+    var totalSum = 0;
+    (rr.roomData||[]).forEach(function(rd){
+      var rk = rd.roomStyle['势']+'_'+rd.roomStyle['局']+'_'+rd.roomStyle['衡']+'_'+rd.roomStyle['法'];
+      var rtn = ''; var rb = '';
+      for(var bi2=0; bi2<FOUR_BEASTS.length; bi2++){
+        for(var ti2=0; ti2<FOUR_BEASTS[bi2].types.length; ti2++){
+          if(FOUR_BEASTS[bi2].types[ti2].key === rk){ rtn = FOUR_BEASTS[bi2].types[ti2].name; rb = FOUR_BEASTS[bi2].name; break; }
+        }
+        if(rtn) break;
+      }
+      totalSum += rd.roomFinal;
+      roomLines += rd.room+'：'+rtn+' · '+rb+'（'+rd.roomFinal.toFixed(1)+'分）\n';
+    });
+    var totalScore = (rr.roomData||[]).length>0 ? (totalSum/(rr.roomData||[]).length).toFixed(1) : '0';
+    var msg = '【'+deviceStr+'】👤 '+(S.nickname||'')+'\n'+
+      '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n'+
+      roomLines+
+      '\n'+ds;
     var xhr = new XMLHttpRequest();
     xhr.open('POST', FEISHU_WEBHOOK, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
