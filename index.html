@@ -2069,8 +2069,9 @@ function saveSession(){
             }
           });
         }
-        var diffNote = diffParts.length>0 ? diffParts.join('；') : (rd===bestRoom?'最佳房间' : '无差异');
-        return {room:rd.room, beast:rb3, type:rn3, score:rd.roomFinal.toFixed(1), isLowest:rd.roomFinal===minScore, diffNote:diffNote};
+        var diffCount = diffParts.length;
+        var diffNote = diffCount>0 ? diffCount+'项差异：'+diffParts.join('；') : (rd===bestRoom?'最佳房间' : '无差异');
+        return {room:rd.room, beast:rb3, type:rn3, score:rd.roomFinal.toFixed(1), isLowest:rd.roomFinal===minScore, diffNote:diffNote, diffCount:diffCount};
       });
       var collectUrl = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? '/api/collect' : 'https://chess-deploy-phi.vercel.app/api/collect';
       fetch(collectUrl,{
