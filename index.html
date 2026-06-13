@@ -2851,8 +2851,8 @@ function renderReport() {
         return '<div style="margin-bottom:14px;background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;">' +
           // 房间标题（可点击展开）
           '<div onclick="var d=document.getElementById(\'rd'+ri+'\');d.style.display=d.style.display==\'none\'?\'block\':\'none\';var a=document.getElementById(\'rdArrow'+ri+'\');a.textContent=d.style.display==\'none\'?\'▸\':\'▾\';" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:14px 16px;transition:background 0.2s;">' +
-            // 匹配房间风格对应的神兽图
-            (function(){ var rk=rd.roomStyle['势']+'_'+rd.roomStyle['局']; for(var bi=0;bi<FOUR_BEASTS.length;bi++){ var b=FOUR_BEASTS[bi]; var br=b.rule.replace(/ /g,'').replace('×','_'); if(rk===br) return '<img loading="lazy" src="'+b.img+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid '+b.color+';flex-shrink:0;" alt="">'; } return ''; })() +
+            // 匹配房间四维风格对应的16型头像
+            (function(){ var rk=rd.roomStyle['势']+'_'+rd.roomStyle['局']+'_'+rd.roomStyle['衡']+'_'+rd.roomStyle['法']; for(var bi=0;bi<FOUR_BEASTS.length;bi++){ for(var ti=0;ti<FOUR_BEASTS[bi].types.length;ti++){ var t=FOUR_BEASTS[bi].types[ti]; if(t.key===rk && t.typeImg) return '<img loading="lazy" src="'+t.typeImg+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid '+FOUR_BEASTS[bi].color+';flex-shrink:0;" alt="">'; } } return ''; })() +
             '<div style="flex:1;">' +
               '<div style="font-weight:700;font-size:15px;color:var(--accent);">' + rd.room + ' · <span style="font-size:13px;font-weight:400;color:var(--sub);">' + rd.roomFinal.toFixed(1) + '分</span></div>' +
               '<div style="font-size:10px;color:var(--sub);">' + rd.meta.focus + '</div>' +
