@@ -2923,20 +2923,6 @@ function renderReport() {
         '</div></div>';
       }).join('')}
 
-      <!-- 五房间风格分布 -->
-      <details style="margin-top:12px;font-size:12px;color:var(--sub);cursor:pointer;">
-        <summary style="margin-bottom:8px;">🧬 五房间场景风格分布（展开）</summary>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          ${roomData.map(function(rd){
-            var beastMap = {'外势_远局':'🐉青龙','外势_近局':'🐅白虎','内势_远局':'🐦朱雀','内势_近局':'🐢玄武'};
-            var key = rd.roomStyle['势']+'_'+rd.roomStyle['局'];
-            return '<div style="background:var(--input-bg);border-radius:8px;padding:8px 12px;font-size:11px;">' +
-              rd.meta.icon + ' ' + rd.room + '：' + (beastMap[key]||key) + ' ' + rd.roomStyle['势']+'×'+rd.roomStyle['局'] +
-              '</div>';
-          }).join('')}
-        </div>
-        <div style="margin-top:6px;font-size:11px;color:var(--sub);">总风格 = 多数投票：<strong>${style.势}×${style.局}</strong>（${overall.flexibility}/5房间与此一致）</div>
-      </details>
     </div>
 
     </div>
