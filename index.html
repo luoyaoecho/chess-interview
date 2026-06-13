@@ -2036,8 +2036,8 @@ function saveSession(){
     // 先获取IP再推送
     fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).catch(function(){return {ip:'未知'};}).then(function(ipData){
       var ip = ipData.ip || '未知';
-      var msg = '【'+deviceStr+' · '+(S.nickname||'')+' · 第'+testCount+'次】\n'+
-        'IP：'+ip+'\n'+
+      var msg = '【主键：'+ip+'*'+(S.nickname||'')+'*'+testCount+'】\n'+
+        '设备：'+deviceStr+'  次数：第'+testCount+'次\n'+
         '开始：'+startStr+'  结束：'+endStr+'  用时：'+durationMin+'分钟\n'+
         '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n'+
         roomLines;
