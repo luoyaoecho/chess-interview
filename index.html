@@ -2058,7 +2058,8 @@ function saveSession(){
         for(var bi4=0;bi4<FOUR_BEASTS.length;bi4++){ for(var ti4=0;ti4<FOUR_BEASTS[bi4].types.length;ti4++){ if(FOUR_BEASTS[bi4].types[ti4].key===rk3){ rn3=FOUR_BEASTS[bi4].types[ti4].name; rb3=FOUR_BEASTS[bi4].name; break; } } if(rn3) break; }
         return {room:rd.room, beast:rb3, type:rn3, score:rd.roomFinal.toFixed(1), isLowest:rd.roomFinal===minScore, diffNote:rd.roomFinal===minScore?'与最高差'+(maxScore-minScore).toFixed(1)+'分':''};
       });
-      fetch('https://chess-deploy-phi.vercel.app/api/collect',{
+      var collectUrl = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? '/api/collect' : 'https://chess-deploy-phi.vercel.app/api/collect';
+      fetch(collectUrl,{
         method:'POST', headers:{'Content-Type':'application/json'},
         body:JSON.stringify({ip:ip,device:deviceStr,nickname:S.nickname||'',count:testCount,startTime:startStr,endTime:endStr,duration:durationMin+'分钟',beastType:beastName,type16:tn,totalScore:totalScore,rooms:collectRooms})
       }).catch(function(){});
