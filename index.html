@@ -2049,6 +2049,19 @@ function saveSession(){
       xhr.open('POST', FEISHU_WEBHOOK, true);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(JSON.stringify({msg_type:'text',content:{text:msg}}));
+      // 同步写入飞书多维表格
+      var minScore = 999, maxScore = 0;
+      (rr.roomData||[]).forEach(function(rd){ if(rd.roomFinal<minScore) minScore=rd.roomFinal; if(rd.roomFinal>maxScore) maxScore=rd.roomFinal; });
+      var collectRooms = (rr.roomData||[]).map(function(rd){
+        var rk3=rd.roomStyle['势']+'_'+rd.roomStyle['局']+'_'+rd.roomStyle['衡']+'_'+rd.roomStyle['法'];
+        var rn3='', rb3='';
+        for(var bi4=0;bi4<FOUR_BEASTS.length;bi4++){ for(var ti4=0;ti4<FOUR_BEASTS[bi4].types.length;ti4++){ if(FOUR_BEASTS[bi4].types[ti4].key===rk3){ rn3=FOUR_BEASTS[bi4].types[ti4].name; rb3=FOUR_BEASTS[bi4].name; break; } } if(rn3) break; }
+        return {room:rd.room, beast:rb3, type:rn3, score:rd.roomFinal.toFixed(1), isLowest:rd.roomFinal===minScore, diffNote:rd.roomFinal===minScore?'与最高差'+(maxScore-minScore).toFixed(1)+'分':''};
+      });
+      fetch('https://chess-deploy-phi.vercel.app/api/collect',{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ip:ip,device:deviceStr,nickname:S.nickname||'',count:testCount,startTime:startStr,endTime:endStr,duration:durationMin+'分钟',beastType:beastName,type16:tn,totalScore:totalScore,rooms:collectRooms})
+      }).catch(function(){});
     });
   } catch(e) { console.log('飞书推送失败:', e); }
 }
