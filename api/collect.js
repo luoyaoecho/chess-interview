@@ -51,7 +51,8 @@ export default async function handler(req, res) {
           '房间类型（16型）': room.type || '',
           '房间分数': String(room.score || '0'),
           '是否为五房间最低分数': room.isLowest ? '是' : '否',
-          '与最佳房间策略差异项': room.diffNote || ''
+          '与最佳房间策略差异项': room.diffNote || '',
+          '与最佳房间策略差异数': room.diffCount || 0
         }
       };
 
