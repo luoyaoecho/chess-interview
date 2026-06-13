@@ -2052,11 +2052,25 @@ function saveSession(){
       // 同步写入飞书多维表格
       var minScore = 999, maxScore = 0;
       (rr.roomData||[]).forEach(function(rd){ if(rd.roomFinal<minScore) minScore=rd.roomFinal; if(rd.roomFinal>maxScore) maxScore=rd.roomFinal; });
+      // 找最佳房间及其四维
+      var bestRoom = null, bestScore = 0;
+      (rr.roomData||[]).forEach(function(rd){ if(rd.roomFinal>bestScore){ bestScore=rd.roomFinal; bestRoom=rd; } });
       var collectRooms = (rr.roomData||[]).map(function(rd){
         var rk3=rd.roomStyle['势']+'_'+rd.roomStyle['局']+'_'+rd.roomStyle['衡']+'_'+rd.roomStyle['法'];
         var rn3='', rb3='';
         for(var bi4=0;bi4<FOUR_BEASTS.length;bi4++){ for(var ti4=0;ti4<FOUR_BEASTS[bi4].types.length;ti4++){ if(FOUR_BEASTS[bi4].types[ti4].key===rk3){ rn3=FOUR_BEASTS[bi4].types[ti4].name; rb3=FOUR_BEASTS[bi4].name; break; } } if(rn3) break; }
-        return {room:rd.room, beast:rb3, type:rn3, score:rd.roomFinal.toFixed(1), isLowest:rd.roomFinal===minScore, diffNote:rd.roomFinal===minScore?'与最高差'+(maxScore-minScore).toFixed(1)+'分':''};
+        // 与最佳房间的四维差异
+        var diffParts = [];
+        if(bestRoom && rd!==bestRoom){
+          ['势','局','衡','法'].forEach(function(dim){
+            if(rd.roomStyle[dim] !== bestRoom.roomStyle[dim]){
+              var dimNames = {势:'能量来源',局:'价值取向',衡:'判断方式',法:'行动风格'};
+              diffParts.push(dimNames[dim]+'：'+rd.roomStyle[dim]+'→'+bestRoom.roomStyle[dim]);
+            }
+          });
+        }
+        var diffNote = diffParts.length>0 ? diffParts.join('；') : (rd===bestRoom?'最佳房间' : '无差异');
+        return {room:rd.room, beast:rb3, type:rn3, score:rd.roomFinal.toFixed(1), isLowest:rd.roomFinal===minScore, diffNote:diffNote};
       });
       var collectUrl = (location.hostname==='localhost'||location.hostname==='127.0.0.1') ? '/api/collect' : 'https://chess-deploy-phi.vercel.app/api/collect';
       fetch(collectUrl,{
