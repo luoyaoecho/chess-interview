@@ -2036,11 +2036,15 @@ function saveSession(){
     // 先获取IP再推送
     fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).catch(function(){return {ip:'未知'};}).then(function(ipData){
       var ip = ipData.ip || '未知';
-      var msg = '【主键：'+ip+'*'+(S.nickname||'')+'*'+testCount+'】\n'+
+      // 收集各房间数据用于TSV
+      var rdMap = {}; (rr.roomData||[]).forEach(function(rd){ var rk2=rd.roomStyle['势']+'_'+rd.roomStyle['局']+'_'+rd.roomStyle['衡']+'_'+rd.roomStyle['法']; var rn=''; for(var bi3=0;bi3<FOUR_BEASTS.length;bi3++){ for(var ti3=0;ti3<FOUR_BEASTS[bi3].types.length;ti3++){ if(FOUR_BEASTS[bi3].types[ti3].key===rk2){ rn=FOUR_BEASTS[bi3].types[ti3].name+'·'+FOUR_BEASTS[bi3].name; break; } } if(rn) break; } rdMap[rd.room]=rn+' '+rd.roomFinal.toFixed(1)+'分'; });
+      var tsv = [ip,S.nickname||'',testCount,deviceStr,startStr,durationMin+'分钟',tn+'·'+beastName,totalScore+'分',rdMap['HR初筛']||'',rdMap['业务面试']||'',rdMap['交叉面试']||'',rdMap['高管面试']||'',rdMap['HR谈薪']||''].join('\t');
+      var msg = '【'+ip+'*'+(S.nickname||'')+'*'+testCount+'】\n'+
         '设备：'+deviceStr+'  次数：第'+testCount+'次\n'+
-        '开始：'+startStr+'  结束：'+endStr+'  用时：'+durationMin+'分钟\n'+
+        '开始：'+startStr+'  用时：'+durationMin+'分钟\n'+
         '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n'+
-        roomLines;
+        roomLines+
+        '\n📋 复制下行粘贴到表格：\n'+tsv;
       var xhr = new XMLHttpRequest();
       xhr.open('POST', FEISHU_WEBHOOK, true);
       xhr.setRequestHeader('Content-Type', 'application/json');
