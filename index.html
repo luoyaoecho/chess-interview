@@ -2033,14 +2033,19 @@ function saveSession(){
       roomLines += rd.room+'：'+rtn+' · '+rb+'（'+rd.roomFinal.toFixed(1)+'分）\n';
     });
     var totalScore = (rr.roomData||[]).length>0 ? (totalSum/(rr.roomData||[]).length).toFixed(1) : '0';
-    var msg = '【'+deviceStr+' · '+(S.nickname||'')+' · 第'+testCount+'次】\n'+
-      '开始：'+startStr+'  结束：'+endStr+'  用时：'+durationMin+'分钟\n'+
-      '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n'+
-      roomLines;
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', FEISHU_WEBHOOK, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({msg_type:'text',content:{text:msg}}));
+    // 先获取IP再推送
+    fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).catch(function(){return {ip:'未知'};}).then(function(ipData){
+      var ip = ipData.ip || '未知';
+      var msg = '【'+deviceStr+' · '+(S.nickname||'')+' · 第'+testCount+'次】\n'+
+        'IP：'+ip+'\n'+
+        '开始：'+startStr+'  结束：'+endStr+'  用时：'+durationMin+'分钟\n'+
+        '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n'+
+        roomLines;
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', FEISHU_WEBHOOK, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({msg_type:'text',content:{text:msg}}));
+    });
   } catch(e) { console.log('飞书推送失败:', e); }
 }
 
