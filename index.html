@@ -1664,6 +1664,7 @@ function closeModal(){
   modals.forEach(function(m){ m.remove(); });
 }
 function proceedToQuestions(){
+  S._testStart = new Date();
   S.selectedQuestions = [];
   S._usedQIndices = {};
   var roomPools = {};
@@ -1986,6 +1987,17 @@ function saveSession(){
   const now=new Date();
   const ds=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   const typeDist = S.result.typeDist;
+  // 测试计数（同设备+同昵称）
+  var testKey = 'testCnt_' + (S.nickname||'');
+  var testCount = (parseInt(localStorage.getItem(testKey))||0) + 1;
+  localStorage.setItem(testKey, testCount);
+  // 时间计算
+  var endTime = new Date();
+  var startTime = S._testStart || endTime;
+  var durationMin = Math.round((endTime - startTime) / 60000 * 10) / 10;
+  var startStr = startTime.getFullYear()+'-'+(startTime.getMonth()+1)+'-'+startTime.getDate()+' '+startTime.getHours()+':'+String(startTime.getMinutes()).padStart(2,'0');
+  var endStr = endTime.getFullYear()+'-'+(endTime.getMonth()+1)+'-'+endTime.getDate()+' '+endTime.getHours()+':'+String(endTime.getMinutes()).padStart(2,'0');
+
   data.sessions.push({date:ds,typeName:tn,styleStr:`${style.势}·${style.局}·${style.衡}·${style.法}`,style,finalDims,finalRadicals,typeDist,answers:[...S.answers],questions:S.selectedQuestions});
   if(data.sessions.length>20)data.sessions=data.sessions.slice(-20);
   saveStorage(data);
@@ -2021,10 +2033,10 @@ function saveSession(){
       roomLines += rd.room+'：'+rtn+' · '+rb+'（'+rd.roomFinal.toFixed(1)+'分）\n';
     });
     var totalScore = (rr.roomData||[]).length>0 ? (totalSum/(rr.roomData||[]).length).toFixed(1) : '0';
-    var msg = '【'+deviceStr+'】👤 '+(S.nickname||'')+'\n'+
+    var msg = '【'+deviceStr+' · '+(S.nickname||'')+' · 第'+testCount+'次】\n'+
+      '开始：'+startStr+'  结束：'+endStr+'  用时：'+durationMin+'分钟\n'+
       '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n'+
-      roomLines+
-      '\n'+ds;
+      roomLines;
     var xhr = new XMLHttpRequest();
     xhr.open('POST', FEISHU_WEBHOOK, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
