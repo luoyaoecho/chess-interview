@@ -1517,7 +1517,7 @@ function renderLogin(){
       ${FOUR_BEASTS.map(function(beast,bi){
         return '<div class="beast-quad" onclick="toggleBeast('+bi+')" style="border:2px solid '+beast.color+';border-radius:12px;position:relative;overflow:hidden;text-align:center;">'+
           // 神兽图：铺满整个卡片
-          (beast.img ? '<img src="'+beast.img+'" style="width:100%;height:100%;object-fit:cover;object-position:center '+(['18%','22%','30%','25%'][bi]||'20%')+';position:absolute;inset:0;z-index:0;opacity:0.40;" alt="">' : '') +
+          (beast.img ? '<img loading="lazy" src="'+beast.img+'" style="width:100%;height:100%;object-fit:cover;object-position:center '+(['18%','22%','30%','25%'][bi]||'20%')+';position:absolute;inset:0;z-index:0;opacity:0.40;" alt="">' : '') +
           // 文字直接叠在图上
           '<div style="position:relative;z-index:1;padding:24px 14px;">'+
             '<div style="font-weight:800;font-size:20px;color:'+beast.color+';margin-bottom:6px;text-shadow:0 0 8px rgba(255,255,255,0.9);">'+beast.name+'</div>'+
@@ -1535,7 +1535,7 @@ function renderLogin(){
           '<div id="beastDetail'+bi+'" class="beast-detail" style="position:relative;z-index:1;padding:0 14px 14px;">'+
             beast.types.map(function(t){
               return '<div style="padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.08);text-align:left;display:flex;gap:10px;align-items:flex-start;">'+
-                (t.typeImg ? '<img src="'+t.typeImg+'" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid '+beast.color+';flex-shrink:0;margin-top:2px;" alt="">' : '') +
+                (t.typeImg ? '<img loading="lazy" src="'+t.typeImg+'" loading="lazy" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid '+beast.color+';flex-shrink:0;margin-top:2px;" alt="">' : '') +
                 '<div>'+
                   '<div style="font-weight:700;font-size:14px;color:'+beast.color+';text-shadow:0 0 6px rgba(255,255,255,0.9);">'+t.name+'</div>'+
                   '<div style="font-size:10px;color:'+beast.color+';opacity:0.7;margin-bottom:2px;">'+(t.key||'').split('_').join(' · ')+'</div>'+
@@ -1631,7 +1631,7 @@ function startGame(){
   overlay.innerHTML = '<div class="modal-box">'+
     '<h3>👤 你的昵称</h3>'+
     '<p>输入一个昵称，结果会保存在本设备上</p>'+
-    '<input type="text" id="modalNi" placeholder="输入你的昵称" value="'+(S.nickname||'')+'" maxlength="20" autofocus>'+
+    '<input type="text" id="modalNi" placeholder="输入你的昵称" value="'+(S.nickname||'')+'" maxlength="20" autofocus onfocus="this.select()">'+
     '<button class="btn btn-next" style="width:100%;" onclick="confirmNickname()">确认，开始评估 →</button>'+
   '</div>';
   document.body.appendChild(overlay);
@@ -2784,7 +2784,7 @@ function renderReport() {
           ${style.势} · ${style.局} · ${style.衡} · ${style.法} → ${beastInfo.beast.ruleDesc}
         </div>
         <div style="font-size:18px;font-weight:800;color:${beastInfo.beast.color};margin-bottom:4px;text-shadow:0 0 8px rgba(255,255,255,0.9);">
-          ${beastInfo.type.typeImg ? '<img src="'+beastInfo.type.typeImg+'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 8px;border:3px solid '+beastInfo.beast.color+';filter:grayscale(0.4) sepia(0.2) brightness(0.95);" alt="">' : (beastInfo.beast.img ? '<img src="'+beastInfo.beast.img+'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 8px;border:3px solid '+beastInfo.beast.color+';filter:grayscale(0.4) sepia(0.2) brightness(0.95);" alt="">' : beastInfo.beast.symbol)} ${beastInfo.beast.name} · ${beastInfo.type.name}
+          ${beastInfo.type.typeImg ? '<img loading="lazy" src="'+beastInfo.type.typeImg+'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 8px;border:3px solid '+beastInfo.beast.color+';filter:grayscale(0.4) sepia(0.2) brightness(0.95);" alt="">' : (beastInfo.beast.img ? '<img loading="lazy" src="'+beastInfo.beast.img+'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 8px;border:3px solid '+beastInfo.beast.color+';filter:grayscale(0.4) sepia(0.2) brightness(0.95);" alt="">' : beastInfo.beast.symbol)} ${beastInfo.beast.name} · ${beastInfo.type.name}
         </div>
         <div style="font-size:13px;line-height:1.8;color:var(--text);margin-bottom:6px;text-shadow:0 0 6px rgba(255,255,255,0.9);">
           ${beastInfo.beast.desc}
