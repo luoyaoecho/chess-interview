@@ -2056,16 +2056,12 @@ function saveSession(){
         var rk3=rd.roomStyle['势']+'_'+rd.roomStyle['局']+'_'+rd.roomStyle['衡']+'_'+rd.roomStyle['法'];
         var rn3='', rb3='';
         for(var bi4=0;bi4<FOUR_BEASTS.length;bi4++){ for(var ti4=0;ti4<FOUR_BEASTS[bi4].types.length;ti4++){ if(FOUR_BEASTS[bi4].types[ti4].key===rk3){ rn3=FOUR_BEASTS[bi4].types[ti4].name; rb3=FOUR_BEASTS[bi4].name; break; } } if(rn3) break; }
-        // 与房间理想风格的四维差异
+        // 与房间理想风格的二维差异（只比势和局）
         var ideal = rd.ideal;
         var diffParts = [];
         if(ideal){
-          var dimNames = {势:'能量来源',局:'价值取向',衡:'判断方式',法:'行动风格'};
-          ['势','局','衡','法'].forEach(function(dim){
-            if(rd.roomStyle[dim] && ideal[dim] && rd.roomStyle[dim] !== ideal[dim]){
-              diffParts.push(dimNames[dim]+'：你'+rd.roomStyle[dim]+'，理想'+ideal[dim]);
-            }
-          });
+          if(rd.roomStyle['势'] && ideal['势'] && rd.roomStyle['势'] !== ideal['势']) diffParts.push('势：你'+rd.roomStyle['势']+'，理想'+ideal['势']);
+          if(rd.roomStyle['局'] && ideal['局'] && rd.roomStyle['局'] !== ideal['局']) diffParts.push('局：你'+rd.roomStyle['局']+'，理想'+ideal['局']);
         }
         var diffCount = diffParts.length;
         var diffNote = diffCount>0 ? diffCount+'项差异：'+diffParts.join('；') : '风格完全匹配';
@@ -2409,11 +2405,11 @@ function computeRoomScores(selectedQuestions, answers, finalRadicals, finalDims,
     // 场景风格适配度评价
     var sceneStyleLabel = '';
     var idealStyles = {
-      'HR初筛':  { 势:'外势', 局:'近局', 衡:'情衡', 法:'定法', note:'HR主要看靠谱度和表达力——直接说清你能做什么、做过什么就行' },
-      '业务面试': { 势:'内势', 局:'近局', 衡:'理衡', 法:'活法', note:'直属leader看重专业深度和落地能力——用数据说话，用案例验证' },
-      '交叉面试': { 势:'外势', 局:'近局', 衡:'情衡', 法:'活法', note:'跨部门同事看你合不合得来——坦诚直接比完美包装更重要' },
-      '高管面试': { 势:'内势', 局:'远局', 衡:'理衡', 法:'活法', note:'高管看格局和长期判断——不只讲做过什么，更要讲为什么做' },
-      'HR谈薪':   { 势:'外势', 局:'远局', 衡:'理衡', 法:'定法', note:'谈判就是信息战——谁手里的牌多、谁能沉住气，谁就赢' }
+      'HR初筛':  { 势:'外势', 局:'近局', note:'HR主要看靠谱度和表达力——直接说清你能做什么、做过什么就行' },
+      '业务面试': { 势:'内势', 局:'近局', note:'直属leader看重专业深度和落地能力——用数据说话，用案例验证' },
+      '交叉面试': { 势:'外势', 局:'近局', note:'跨部门同事看你合不合得来——坦诚直接比完美包装更重要' },
+      '高管面试': { 势:'内势', 局:'远局', note:'高管看格局和长期判断——不只讲做过什么，更要讲为什么做' },
+      'HR谈薪':   { 势:'外势', 局:'远局', note:'谈判就是信息战——谁手里的牌多、谁能沉住气，谁就赢' }
     };
     var ideal = idealStyles[room];
     var matchCount = 0;
