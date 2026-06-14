@@ -1560,7 +1560,8 @@ function renderLogin(){
       <button class="btn btn-next" style="padding:14px 48px;font-size:17px;" onclick="startGame()">
         开始评估 →
       </button>
-      <div style="font-size:10px;color:var(--sub);margin-bottom:12px;">约30道场景题（含动态追问） · 约8分钟 · 结果仅保存在本设备</div>
+      <div style="font-size:10px;color:var(--sub);margin-bottom:4px;">约30道场景题（含动态追问） · 约8分钟 · 结果仅保存在本设备</div>
+      <div id="testCount" style="font-size:10px;color:var(--accent);margin-bottom:12px;opacity:0.7;"></div>
       <!-- 场景权重折叠 -->
       <details style="max-width:480px;margin:0 auto 16px;font-size:12px;color:var(--sub);cursor:pointer;text-align:left;">
         <summary style="margin-bottom:6px;text-align:center;">📊 场景权重分配（展开调整，默认各4题+动态追问，共约30题）</summary>
@@ -1575,8 +1576,8 @@ function renderLogin(){
 
     </div>
   `;
-  // 渲染房间分配滑块
-  setTimeout(()=>{ renderRoomSliders(); },100);
+  // 渲染房间分配滑块 + 测试计数
+  setTimeout(()=>{ renderRoomSliders(); var c=parseInt(localStorage.getItem('chess_total_tests'))||0; var el=document.getElementById('testCount'); if(el && c>0) el.textContent='📊 本设备已累计完成 '+c+' 次测试'; },100);
 }
 
 // 四象限展开/收起
@@ -1981,6 +1982,10 @@ function nextQ(){
 var FEISHU_WEBHOOK = 'https://open.feishu.cn/open-apis/bot/v2/hook/521dc2f6-b01b-4b6b-9fd2-e6db0f86a472';
 
 function saveSession(){
+  // 全局测试计数
+  var totalTests = (parseInt(localStorage.getItem('chess_total_tests'))||0) + 1;
+  localStorage.setItem('chess_total_tests', totalTests);
+
   const data=getStorage();
   const {finalDims,finalRadicals,style}=S.result;
   const tn=getStyleTypeName(style);
