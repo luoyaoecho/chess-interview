@@ -2051,8 +2051,10 @@ function saveSession(){
         var diffNote = diffParts.length>0 ? diffParts.length+'项：'+diffParts.join(';') : '匹配';
         return [ip,S.nickname||'',testCount,deviceStr,startStr,endStr,durationMin+'分钟',beastName,tn,totalScore+'分',rd.room,rb,rn,rd.roomFinal.toFixed(1)+'分',rd.roomFinal===minScore?'是':'否',diffNote,diffParts.length].join('\t');
       }).join('\n');
+      var totalTestsAll = parseInt(localStorage.getItem('chess_total_tests'))||0;
       var msg = '【'+ip+'*'+(S.nickname||'')+'*'+testCount+'】\n'+
-        '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n\n'+
+        '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n'+
+        '📊 本设备已累计：'+totalTestsAll+' 次测试\n\n'+
         roomLines+
         '\n📋 以下每行对应一个房间，复制粘贴到表格：\n'+tsvLines;
       var xhr = new XMLHttpRequest();
