@@ -2036,15 +2036,20 @@ function saveSession(){
     // 先获取IP再推送
     fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).catch(function(){return {ip:'未知'};}).then(function(ipData){
       var ip = ipData.ip || '未知';
-      // 收集各房间数据用于TSV
-      var rdMap = {}; (rr.roomData||[]).forEach(function(rd){ var rk2=rd.roomStyle['势']+'_'+rd.roomStyle['局']+'_'+rd.roomStyle['衡']+'_'+rd.roomStyle['法']; var rn=''; for(var bi3=0;bi3<FOUR_BEASTS.length;bi3++){ for(var ti3=0;ti3<FOUR_BEASTS[bi3].types.length;ti3++){ if(FOUR_BEASTS[bi3].types[ti3].key===rk2){ rn=FOUR_BEASTS[bi3].types[ti3].name+'·'+FOUR_BEASTS[bi3].name; break; } } if(rn) break; } rdMap[rd.room]=rn+' '+rd.roomFinal.toFixed(1)+'分'; });
-      var tsv = [ip,S.nickname||'',testCount,deviceStr,startStr,durationMin+'分钟',tn+'·'+beastName,totalScore+'分',rdMap['HR初筛']||'',rdMap['业务面试']||'',rdMap['交叉面试']||'',rdMap['高管面试']||'',rdMap['HR谈薪']||''].join('\t');
+      // 生成每行一个房间的TSV（匹配表格17列）
+      var minScore = 999; (rr.roomData||[]).forEach(function(rd){ if(rd.roomFinal<minScore) minScore=rd.roomFinal; });
+      var tsvLines = (rr.roomData||[]).map(function(rd){
+        var rk2=rd.roomStyle['势']+'_'+rd.roomStyle['局']+'_'+rd.roomStyle['衡']+'_'+rd.roomStyle['法'];
+        var rn='', rb='', diffParts=[];
+        for(var bi3=0;bi3<FOUR_BEASTS.length;bi3++){ for(var ti3=0;ti3<FOUR_BEASTS[bi3].types.length;ti3++){ if(FOUR_BEASTS[bi3].types[ti3].key===rk2){ rn=FOUR_BEASTS[bi3].types[ti3].name; rb=FOUR_BEASTS[bi3].name; break; } } if(rn) break; }
+        if(rd.ideal){ if(rd.roomStyle['势']!==rd.ideal['势']) diffParts.push('势：你'+rd.roomStyle['势']+',理想'+rd.ideal['势']); if(rd.roomStyle['局']!==rd.ideal['局']) diffParts.push('局：你'+rd.roomStyle['局']+',理想'+rd.ideal['局']); }
+        var diffNote = diffParts.length>0 ? diffParts.length+'项：'+diffParts.join(';') : '匹配';
+        return [ip,S.nickname||'',testCount,deviceStr,startStr,endStr,durationMin+'分钟',beastName,tn,totalScore+'分',rd.room,rb,rn,rd.roomFinal.toFixed(1)+'分',rd.roomFinal===minScore?'是':'否',diffNote,diffParts.length].join('\t');
+      }).join('\n');
       var msg = '【'+ip+'*'+(S.nickname||'')+'*'+testCount+'】\n'+
-        '设备：'+deviceStr+'  次数：第'+testCount+'次\n'+
-        '开始：'+startStr+'  用时：'+durationMin+'分钟\n'+
-        '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n'+
+        '综合：'+tn+' · '+beastName+'（'+totalScore+'分）\n\n'+
         roomLines+
-        '\n📋 复制下行粘贴到表格：\n'+tsv;
+        '\n📋 以下每行对应一个房间，复制粘贴到表格：\n'+tsvLines;
       var xhr = new XMLHttpRequest();
       xhr.open('POST', FEISHU_WEBHOOK, true);
       xhr.setRequestHeader('Content-Type', 'application/json');
